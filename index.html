@@ -114,8 +114,8 @@
                     </div>
                     <div class="plate-eu-country">NL</div>
                   </div>
-                  <input class="plate-input fi" id="vehicle1-plate" name="vehicle1Plate" type="text" maxlength="10" placeholder="" value="AP-EX-CL" aria-label="Kenteken auto 1" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
-                  <span class="plate-hint" aria-hidden="true">AP-EX-CL</span>
+                  <input class="plate-input fi" id="vehicle1-plate" name="vehicle1Plate" type="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 1" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+                  <span class="plate-hint" aria-hidden="true"></span>
                 </div>
               </div>
               <span id="vehicle1-badge" class="value-badge" hidden>Gevonden via kenteken</span>
@@ -176,8 +176,8 @@
                     </div>
                     <div class="plate-eu-country">NL</div>
                   </div>
-                  <input class="plate-input fi" id="vehicle2-plate" name="vehicle2Plate" type="text" maxlength="10" placeholder="" value="US-IV-E" aria-label="Kenteken auto 2" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
-                  <span class="plate-hint" aria-hidden="true">US-IV-E</span>
+                  <input class="plate-input fi" id="vehicle2-plate" name="vehicle2Plate" type="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 2" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+                  <span class="plate-hint" aria-hidden="true"></span>
                 </div>
               </div>
               <span id="vehicle2-badge" class="value-badge" hidden>Gevonden via kenteken</span>
@@ -233,6 +233,27 @@
             </div>
           </div>
           <div class="compare-difference" id="compare-difference">Wanneer beide voertuigen zijn geladen, tonen wij het verschil in kosten.</div>
+
+          <!-- Meer info toggle -->
+          <div style="margin-top:1rem">
+            <button id="more-info-toggle" class="btn">Meer info</button>
+            <div id="more-info-panel" class="more-info-panel" hidden>
+              <div class="more-info-grid">
+                <div class="more-info-item">
+                  <h4>Auto 1</h4>
+                  <div><strong>Aantal eigenaren:</strong> <span id="moreinfo-1-owners">Niet beschikbaar</span></div>
+                  <div><strong>Eerste registratie:</strong> <span id="moreinfo-1-firstreg">Niet beschikbaar</span></div>
+                  <div><strong>APK geldig tot:</strong> <span id="moreinfo-1-apk">Niet beschikbaar</span></div>
+                </div>
+                <div class="more-info-item">
+                  <h4>Auto 2</h4>
+                  <div><strong>Aantal eigenaren:</strong> <span id="moreinfo-2-owners">Niet beschikbaar</span></div>
+                  <div><strong>Eerste registratie:</strong> <span id="moreinfo-2-firstreg">Niet beschikbaar</span></div>
+                  <div><strong>APK geldig tot:</strong> <span id="moreinfo-2-apk">Niet beschikbaar</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="compare-advice" hidden>
