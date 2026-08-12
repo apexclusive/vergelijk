@@ -473,33 +473,121 @@ function bindPlateInput(side) {
   }
 }
 
+const _brandLogoCache = new Map();
+
 function updateBrandIcon(side, make) {
   const iconEl = document.getElementById(`vehicle${side}-logo`);
   if (!iconEl) return;
-  const normalized = String(make || '').toLowerCase();
+  const raw = String(make || '').trim();
+  const normalized = raw.toLowerCase();
+
+  // inline SVG logo snippets for very common brands
   const logos = {
     audi: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="12" r="3.2"/><circle cx="12" cy="12" r="3.2"/><circle cx="18" cy="12" r="3.2"/></svg>',
-    vw: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 6l5 6 5-6"/><path d="M7 18l5-6 5 6"/></svg>',
     volkswagen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 6l5 6 5-6"/><path d="M7 18l5-6 5 6"/></svg>',
     bmw: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M3 12h18"/><path d="M7 7l5 5"/><path d="M17 17l-5-5"/></svg>',
     mercedes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3l3.5 8.5L12 12 8.5 11.5 12 3z"/><path d="M12 12l-3.5 8.5L12 21 15.5 20.5 12 12z"/></svg>',
-    'mercedes-benz': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3l3.5 8.5L12 12 8.5 11.5 12 3z"/><path d="M12 12l-3.5 8.5L12 21 15.5 20.5 12 12z"/></svg>',
     porsche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12l1.5 6-1.5 6H6L4.5 9 6 3z"/><path d="M9 9h6"/><path d="M9 15h6"/></svg>',
-    lamborghini: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8l3-3 2 1 1-1 2 1 2-1 2 1 3 3v4l-1 3-3 2-4 1-4-1-3-2-1-3V8z"/></svg>',
-    volvo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M16 8l4-4"/><path d="M14 10h6"/><path d="M10 14l-3 3"/></svg>',
-    toyota: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="12" rx="8" ry="5"/><ellipse cx="12" cy="11" rx="4" ry="2.5"/></svg>',
-    renault: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12l6-8 6 8-6 8-6-8z"/></svg>',
-    peugeot: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 19s6-3 10-8c2-3 0-7 0-7s-4 0-7 4c-4 3-3 11-3 11z"/></svg>',
-    citroen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l8-8 8 8"/><path d="M4 12l8-8 8 8"/></svg>'
+    lamborghini: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8l3-3 2 1 1-1 2 1 2-1 2 1 3 3v4l-1 3-3 2-4 1-4-1-3-2-1-3V8z"/></svg>'
   };
-  const match = Object.keys(logos).find(key => normalized.includes(key));
-  if (match) {
-    iconEl.innerHTML = logos[match];
-    iconEl.classList.add('has-logo');
-  } else {
-    iconEl.textContent = '';
-    iconEl.classList.remove('has-logo');
+
+  // Tokenize and try inline matches first
+  const tokens = normalized.split(/[^a-z0-9]+/).filter(Boolean);
+  console.debug('updateBrandIcon:init', { side, raw, tokens });
+  for (const t of tokens) {
+    if (logos[t]) {
+      iconEl.innerHTML = logos[t];
+      iconEl.classList.add('has-logo');
+      iconEl.classList.remove('brand-fallback');
+      iconEl.title = `Matched inline logo: ${t}`;
+      return;
+    }
   }
+
+  // Substring match
+  const subMatch = Object.keys(logos).find(key => normalized.includes(key));
+  if (subMatch) {
+    iconEl.innerHTML = logos[subMatch];
+    iconEl.classList.add('has-logo');
+    iconEl.classList.remove('brand-fallback');
+    iconEl.title = `Matched inline substring logo: ${subMatch}`;
+    return;
+  }
+
+  // Try fetching from SimpleIcons CDN (https://cdn.simpleicons.org/{slug}/{hex})
+  // Build a slug candidate from tokens, prefer known mappings
+  const alias = {
+    vw: 'volkswagen',
+    merc: 'mercedes',
+    'mercedes-benz': 'mercedes',
+    'bmwgroup': 'bmw'
+  };
+  const slugCandidates = [];
+  if (tokens.length) {
+    // full normalized joined, then individual tokens
+    slugCandidates.push(tokens.join('-'));
+    slugCandidates.push(tokens[0]);
+    slugCandidates.push(tokens.slice(0,2).join('-'));
+    slugCandidates.push(tokens.slice(-1)[0]);
+  }
+  // include simple aliases
+  for (const t of tokens) if (alias[t]) slugCandidates.unshift(alias[t]);
+
+  // dedupe candidates
+  const uniq = [...new Set(slugCandidates.filter(Boolean))];
+
+  // try cache first
+  for (const s of uniq) {
+    if (_brandLogoCache.has(s)) {
+      const url = _brandLogoCache.get(s);
+      if (url === null) break; // known-missing
+      iconEl.innerHTML = `<img src="${url}" alt="${raw} logo">`;
+      iconEl.classList.add('has-logo');
+      iconEl.classList.remove('brand-fallback');
+      iconEl.title = `Loaded from cache: ${s}`;
+      return;
+    }
+  }
+
+  // attempt to load each candidate from SimpleIcons using an <img> loader (works from file:// and avoids CORS fetch issues)
+  (async () => {
+    for (const s of uniq) {
+      try {
+        const slug = encodeURIComponent(s);
+        const url = `https://cdn.simpleicons.org/${slug}/000000`;
+        // Load via Image() to avoid fetch/CORS issues when opening file://
+        await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => resolve();
+          img.onerror = () => reject(new Error('img load error'));
+          img.src = url;
+          // In some browsers, setting src after handlers is fine; ensure timeout
+          setTimeout(() => {
+            // If not resolved yet, let onerror/ onload handle; do nothing here
+          }, 800);
+        });
+        // if loaded successfully
+        _brandLogoCache.set(s, url);
+        iconEl.innerHTML = `<img src="${url}" alt="${raw} logo">`;
+        iconEl.classList.add('has-logo');
+        iconEl.classList.remove('brand-fallback');
+        iconEl.title = `Loaded from SimpleIcons: ${s}`;
+        console.debug('updateBrandIcon:found', { side, raw, slug: s, url });
+        return;
+      } catch (err) {
+        _brandLogoCache.set(s, null);
+        console.debug('updateBrandIcon:notfound', { side, raw, slug: s, error: err && err.message });
+        // try next candidate
+      }
+    }
+
+    // last fallback: show text badge with initials
+    const abbr = tokens.length ? tokens.map(p => p[0]).slice(0,3).join('').toUpperCase() : (raw.slice(0,3).toUpperCase() || '—');
+    iconEl.innerHTML = `<span class="brand-fallback">${abbr}</span>`;
+    iconEl.classList.add('has-logo', 'brand-fallback');
+    iconEl.title = `No logo found; tried: ${uniq.join(', ')}`;
+  })();
 }
 
 function apexToggle() {
