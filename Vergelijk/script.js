@@ -453,7 +453,14 @@ function bindPlateInput(side) {
   const plateInput = plateFields[side];
   if (!plateInput) return;
   const plateUi = document.getElementById(`vehicle${side}-plate-ui`);
-  if (plateUi) plateUi.addEventListener('click', () => plateInput.focus());
+  if (plateUi) plateUi.addEventListener('click', () => {
+    // When user clicks the plate area, hide the blinking caret (visual preference)
+    plateInput.classList.add('no-caret');
+    const hint = plateUi.querySelector('.plate-hint');
+    if (hint) hint.classList.add('no-caret');
+    // keep focus so typing still works but without a visible caret
+    plateInput.focus();
+  });
   plateInput.addEventListener('input', (event) => {
     const raw = String(event.target.value || '');
     const normalized = normalizePlate(raw);
@@ -471,6 +478,13 @@ function bindPlateInput(side) {
     plateUi.classList.add('empty');
     plateUi.classList.remove('filled');
   }
+
+  // Hide caret once user begins typing (user preference: no blinking cursor while typing)
+  plateInput.addEventListener('keydown', () => {
+    plateInput.classList.add('no-caret');
+    const hint = plateUi && plateUi.querySelector('.plate-hint');
+    if (hint) hint.classList.add('no-caret');
+  }, { once: true });
 }
 
 const _brandLogoCache = new Map();
@@ -616,12 +630,106 @@ function apexRequestTransfer() {
   if (toast) toast.textContent = 'Een adviseur schakelt u binnenkort in.';
 }
 
+const plateAnimationTimers = {1: null, 2: null};
+
+function animatePlate(side, text, totalDuration = 5000) {
+  // visual-only: populates the .plate-hint with per-letter spans that fade in over totalDuration
+  const plateUi = document.getElementById(`vehicle${side}-plate-ui`);
+  if (!plateUi) return;
+  const hint = plateUi.querySelector('.plate-hint');
+  if (!hint) return;
+  // clear existing
+  hint.innerHTML = '';
+  const letters = Array.from(String(text || '').toUpperCase());
+  if (letters.length === 0) return;
+  const perDelay = totalDuration / letters.length;
+  letters.forEach((ch, i) => {
+    const span = document.createElement('span');
+    span.className = 'plate-letter';
+    span.textContent = ch;
+    // stagger the animation so the full sequence takes ~totalDuration
+    span.style.animationDelay = `${(i * perDelay) / 1000}s`;
+    hint.appendChild(span);
+  });
+  // store timer so animation can be cancelled if user clicks
+  if (plateAnimationTimers[side]) {
+    clearTimeout(plateAnimationTimers[side]);
+    plateAnimationTimers[side] = null;
+  }
+  plateAnimationTimers[side] = setTimeout(() => {
+    plateAnimationTimers[side] = null;
+  }, totalDuration + 700);
+}
+
+async function animatePlateSequence() {
+  // animate vehicle1 then vehicle2 sequentially (5s each by requirement)
+  animatePlate(1, 'AP-EX-CL', 5000);
+  // wait 5.6s to ensure completion before starting the second (give small buffer)
+  await new Promise(resolve => setTimeout(resolve, 5600));
+  animatePlate(2, 'US-IV-E', 5000);
+}
+
+function stopPlateAnimation(side) {
+  const plateUi = document.getElementById(`vehicle${side}-plate-ui`);
+  if (!plateUi) return;
+  const hint = plateUi.querySelector('.plate-hint');
+  if (hint) hint.innerHTML = '';
+  if (plateAnimationTimers[side]) {
+    clearTimeout(plateAnimationTimers[side]);
+    plateAnimationTimers[side] = null;
+  }
+}
+
 function init() {
   bindPlateInput(1);
   bindPlateInput(2);
   compareVehicles();
   window.addEventListener('scroll', showProgress, { passive:true });
   showProgress();
+
+  // start the intro plate animation sequence
+  // do this after a short delay so the page settles visually
+  setTimeout(() => {
+    animatePlateSequence();
+  }, 420);
+
+  // If user clicks on a plate while animation is running, clear the animation
+  [1,2].forEach(side => {
+    const plateUi = document.getElementById(`vehicle${side}-plate-ui`);
+    if (!plateUi) return;
+    plateUi.addEventListener('click', () => stopPlateAnimation(side));
+  });
+
+  // More info toggle
+  const moreBtn = document.getElementById('more-info-toggle');
+  const morePanel = document.getElementById('more-info-panel');
+  if (moreBtn && morePanel) {
+    moreBtn.addEventListener('click', () => {
+      const isHidden = morePanel.hasAttribute('hidden');
+      if (isHidden) {
+        morePanel.removeAttribute('hidden');
+        moreBtn.textContent = 'Minder info';
+        populateMoreInfoPanel();
+      } else {
+        morePanel.setAttribute('hidden', '');
+        moreBtn.textContent = 'Meer info';
+      }
+    });
+  }
+}
+
+function populateMoreInfoPanel() {
+  // Fill the extra info from vehicleState where available, otherwise fallback text
+  const mapping = [1,2];
+  mapping.forEach(side => {
+    const ownersEl = document.getElementById(`moreinfo-${side}-owners`);
+    const firstEl = document.getElementById(`moreinfo-${side}-firstreg`);
+    const apkEl = document.getElementById(`moreinfo-${side}-apk`);
+    const state = vehicleState[side] || {};
+    ownersEl && (ownersEl.textContent = state.owners != null ? String(state.owners) : 'Niet beschikbaar');
+    firstEl && (firstEl.textContent = state.firstRegistration || state.year || 'Niet beschikbaar');
+    apkEl && (apkEl.textContent = state.apkExpiry || 'Niet beschikbaar');
+  });
 }
 
 window.addEventListener('DOMContentLoaded', init);
