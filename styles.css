@@ -43,13 +43,13 @@ body::before { content:''; position:fixed; inset:0; background:radial-gradient(c
 
 .value-badge[hidden] { display:none !important; }
 
-header { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.25rem var(--pd); background:rgba(8,8,8,.94); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); border-bottom:none; }
+header { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.25rem 1rem; background:rgba(8,8,8,.94); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); border-bottom:none; }
 .back-btn { display:inline-flex; align-items:center; gap:.55rem; font-family:var(--lb); font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(198,203,209,.4); border:1px solid rgba(198,203,209,.14); padding:.55rem 1.2rem; transition:.25s; }
 .back-btn:hover { border-color:rgba(198,203,209,.28); color:var(--pt); }
 .back-btn svg { width:12px; height:12px; fill:none; stroke:currentColor; stroke-width:1.5; }
 
 
-.wrap { max-width:980px; margin:0 auto; padding:1.3rem var(--pd) 1.5rem; flex:1; }
+.wrap { max-width:980px; margin:0 auto; padding:1.3rem 1rem 1.5rem; flex:1; }
 .form-card { position:relative; background:rgba(10,10,12,0.97); border:none; padding:1.5rem; border-radius:0; box-shadow:none; backdrop-filter:blur(18px); overflow:visible; }
 .form-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg, var(--ig) 0%, var(--pt) 45%, var(--ir) 100%); }
 .form-card::after { display:none; }
@@ -65,7 +65,7 @@ button, .btn, .back-btn, .chat-contact-input, .chat-inp, .plate, .plate-eu, .val
 .intro-copy { color:rgba(198,203,209,.74); margin-bottom:1.4rem; max-width:780px; }
 .top-strip { max-width:760px; margin-bottom:1.5rem; padding:1.4rem 0 .6rem; }
 .top-strip h1 { font-family:var(--sf); font-size:clamp(2rem, 4vw, 3rem); line-height:1.05; color:#f8f3e7; margin:0 0 .7rem; letter-spacing:.04em; }
-.lead-copy { color:rgba(229,226,220,.84); max-width:720px; font-size:1rem; line-height:1.85; }
+.lead-copy { color:rgba(229,226,220,.84); max-width:720px; font-size:1.06rem; line-height:1.88; }
 
 .page-hero {
   position: relative;
@@ -185,7 +185,7 @@ button, .btn, .back-btn, .chat-contact-input, .chat-inp, .plate, .plate-eu, .val
 .vehicle-card-title:empty { display:none; }
 .vehicle-status { font-size:.82rem; color:rgba(198,203,209,.72); }
 .field { display:flex; flex-direction:column; gap:.35rem; }
-.field-lbl { color:var(--mt); font-size:.88rem; }
+.field-lbl { color:var(--mt); font-size:.98rem; }
 .vehicle-card-body {
   overflow: hidden;
   max-height: 0;
@@ -463,7 +463,7 @@ button, .btn, .back-btn, .chat-contact-input, .chat-inp, .plate, .plate-eu, .val
 .field-help { color:rgba(198,203,209,.68); font-size:.88rem; line-height:1.55; }
 .value-summary-row { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
 .value-summary-card { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); padding:.95rem .95rem .9rem; display:flex; flex-direction:column; gap:.45rem; border-radius:0; }
-.value-summary-card span { color:rgba(198,203,209,.7); font-size:.8rem; text-transform:uppercase; letter-spacing:.12em; }
+.value-summary-card span { color:rgba(198,203,209,.7); font-size:.9rem; text-transform:uppercase; letter-spacing:.12em; }
 .value-summary-card strong { font-size:1rem; }
 .vehicle-details, .cost-breakdown { display:grid; gap:.9rem; }
 .detail-item, .cost-row { display:flex; justify-content:space-between; gap:.75rem; border-bottom:1px solid rgba(255,255,255,.08); padding-bottom:.55rem; }
@@ -496,7 +496,7 @@ button, .btn, .back-btn, .chat-contact-input, .chat-inp, .plate, .plate-eu, .val
 .compare-grid-small { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; margin-top:1rem; }
 .compare-card { padding:1.2rem 1.15rem; background:rgba(255,255,255,.065); border:1px solid rgba(255,255,255,.12); min-height:118px; display:flex; flex-direction:column; justify-content:center; box-shadow:0 18px 42px rgba(0,0,0,.14); border-radius:0; }
 .compare-card span { display:block; color:rgba(198,203,209,.72); margin-bottom:.65rem; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; }
-.compare-card strong { font-size:1.35rem; }
+.compare-card strong { font-size:1.5rem; }
 .compare-card.best { border-color:rgba(13,136,55,.5); background:rgba(13,136,55,.14); box-shadow:0 18px 56px rgba(13,136,55,.12); }
 .compare-card.worst { border-color:rgba(206,43,55,.5); background:rgba(206,43,55,.14); box-shadow:0 18px 56px rgba(206,43,55,.12); }
 .compare-card.best span { color:#b8f2c0; }
@@ -509,7 +509,7 @@ button, .btn, .back-btn, .chat-contact-input, .chat-inp, .plate, .plate-eu, .val
 .compare-advice p { margin:0; color:rgba(198,203,209,.78); line-height:1.75; }
 
 .value-badge { display:inline-flex; align-items:center; gap:.4rem; margin-top:.5rem; background:rgba(0,146,70,.12); color:#e6f5e8; padding:.28rem .75rem; border-radius:0; font-size:.82rem; font-weight:700; border:1px solid rgba(0,146,70,.28); }
-.value-badge::before { content:'âœ”'; display:inline-flex; align-items:center; justify-content:center; width:1rem; height:1rem; border-radius:0; background:rgba(0,146,70,.22); color:#fff; font-size:.8rem; }
+.value-badge::before { content:'✔'; display:inline-flex; align-items:center; justify-content:center; width:1rem; height:1rem; border-radius:0; background:rgba(0,146,70,.22); color:#fff; font-size:.8rem; }
 .value-badge[hidden] { display:none !important; }
 .apex-bubble { position:fixed; right:1.25rem; bottom:1.25rem; z-index:200; display:inline-flex; align-items:center; gap:.55rem; padding:.95rem 1.15rem; border:1px solid rgba(255,255,255,.12); background:linear-gradient(90deg, rgba(255,255,255,.98), rgba(246,240,220,.95)); color:var(--ink); cursor:pointer; font-family:var(--lb); font-size:.92rem; letter-spacing:.01em; border-radius:0; box-shadow:0 18px 40px rgba(0,0,0,.18); }
 .apex-bubble:hover { transform: translateY(-1px); }
@@ -536,7 +536,7 @@ button, .btn, .back-btn, .chat-contact-input, .chat-inp, .plate, .plate-eu, .val
 
 footer {
   text-align: center;
-  padding: 1.5rem var(--pd) 1.25rem;
+  padding: 1.5rem 1rem 1.25rem;
   border-top: 1px solid var(--hr);
   background: var(--ink);
   position: relative;
