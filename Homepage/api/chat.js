@@ -3,6 +3,7 @@ export default async function handler(req, res) {
   const allowedOrigins = new Set([
     'https://apexclusive.nl',
     'https://www.apexclusive.nl',
+    'https://vergelijk.apexclusive.nl',
     'https://mpxstudio.nl',
     'https://www.mpxstudio.nl',
     'http://localhost:4173'
