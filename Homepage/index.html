@@ -1424,7 +1424,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
 </nav>
 
 <!-- MOBILE MENU -->
-<div id="mm" role="dialog" aria-label="Navigatiemenu" aria-modal="true" aria-hidden="true">
+<div id="mm" role="dialog" aria-label="Navigatiemenu" aria-modal="true" aria-hidden="true" inert>
     <button id="mm-close" type="button" class="mm-close" aria-label="Sluit menu">✕</button>
   <div id="mm-brand" class="brand" aria-hidden="true">
     <span class="brand-apex">APEX</span><span class="brand-divider" aria-hidden="true"></span><span class="brand-excl">EXCLUSIVE</span>
@@ -2400,6 +2400,7 @@ burger.addEventListener('click',function(){
     burger.classList.add('open');
     burger.setAttribute('aria-expanded','true');
     mm.setAttribute('aria-hidden','false');
+    mm.removeAttribute('inert');
     document.body.style.overflow='hidden';
     // focus the close control for accessibility
     try{ if(mmClose) mmClose.focus(); }catch(e){}
@@ -2414,6 +2415,7 @@ function closeMM(){
   burger.classList.remove('open');
   burger.setAttribute('aria-expanded','false');
   mm.setAttribute('aria-hidden','true');
+  mm.setAttribute('inert','');
   document.body.style.overflow='';
   if(wasOpen) burger.focus();
 }
