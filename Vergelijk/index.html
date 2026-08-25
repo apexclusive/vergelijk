@@ -3,23 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Auto Vergelijker — APEX exclusive | Vergelijk twee kentekens</title>
-  <meta name="description" content="Vergelijk twee Nederlandse kentekens en zie kosten per maand voor verzekering, brandstof, belasting, onderhoud en afschrijving.">
+  <title>Auto Vergelijker — APEXclusive | Vergelijk twee kentekens</title>
+  <meta name="description" content="Vergelijk twee Nederlandse kentekens en bekijk indicatieve maandlasten voor verzekering, brandstof, belasting, onderhoud en afschrijving.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="nl_NL">
   <meta property="og:title" content="Auto Vergelijker — APEX exclusive">
-  <meta property="og:description" content="Vergelijk direct twee kentekens en zie maandlasten op een rij.">
+  <meta property="og:description" content="Vergelijk direct twee kentekens en bekijk indicatieve maandlasten op een rij.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Auto Vergelijker — APEX exclusive">
-  <meta name="twitter:description" content="Vergelijk twee kentekens en bekijk maandelijkse kosten voor afschrijving, verzekering, belasting en brandstof.">
+  <meta name="twitter:description" content="Vergelijk twee kentekens en bekijk indicatieve maandlasten voor afschrijving, verzekering, belasting en brandstof.">
   <meta name="theme-color" content="#0d0d0d">
-  <link rel="canonical" href="https://apexclusive.nl/vergelijk">
+  <link rel="canonical" href="https://vergelijk.apexclusive.nl/">
+  <meta property="og:url" content="https://vergelijk.apexclusive.nl/">
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%230a0a0a"/><text x="32" y="46" font-family="Georgia,serif" font-size="42" fill="%23c6cbd1" text-anchor="middle">A</text></svg>'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Oswald:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://apexclusive.nl/apex-tool-theme.css">
+<link rel="stylesheet" href="https://apexclusive.nl/apex-tool-chrome.css">
 </head>
 <body>
   <a class="skip-link" href="#compare-app">Direct naar de vergelijker</a>
@@ -35,15 +38,15 @@
       <div class="chat-hdr-info">
         <div class="chat-hdr-name">APEX exclusive</div>
         <div class="chat-hdr-sub">Private Vehicle Advisory</div>
-        <div class="chat-online">Online · reageert direct</div>
+        <div class="chat-online">AI-ondersteunde adviseur · stel uw vraag</div>
       </div>
       <button class="chat-x" type="button" onclick="apexToggle()" aria-label="Sluit chat">✕</button>
     </div>
     <div id="apex-msgs" class="chat-msgs"></div>
     <div id="apex-toast" class="chat-toast"></div>
     <div class="chat-contact-form" id="apex-contact-form">
-      <input id="apex-contact-name" class="chat-contact-input" type="text" placeholder="Naam">
-      <input id="apex-contact-email" class="chat-contact-input" type="email" placeholder="E-mailadres">
+      <input id="apex-contact-name" class="chat-contact-input" type="text" placeholder="Naam" autocomplete="name" required>
+      <input id="apex-contact-email" class="chat-contact-input" type="email" placeholder="E-mailadres" autocomplete="email" required>
       <input id="apex-contact-phone" class="chat-contact-input" type="tel" placeholder="06-nummer">
       <button class="chat-contact-btn" type="button" onclick="apexSubmitContact()">Verstuur contactgegevens</button>
     </div>
@@ -65,11 +68,11 @@
     <a href="https://apexclusive.nl" class="brand" target="_blank" rel="noreferrer">
       <span class="brand-apex">APEX</span>
       <span class="brand-sep" aria-hidden="true"><span></span><span></span><span></span></span>
-      <span class="brand-excl">exclusive</span>
+      <span class="brand-excl">EXCLUSIVE</span>
     </a>
-    <a href="https://apexclusive.nl/#tools" class="back-btn" target="_blank" rel="noreferrer">
+    <a href="https://apexclusive.nl/" class="back-btn" target="_blank" rel="noreferrer">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      Terug naar tools
+      Terug naar website
     </a>
   </header>
   <div class="page-hero" id="top">
@@ -119,6 +122,7 @@
                 </div>
               </div>
               <span id="vehicle1-badge" class="value-badge" hidden>Gevonden via kenteken</span>
+              <span id="vehicle1-status" class="field-status" role="status" aria-live="polite"></span>
             </div>
 
             <div class="vehicle-card-body" id="vehicle1-body">
@@ -144,7 +148,7 @@
             </div>
 
             <div class="vehicle-total" id="vehicle1-total-box">
-              <span>Totaal per maand</span>
+              <span>Indicatie per maand</span>
               <strong id="vehicle1-total">—</strong>
             </div>
           </div>
@@ -181,6 +185,7 @@
                 </div>
               </div>
               <span id="vehicle2-badge" class="value-badge" hidden>Gevonden via kenteken</span>
+              <span id="vehicle2-status" class="field-status" role="status" aria-live="polite"></span>
             </div>
 
             <div class="vehicle-card-body" id="vehicle2-body">
@@ -206,7 +211,7 @@
             </div>
 
             <div class="vehicle-total" id="vehicle2-total-box">
-              <span>Totaal per maand</span>
+              <span>Indicatie per maand</span>
               <strong id="vehicle2-total">—</strong>
             </div>
           </div>
@@ -214,7 +219,7 @@
         </div>
 
         <div class="compare-summary" id="compare-summary" hidden>
-          <p class="compare-note">Voer beide kentekens in en ontvang direct een premium kostenprofiel voor verzekering, belasting, afschrijving, brandstof en onderhoud.</p>
+          <p class="compare-note">Voer beide kentekens in en ontvang direct een indicatief kostenprofiel voor verzekering, belasting, afschrijving, brandstof en onderhoud.</p>
           <div class="compare-summary-head">
             <div>
               <span class="section-lbl">RESULTAAT</span>
@@ -233,6 +238,7 @@
             </div>
           </div>
           <div class="compare-difference" id="compare-difference">Wanneer beide voertuigen zijn geladen, tonen wij het verschil in kosten.</div>
+          <p class="compare-disclaimer">Indicatie op basis van algemene aannames (waaronder 12.000 km per jaar en &euro; 2,20 per liter). Werkelijke kosten hangen af van uw situatie en voertuig; dit is geen offerte of financieel advies.</p>
 
           <!-- Meer info toggle -->
           <div style="margin-top:1rem">
@@ -260,21 +266,23 @@
           <span class="advice-label">Advies</span>
           <h2>Wil je dezelfde auto buiten Nederland kopen?</h2>
           <p>Twijfel je nog? Neem contact op met APEX exclusive voor een persoonlijk koopadvies, importcheck en begeleiding bij de beste deal.</p>
+          <div class="compare-actions">
+            <a class="btn compare-whatsapp" id="compare-whatsapp" href="https://wa.me/31624735939?text=Goedendag%2C%20ik%20heb%20een%20auto%20vergeleken%20en%20wil%20graag%20persoonlijk%20advies." target="_blank" rel="noreferrer noopener">Bespreek deze vergelijking</a>
+            <a class="btn gh" href="https://apexclusive.nl/#contact" target="_blank" rel="noreferrer noopener">Naar APEXclusive</a>
+          </div>
         </div>
       </div>
     </div>
   </main>
 
   <footer>
-    <div class="ft-copy">
-      <span>© <span id="yr">2026</span></span>
-      <a href="https://apexclusive.nl" class="brand footer-brand" target="_blank" rel="noreferrer">
-        <span class="brand-apex">APEX</span>
-        <span class="brand-sep" aria-hidden="true"><span></span><span></span><span></span></span>
-        <span class="brand-excl">exclusive</span>
-      </a>
-      <span>· Automotive Advisory · Maastricht</span>
+    <div class="fg">
+      <div><a href="https://apexclusive.nl" class="brand"><span class="brand-apex">APEX</span><span class="brand-sep" aria-hidden="true"></span><span class="brand-excl">EXCLUSIVE</span></a><p>Onafhankelijke begeleiding bij aankoop en import van exclusieve auto's.<br>Maastricht · Nederland</p></div>
+      <div><p class="fh">Juridisch</p><ul class="fl"><li><a href="https://apexclusive.nl/algemenevoorwaarden.html">Algemene voorwaarden</a></li></ul></div>
+      <div><p class="fh">Contact</p><ul class="fl"><li><a href="mailto:info@apexclusive.nl">E-mail: info@apexclusive.nl</a></li><li><a href="https://wa.me/31624735939?text=Goedendag%2C%20ik%20heb%20de%20auto-vergelijker%20gebruikt%20en%20wil%20graag%20advies." target="_blank" rel="noreferrer noopener">WhatsApp: +31 6 24 73 59 39</a></li><li><a href="https://apexclusive.nl">Maastricht, Nederland</a></li></ul></div>
     </div>
+    <div class="fb"><span>&copy; <span id="yr">2026</span> APEXclusive &middot; Automotive Advisory &middot; Maastricht</span><span>Driven by Excellence.<span class="tric"></span>Gran turismo, geregeld.</span></div>
+    <div class="site-credit">Website ontworpen en gebouwd door <a href="https://mpxstudio.nl" target="_blank" rel="noreferrer noopener">MPX Studio</a></div>
   </footer>
 
   <script src="script.js"></script>

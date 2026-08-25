@@ -2,6 +2,7 @@ const defaultKmPerYear = 12000;
 const defaultFuelPrice = 2.20;
 const vehicleState = { 1: {}, 2: {} };
 const plateTimers = { 1: null, 2: null };
+const lookupTokens = { 1: 0, 2: 0 };
 
 const plateFields = {
   1: document.getElementById('vehicle1-plate'),
@@ -178,6 +179,7 @@ function compareVehicles() {
   const compareCard2 = document.getElementById('compare-card-2');
   const totalBox1 = document.getElementById('vehicle1-total-box');
   const totalBox2 = document.getElementById('vehicle2-total-box');
+  const compareWhatsapp = document.getElementById('compare-whatsapp');
 
   if (!compareTotal1 || !compareTotal2 || !compareDifference || !compareWinner) return;
   const compareSection = document.getElementById('compare-summary');
@@ -190,6 +192,11 @@ function compareVehicles() {
   const label2 = vehicleState[2].make ? `Totaal ${vehicleState[2].make}` : 'Totaal auto 2';
   if (compareLabel1) compareLabel1.textContent = label1;
   if (compareLabel2) compareLabel2.textContent = label2;
+  if (compareWhatsapp && bothLoaded) {
+    const name1 = vehicleState[1].make || 'auto 1';
+    const name2 = vehicleState[2].make || 'auto 2';
+    compareWhatsapp.href = `https://wa.me/31624735939?text=${encodeURIComponent(`Goedendag, ik heb ${name1} en ${name2} vergeleken en wil graag persoonlijk advies.`)}`;
+  }
 
   if (!bothLoaded) {
     clearMetricHighlights();
@@ -268,12 +275,14 @@ function clearVehicleData(side) {
   toggleVehicleBody(side, false);
   const nameEl = getElement(side, 'name');
   const makeEl = getElement(side, 'make');
+  const modelEl = getElement(side, 'model');
   const yearEl = getElement(side, 'year');
   const logoEl = document.getElementById(`vehicle${side}-logo`);
   const catBox = document.getElementById(`vehicle${side}-catalogue-value-box`);
   const plateUi = document.getElementById(`vehicle${side}-plate-ui`);
   if (nameEl) nameEl.textContent = '';
   if (makeEl) makeEl.textContent = '—';
+  if (modelEl) modelEl.textContent = '—';
   if (yearEl) yearEl.textContent = '—';
   if (logoEl) {
     logoEl.textContent = '';
@@ -381,15 +390,18 @@ function extractPriceFromRdwRow(row) {
     return Number.isFinite(num) && num > 500 ? [{ key: key.toLowerCase(), value: num }] : [];
   });
   if (candidates.length === 0) return null;
-  const prefer = candidates.find(item => /catalog|prijs|catalogus|catalogusprijs/.test(item.key));
-  let value = (prefer || candidates.sort((a,b) => b.value - a.value)[0]).value;
+  // Only expose a catalog value when the RDW response names that field
+  // explicitly; dates, weights and other numeric fields are not prices.
+  const prefer = candidates.find(item => /catalogus(prijs|waarde)|catalog(value|price)/.test(item.key));
+  if (!prefer) return null;
+  let value = prefer.value;
   if (value > 1000000) value = Math.round(value / 100);
   if (value > 1000000) value = Math.round(value / 10);
   if (value < 500 || value > 2000000) return null;
   return Math.round(value);
 }
 
-async function attemptAutoLookup(side, normalized) {
+async function attemptAutoLookup(side, normalized, token) {
   if (!normalized) return;
   const valid = /^[A-Z0-9]{4,8}$/.test(normalized) && /[0-9]/.test(normalized) && /[A-Z]/.test(normalized);
   if (!valid) {
@@ -406,6 +418,7 @@ async function attemptAutoLookup(side, normalized) {
   }
   let rdwData = null;
   try { rdwData = await fetchRdwByPlate(normalized); } catch (error) { rdwData = null; }
+  if (token !== lookupTokens[side]) return;
   if (rdwData) {
     applyVehicleData(side, rdwData, 'kenteken');
     cachePlateResult(cacheKey, rdwData);
@@ -471,8 +484,10 @@ function bindPlateInput(side) {
       plateUi.classList.remove('ready');
     }
     clearVehicleData(side);
+    lookupTokens[side] += 1;
+    const token = lookupTokens[side];
     if (plateTimers[side]) clearTimeout(plateTimers[side]);
-    plateTimers[side] = setTimeout(() => attemptAutoLookup(side, normalized), 450);
+    plateTimers[side] = setTimeout(() => attemptAutoLookup(side, normalized, token), 450);
   });
   if (plateUi) {
     plateUi.classList.add('empty');
@@ -615,9 +630,35 @@ function apexSend() {
   if (toast) toast.textContent = 'Chat werkt in deze demo nog niet volledig.';
 }
 
-function apexSubmitContact() {
+async function apexSubmitContact() {
   const toast = document.getElementById('apex-toast');
-  if (toast) toast.textContent = 'Contactgegevens zijn geregistreerd. We nemen snel contact op.';
+  const form = document.getElementById('apex-contact-form');
+  const button = form?.querySelector('.chat-contact-btn');
+  const name = document.getElementById('apex-contact-name')?.value.trim() || '';
+  const email = document.getElementById('apex-contact-email')?.value.trim() || '';
+  const phone = document.getElementById('apex-contact-phone')?.value.trim() || '';
+  if (!name || !/^\S+@\S+\.\S+$/.test(email)) {
+    if (toast) toast.textContent = 'Vul uw naam en een geldig e-mailadres in.';
+    return;
+  }
+  const fallback = `mailto:info@apexclusive.nl?subject=${encodeURIComponent('Contactaanvraag via auto-vergelijker')}&body=${encodeURIComponent(`Naam: ${name}\nE-mail: ${email}\nTelefoon: ${phone || '-'}\n\nAanvraag via de auto-vergelijker.`)}`;
+  if (button) button.disabled = true;
+  if (toast) toast.textContent = 'Gegevens worden verzonden...';
+  try {
+    const response = await fetch('https://apexclusive.nl/api/apex-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, request: 'Aanvraag via de auto-vergelijker.', website: '', brand: 'apex' })
+    });
+    if (!response.ok) throw new Error('lead endpoint unavailable');
+    form?.classList.remove('open');
+    if (toast) toast.textContent = 'Bedankt. Uw gegevens zijn ontvangen.';
+  } catch (error) {
+    if (toast) toast.textContent = 'Online verzenden is niet beschikbaar. Uw e-mailprogramma wordt geopend...';
+    window.location.href = fallback;
+  } finally {
+    if (button) button.disabled = false;
+  }
 }
 
 function apexQuick(query) {
@@ -627,7 +668,12 @@ function apexQuick(query) {
 
 function apexRequestTransfer() {
   const toast = document.getElementById('apex-toast');
-  if (toast) toast.textContent = 'Een adviseur schakelt u binnenkort in.';
+  const form = document.getElementById('apex-contact-form');
+  if (form) {
+    form.classList.add('open');
+    document.getElementById('apex-contact-name')?.focus();
+  }
+  if (toast) toast.textContent = 'Laat uw gegevens achter; we nemen persoonlijk contact met u op.';
 }
 
 const plateAnimationTimers = {1: null, 2: null};
