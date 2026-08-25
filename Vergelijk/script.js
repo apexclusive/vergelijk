@@ -329,7 +329,8 @@ function parseRdwYear(candidate) {
 async function fetchRdwByPlate(plate) {
   const key = normalizePlate(plate);
   if (!key) return null;
-  const proxyPorts = [5000, 5001];
+  const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const proxyPorts = isLocal ? [5000, 5001] : [];
   for (const port of proxyPorts) {
     const url = `http://127.0.0.1:${port}/rdw?kenteken=${encodeURIComponent(key)}`;
     try {
@@ -619,15 +620,82 @@ function updateBrandIcon(side, make) {
   })();
 }
 
+let compareChatOpen = false;
+let compareChatBusy = false;
+const compareChatMessages = [];
+
 function apexToggle() {
   const win = document.getElementById('apex-chat-win');
   if (!win) return;
-  win.classList.toggle('open');
+  compareChatOpen = !compareChatOpen;
+  win.classList.toggle('open', compareChatOpen);
+  const launcher = document.querySelector('.apex-bubble');
+  if (launcher) launcher.setAttribute('aria-expanded', String(compareChatOpen));
+  if (compareChatOpen) {
+    if (!compareChatMessages.length) addCompareMessage('bot', 'Goedendag! Ik ben de digitale adviseur van **APEXclusive**. Waarmee kan ik u helpen?');
+    document.getElementById('apex-inp')?.focus();
+  } else {
+    launcher?.focus();
+  }
 }
 
-function apexSend() {
-  const toast = document.getElementById('apex-toast');
-  if (toast) toast.textContent = 'Chat werkt in deze demo nog niet volledig.';
+function formatCompareMessage(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+
+function addCompareMessage(role, text) {
+  const messages = document.getElementById('apex-msgs');
+  if (!messages) return;
+  const item = document.createElement('div');
+  item.className = `cmsg ${role}`;
+  const label = document.createElement('div');
+  label.className = 'cmsg-lbl';
+  label.textContent = role === 'bot' ? 'APEXclusive Adviseur' : 'U';
+  const content = document.createElement('div');
+  content.className = 'cmsg-content';
+  content.innerHTML = formatCompareMessage(text);
+  item.append(label, content);
+  messages.appendChild(item);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+async function apexSend() {
+  const input = document.getElementById('apex-inp');
+  const text = input?.value.trim();
+  if (!text || compareChatBusy) return;
+  input.value = '';
+  compareChatMessages.push({ role: 'user', content: text });
+  addCompareMessage('user', text);
+  compareChatBusy = true;
+  const send = document.getElementById('apex-send');
+  if (send) send.disabled = true;
+  const pending = document.createElement('div');
+  pending.className = 'cmsg bot';
+  pending.innerHTML = '<div class="cmsg-lbl">APEXclusive Adviseur</div><div class="cmsg-content">Even geduld…</div>';
+  document.getElementById('apex-msgs')?.appendChild(pending);
+  try {
+    const response = await fetch('https://apexclusive.nl/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: compareChatMessages })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Verbinding niet beschikbaar');
+    const reply = data.reply || 'Geen antwoord ontvangen.';
+    compareChatMessages.push({ role: 'assistant', content: reply });
+    pending.querySelector('.cmsg-content').innerHTML = formatCompareMessage(reply);
+  } catch (error) {
+    pending.querySelector('.cmsg-content').textContent = 'Verbindingsfout. Probeer opnieuw of neem contact op via WhatsApp.';
+  } finally {
+    compareChatBusy = false;
+    if (send) send.disabled = false;
+  }
 }
 
 async function apexSubmitContact() {
@@ -662,8 +730,10 @@ async function apexSubmitContact() {
 }
 
 function apexQuick(query) {
-  const msgs = document.getElementById('apex-msgs');
-  if (msgs) msgs.textContent = `Vraag: ${query}`;
+  const input = document.getElementById('apex-inp');
+  if (!input) return;
+  input.value = query;
+  apexSend();
 }
 
 function apexRequestTransfer() {
@@ -727,6 +797,12 @@ function stopPlateAnimation(side) {
 }
 
 function init() {
+  document.getElementById('apex-inp')?.addEventListener('keydown', event => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      apexSend();
+    }
+  });
   bindPlateInput(1);
   bindPlateInput(2);
   compareVehicles();

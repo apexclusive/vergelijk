@@ -42,12 +42,12 @@
       </div>
       <button class="chat-x" type="button" onclick="apexToggle()" aria-label="Sluit chat">✕</button>
     </div>
-    <div id="apex-msgs" class="chat-msgs"></div>
+    <div id="apex-msgs" class="chat-msgs" aria-live="polite" aria-atomic="false"></div>
     <div id="apex-toast" class="chat-toast"></div>
     <div class="chat-contact-form" id="apex-contact-form">
-      <input id="apex-contact-name" class="chat-contact-input" type="text" placeholder="Naam" autocomplete="name" required>
-      <input id="apex-contact-email" class="chat-contact-input" type="email" placeholder="E-mailadres" autocomplete="email" required>
-      <input id="apex-contact-phone" class="chat-contact-input" type="tel" placeholder="06-nummer">
+      <input id="apex-contact-name" class="chat-contact-input" type="text" placeholder="Naam" aria-label="Naam" autocomplete="name" required>
+      <input id="apex-contact-email" class="chat-contact-input" type="email" placeholder="E-mailadres" aria-label="E-mailadres" autocomplete="email" required>
+      <input id="apex-contact-phone" class="chat-contact-input" type="tel" placeholder="06-nummer" aria-label="06-nummer" autocomplete="tel">
       <button class="chat-contact-btn" type="button" onclick="apexSubmitContact()">Verstuur contactgegevens</button>
     </div>
     <div class="chat-quick" id="apex-quick">
@@ -79,10 +79,10 @@
     <div class="page-hero-inner">
       <h1>Premium kentekenvergelijking<br><em>Direct inzicht, discreet advies.</em></h1>
       <div class="hero-meta">
-        <div class="hero-points" aria-label="Tool voordelen">
-          <span>Snelle vergelijking</span>
-          <span>Executive layout</span>
-          <span>Rechtstreeks inzicht</span>
+        <div class="hero-points" role="list" aria-label="Tool voordelen">
+          <span role="listitem">Snelle vergelijking</span>
+          <span role="listitem">Executive layout</span>
+          <span role="listitem">Rechtstreeks inzicht</span>
         </div>
       </div>
     </div>
@@ -242,7 +242,7 @@
 
           <!-- Meer info toggle -->
           <div style="margin-top:1rem">
-            <button id="more-info-toggle" class="btn">Meer info</button>
+            <button id="more-info-toggle" type="button" class="btn">Meer info</button>
             <div id="more-info-panel" class="more-info-panel" hidden>
               <div class="more-info-grid">
                 <div class="more-info-item">
