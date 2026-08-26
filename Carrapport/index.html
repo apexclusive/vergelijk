@@ -7,11 +7,29 @@
 <title>Advertentiecontrole — APEXclusive | Lokale invoercheck</title>
 <meta name="description" content="Controleer lokaal een voertuigadvertentie-URL of afbeelding. Deze APEXclusive invoercheck haalt geen voertuiggegevens op en geeft geen prijs-, import- of risicoanalyse.">
 <meta name="theme-color" content="#0a0d0e">
+<meta name="application-name" content="APEXclusive">
+<meta name="robots" content="index,follow">
 <link rel="canonical" href="https://carrapport.apexclusive.nl/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Advertentiecontrole — APEXclusive | Lokale invoercheck">
 <meta property="og:description" content="Controleer lokaal een voertuigadvertentie-URL of afbeelding. Er worden geen voertuiggegevens opgehaald.">
 <meta property="og:url" content="https://carrapport.apexclusive.nl/">
+<meta property="og:site_name" content="APEXclusive">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Advertentiecontrole — APEXclusive">
+<meta name="twitter:description" content="Lokale controle van een advertentie-URL of afbeelding, zonder voertuiggegevens op te halen.">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"APEXclusive Advertentiecontrole",
+  "url":"https://carrapport.apexclusive.nl/",
+  "applicationCategory":"UtilitiesApplication",
+  "operatingSystem":"Web",
+  "inLanguage":"nl-NL",
+  "description":"Lokale controle van een voertuigadvertentie-URL of afbeelding zonder voertuiggegevens op te halen."
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://apexclusive.nl/apex-tool-theme.css">
@@ -385,6 +403,13 @@ text-align:left
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .form-status{min-height:1.5em;margin:14px 0 0;color:#d5a77f;font-size:12px;line-height:1.6}
 .form-status[data-state="error"]{color:#e4a39b}
+.field-help{margin:-4px 0 18px;color:rgba(244,241,235,.58);font-size:11px;line-height:1.6}
+.input:focus-visible,.upload:focus-visible,.btn:focus-visible,.footer-links a:focus-visible,.brand:focus-visible,.back-btn:focus-visible{outline:2px solid #f5e6a3;outline-offset:3px}
+.upload{display:block}
+.upload-text{display:block}
+.tool-links{list-style:none;margin-top:12px;display:grid;gap:9px}
+.tool-links a{color:rgba(244,241,235,.68);font-size:12px;letter-spacing:.02em;text-decoration:none;transition:color .25s}
+.tool-links a:hover{color:#f4f1eb}
 
 header{display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.9);border-bottom:1px solid rgba(198,203,209,.22);padding:18px clamp(20px,5vw,64px);position:sticky;top:0;z-index:100;backdrop-filter:blur(22px)}
 .brand{display:inline-flex;align-items:center;gap:.38em;font-family:'DM Sans',sans-serif;font-size:1.08rem;letter-spacing:.08em;color:#c6cbd1;text-decoration:none;text-transform:uppercase}
@@ -396,6 +421,12 @@ header{display:flex;align-items:center;justify-content:space-between;background:
 </style>
 
 <link rel="stylesheet" href="https://apexclusive.nl/apex-tool-chrome.css">
+<style>
+@media (max-width:650px){
+  footer:before{margin-left:0!important;margin-right:0!important}
+  .hero h1{overflow-wrap:anywhere}
+}
+</style>
 </head>
 
 <body>
@@ -444,14 +475,15 @@ Controleer de invoer en bereid een onafhankelijke beoordeling voor.
 Advertentie invoeren
 </div>
 
-
+<form id="checkForm" novalidate>
 <label class="sr-only" for="url">Advertentie URL</label>
-<input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" placeholder="Plak advertentie URL (Marktplaats / mobile.de)...">
+<input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" aria-describedby="inputHelp" placeholder="Plak advertentie URL (Marktplaats / mobile.de)...">
+<p class="field-help" id="inputHelp">Alleen de invoer wordt lokaal gecontroleerd; er wordt geen advertentie geopend of uitgelezen.</p>
 
 
 <label class="upload" for="foto" role="button" tabindex="0">
 
-Upload advertentiefoto
+<span class="upload-text">Upload advertentiefoto</span>
 
 <input id="foto" type="file" accept="image/jpeg,image/png,image/webp" hidden>
 
@@ -463,15 +495,16 @@ Upload advertentiefoto
 <br>
 
 
-<button class="btn" id="analyseButton" type="button" aria-controls="result priceCard importCard riskCard" aria-describedby="rapport">
+<button class="btn" id="analyseButton" type="submit" aria-controls="result priceCard importCard riskCard" aria-describedby="rapport">
 Controleer invoer
 </button>
 <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+</form>
 
 
 </div>
 
-<div class="card" id="result">
+<div class="card" id="result" role="region" aria-labelledby="vehicleTitle" tabindex="-1">
 
 <h2 id="vehicleTitle">
 Invoer gecontroleerd
@@ -691,6 +724,18 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
 </ul>
 </div>
 <div>
+<p class="footer-heading">Meer APEX-tools</p>
+<ul class="tool-links">
+<li><a href="https://kentekencheck.apexclusive.nl/" target="_blank" rel="noreferrer">Kentekencheck</a></li>
+<li><a href="https://bpm.apexclusive.nl/" target="_blank" rel="noreferrer">BPM Calculator</a></li>
+<li><a href="https://vergelijk.apexclusive.nl/" target="_blank" rel="noreferrer">Auto vergelijken</a></li>
+<li><a href="https://waarde.apexclusive.nl/" target="_blank" rel="noreferrer">Auto waarde</a></li>
+<li><a href="https://verzekering.apexclusive.nl/" target="_blank" rel="noreferrer">Verzekering vergelijken</a></li>
+<li><a href="https://lening.apexclusive.nl/" target="_blank" rel="noreferrer">Autolening vergelijken</a></li>
+<li><a href="https://advertentie.apexclusive.nl/" target="_blank" rel="noreferrer">Advertentietips</a></li>
+</ul>
+</div>
+<div>
 <p class="footer-heading">Contact</p>
 <ul class="footer-links">
 <li><a href="mailto:info@apexclusive.nl">E-mail: info@apexclusive.nl</a></li>
@@ -715,6 +760,8 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
   const preview = document.getElementById('preview');
   const button = document.getElementById('analyseButton');
   const status = document.getElementById('formStatus');
+  const checkForm = document.getElementById('checkForm');
+  const result = document.getElementById('result');
   let previewUrl = '';
 
   const setStatus = (message, state = '') => {
@@ -761,10 +808,13 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
     if (status.dataset.state === 'error') setStatus('');
   });
 
-  button.addEventListener('click', () => {
+  checkForm.addEventListener('submit', (event) => {
+    event.preventDefault();
     const rawUrl = urlInput.value.trim();
     const file = fileInput.files[0];
     let parsedUrl = null;
+    hideCards();
+    setText('rapport', 'Voer een URL of afbeelding in om de invoer lokaal te controleren.');
 
     if (rawUrl) {
       try {
@@ -784,8 +834,9 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
     }
 
     button.disabled = true;
-    hideCards();
+    button.setAttribute('aria-busy', 'true');
     setStatus('Invoer wordt gecontroleerd…');
+    setText('rapport', 'Lokale controle wordt voorbereid…');
 
     window.setTimeout(() => {
       const source = parsedUrl ? parsedUrl.hostname.replace(/^www\./, '') : 'lokale afbeelding';
@@ -795,9 +846,19 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
       document.querySelectorAll('.card').forEach((card) => {
         card.style.display = 'block';
       });
-      setStatus('Invoer gecontroleerd. Er zijn geen voertuiggegevens opgehaald.');
+      setStatus(
+        parsedUrl && file
+          ? 'Invoer gecontroleerd. De URL is gebruikt; de afbeelding is lokaal gebleven. Er zijn geen voertuiggegevens opgehaald.'
+          : 'Invoer gecontroleerd. Er zijn geen voertuiggegevens opgehaald.'
+      );
       button.disabled = false;
+      button.removeAttribute('aria-busy');
+      result.focus();
     }, 250);
+  });
+
+  window.addEventListener('pagehide', () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
   });
 })();
 </script>
