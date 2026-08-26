@@ -539,9 +539,10 @@ function updateBrandIcon(side, make) {
   };
   const slugCandidates = [];
   if (tokens.length) {
-    // full normalized joined, then individual tokens
-    slugCandidates.push(tokens.join('-'));
+    // Prefer the brand token before a model compound; Simple Icons usually
+    // exposes brand slugs, while model compounds often return 404.
     slugCandidates.push(tokens[0]);
+    slugCandidates.push(tokens.join('-'));
     slugCandidates.push(tokens.slice(0,2).join('-'));
     slugCandidates.push(tokens.slice(-1)[0]);
   }
