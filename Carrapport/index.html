@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Advertentie Analyse — APEXclusive</title>
+<meta name="description" content="Analyseer een voertuigadvertentie op prijs, specificaties, importpotentieel en risico's met APEXclusive.">
+<link rel="canonical" href="https://carrapport.apexclusive.nl/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Advertentie Analyse — APEXclusive">
+<meta property="og:description" content="Analyseer een voertuigadvertentie op prijs, specificaties, importpotentieel en risico's.">
+<meta property="og:url" content="https://carrapport.apexclusive.nl/">
+<link rel="stylesheet" href="https://apexclusive.nl/apex-tool-theme.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@200;300;400;500;600&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0
+}
+
+body{
+background:#0a0d0e;
+color:#f4f1eb;
+font-family:'DM Sans',sans-serif;
+font-weight:300;
+min-height:100vh;
+-webkit-font-smoothing:antialiased;
+text-rendering:optimizeLegibility
+}
+
+
+nav{
+background:rgba(10,13,14,.9);
+border-bottom:1px solid rgba(244,241,235,.18);
+padding:18px clamp(20px,5vw,64px);
+display:flex;
+align-items:center;
+justify-content:space-between;
+position:sticky;
+top:0;
+z-index:100;
+backdrop-filter:blur(24px)
+}
+
+.brand-wrap{display:flex;align-items:baseline;gap:.34em}
+
+
+.logo{
+display:inline-flex;
+align-items:center;
+gap:.34em;
+font-family:'DM Sans',sans-serif;
+font-size:20px;
+font-weight:400;
+letter-spacing:.08em;
+color:#fff;
+text-decoration:none;
+text-transform:uppercase
+}
+
+.logo:before{
+content:'';
+display:block;
+width:1.55rem;
+height:1.7rem;
+flex:0 0 1.55rem;
+background:url('https://apexclusive.nl/apexclusive-schild-randloos.svg') center/contain no-repeat;
+opacity:.92
+}
+
+
+.logo span{
+color:#d5a77f
+}
+
+.brand-sub{
+font-family:'Oswald',sans-serif;
+font-size:9px;
+letter-spacing:.14em;
+text-transform:uppercase;
+color:rgba(244,241,235,.56)
+}
+
+#burger{
+width:34px;
+height:34px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+gap:5px;
+padding:8px;
+border:1px solid rgba(244,241,235,.24);
+background:transparent;
+cursor:pointer
+}
+
+#burger span{display:block;width:100%;height:1px;background:#f4f1eb}
+
+
+.back{
+font-family:'Oswald',sans-serif;
+font-size:9px;
+letter-spacing:.18em;
+text-transform:uppercase;
+color:#d5a77f;
+text-decoration:none;
+border-bottom:1px solid rgba(213,167,127,.62);
+padding:8px 0;
+transition:.35s
+}
+
+
+.back:hover{
+border-color:#d5a77f;
+color:#fff
+}
+
+
+
+.hero{
+text-align:center;
+padding:80px 40px 60px;
+position:relative
+}
+
+
+.hero:before{
+content:'';
+position:absolute;
+top:0;
+left:50%;
+transform:translateX(-50%);
+width:1px;
+height:60px;
+background:linear-gradient(to bottom,transparent,#c9a84c)
+}
+
+
+.hl{
+font-size:10px;
+letter-spacing:.35em;
+text-transform:uppercase;
+color:#c9a84c;
+margin-bottom:20px;
+margin-top:16px
+}
+
+
+.hero h1{
+font-family:'Cormorant Garamond',serif;
+font-size:clamp(32px,5vw,56px);
+font-weight:300;
+color:#fff;
+letter-spacing:.06em;
+line-height:1.2;
+margin-bottom:20px
+}
+
+
+.hero p{
+font-size:13px;
+color:#888;
+letter-spacing:.08em;
+line-height:1.9;
+max-width:600px;
+margin:auto
+}
+
+
+
+.gl{
+height:1px;
+background:linear-gradient(90deg,transparent,#c9a84c,#f5e6a3,#c9a84c,transparent);
+margin:0 40px;
+opacity:.5
+}
+
+
+
+.wrap{
+max-width:900px;
+margin:auto;
+padding:60px 40px 80px
+}
+
+
+
+.box{
+background:#0f0f0f;
+border:1px solid #1a1a1a;
+border-left:2px solid #c9a84c;
+padding:32px;
+margin-bottom:24px
+}
+
+
+.title{
+font-size:9px;
+letter-spacing:.3em;
+text-transform:uppercase;
+color:#c9a84c;
+margin-bottom:25px
+}
+
+
+
+.input{
+width:100%;
+background:#111;
+border:1px solid #222;
+color:#fff;
+padding:18px;
+font-family:'Montserrat';
+font-size:13px;
+margin-bottom:15px
+}
+
+
+.input:focus{
+outline:none;
+border-color:#c9a84c
+}
+
+
+
+.btn{
+background:#c9a84c;
+color:#0a0a0a;
+border:none;
+font-family:'Montserrat';
+font-size:10px;
+letter-spacing:.25em;
+text-transform:uppercase;
+padding:18px 40px;
+cursor:pointer;
+transition:.35s
+}
+
+
+.btn:hover{
+box-shadow:0 0 30px rgba(201,168,76,.4)
+}
+
+
+
+.upload{
+border:1px dashed #333;
+padding:35px;
+text-align:center;
+color:#777;
+cursor:pointer
+}
+
+
+.upload:hover{
+border-color:#c9a84c
+}
+
+
+#preview{
+max-width:100%;
+margin-top:25px;
+display:none
+}
+
+
+
+.card{
+background:#0f0f0f;
+border:1px solid #1a1a1a;
+border-left:2px solid #c9a84c;
+padding:32px;
+margin-bottom:20px;
+display:none
+}
+
+
+.card h2{
+font-family:'Cormorant Garamond',serif;
+font-size:30px;
+font-weight:300;
+margin-bottom:20px;
+color:white
+}
+
+
+.row{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px
+}
+
+
+.item span:first-child{
+display:block;
+font-size:9px;
+letter-spacing:.2em;
+color:#555;
+text-transform:uppercase;
+margin-bottom:5px
+}
+
+
+.item span:last-child{
+font-size:14px
+}
+
+
+@media(max-width:650px){
+
+nav{
+padding:16px 20px
+}
+
+.wrap{
+padding:40px 20px
+}
+
+.brand-wrap{gap:8px;flex-direction:column;align-items:flex-start}
+.brand-sub{font-size:8px}
+
+.footer-grid{grid-template-columns:1fr;gap:30px;padding-top:40px}
+.footer-bottom{flex-direction:column;gap:8px;line-height:1.6}
+
+.row{
+grid-template-columns:1fr
+}
+
+}
+
+
+footer{
+background:linear-gradient(180deg,#101515 0%,#070909 100%);
+border-top:1px solid rgba(244,241,235,.2);
+padding:0 clamp(20px,5vw,64px);
+position:relative
+}
+
+footer:before{
+content:'';
+display:block;
+height:2px;
+margin:0 -64px;
+background:linear-gradient(90deg,transparent,#b77748 24%,#f4f1eb 50%,#b77748 76%,transparent);
+opacity:.72
+}
+
+.footer-grid{
+max-width:1120px;
+margin:auto;
+padding:clamp(40px,5vw,64px) 0 36px;
+display:grid;
+grid-template-columns:2fr 1fr 1fr;
+gap:clamp(32px,6vw,80px);
+text-align:left
+}
+
+.footer-grid p{margin-top:12px;color:rgba(244,241,235,.68);font-size:12px;letter-spacing:.04em}
+.footer-heading{font-family:'Oswald',sans-serif!important;color:#d5a77f!important;font-size:10px!important;letter-spacing:.18em!important;text-transform:uppercase}
+.footer-links{list-style:none;margin-top:12px}
+.footer-links li{margin-bottom:9px}
+.footer-links a,.footer-links span{color:rgba(244,241,235,.68);font-size:12px;letter-spacing:.02em;text-decoration:none;transition:color .25s}
+.footer-links a:hover{color:#f4f1eb}
+.footer-bottom{max-width:1120px;margin:auto;border-top:1px solid rgba(244,241,235,.14);padding:18px 0;color:rgba(244,241,235,.46);display:flex;justify-content:space-between;gap:20px;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+header{display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.9);border-bottom:1px solid rgba(198,203,209,.22);padding:18px clamp(20px,5vw,64px);position:sticky;top:0;z-index:100;backdrop-filter:blur(22px)}
+.brand{display:inline-flex;align-items:center;gap:.38em;font-family:'DM Sans',sans-serif;font-size:1.08rem;letter-spacing:.08em;color:#c6cbd1;text-decoration:none;text-transform:uppercase}
+.brand:before{content:'';display:block;order:-1;width:1.45rem;height:1.6rem;flex:0 0 1.45rem;background:url('https://apexclusive.nl/apexclusive-schild-randloos.svg') center/contain no-repeat;opacity:.92}
+.brand-apex{letter-spacing:.15em;color:#c6cbd1}.brand-excl{letter-spacing:.13em;color:rgba(215,218,220,.76)}.brand-sep{display:none}
+.back-btn{display:inline-flex;align-items:center;gap:.55rem;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(236,236,236,.72);text-decoration:none;border:1px solid rgba(198,203,209,.2);padding:10px 14px;transition:.25s}.back-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5}.back-btn:hover{border-color:#c6cbd1;color:#fff}
+
+
+</style>
+
+<link rel="stylesheet" href="https://apexclusive.nl/apex-tool-chrome.css">
+</head>
+
+<body>
+
+
+<header>
+<a href="https://apexclusive.nl" class="brand" target="_blank" rel="noreferrer">
+<span class="brand-apex">APEX</span>
+<span class="brand-sep" aria-hidden="true"></span>
+<span class="brand-excl">EXCLUSIVE</span>
+</a>
+<a href="https://apexclusive.nl/" class="back-btn" target="_blank" rel="noreferrer">
+<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+Terug naar website
+</a>
+</header>
+
+
+<div class="hero">
+
+<div class="hl">
+Vehicle Intelligence
+</div>
+
+<h1>
+Advertentie Analyse
+</h1>
+
+<p>
+Upload een Marktplaats, mobile.de of andere voertuigadvertentie.
+APEXclusive analyseert prijs, specificaties, risico's en importpotentieel.
+</p>
+
+</div>
+
+
+<div class="gl"></div>
+
+
+<div class="wrap">
+
+
+<div class="box">
+
+<div class="title">
+Advertentie invoeren
+</div>
+
+
+<label class="sr-only" for="url">Advertentie URL</label>
+<input class="input" id="url" placeholder="Plak advertentie URL (Marktplaats / mobile.de)...">
+
+
+<div class="upload" onclick="document.getElementById('foto').click()">
+
+Upload advertentiefoto
+
+<label class="sr-only" for="foto">Advertentiefoto</label>
+<input id="foto" type="file" accept="image/*" hidden>
+
+<img id="preview" alt="Voorbeeld van de geanalyseerde advertentie">
+
+</div>
+
+
+<br>
+
+
+<button class="btn" onclick="analyse()">
+Start analyse
+</button>
+
+
+</div>
+
+<div class="card" id="result">
+
+<h2 id="vehicleTitle">
+Voertuig Analyse
+</h2>
+
+
+<div class="row">
+
+
+<div class="item">
+<span>Merk / Model</span>
+<span id="merkModel">—</span>
+</div>
+
+
+<div class="item">
+<span>Bouwjaar</span>
+<span id="bouwjaar">—</span>
+</div>
+
+
+<div class="item">
+<span>Kilometerstand</span>
+<span id="km">—</span>
+</div>
+
+
+<div class="item">
+<span>Brandstof</span>
+<span id="brandstof">—</span>
+</div>
+
+
+<div class="item">
+<span>Vermogen</span>
+<span id="vermogen">—</span>
+</div>
+
+
+<div class="item">
+<span>Transmissie</span>
+<span id="transmissie">—</span>
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="card" id="priceCard">
+
+<h2>
+Prijsanalyse
+</h2>
+
+
+<div class="row">
+
+
+<div class="item">
+<span>Vraagprijs</span>
+<span id="prijs">—</span>
+</div>
+
+
+<div class="item">
+<span>Marktpositie</span>
+<span id="markt">—</span>
+</div>
+
+
+<div class="item">
+<span>Prijsadvies</span>
+<span id="prijsadvies">—</span>
+</div>
+
+
+<div class="item">
+<span>Onderhandelingsruimte</span>
+<span id="onderhandeling">—</span>
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="card" id="importCard">
+
+<h2>
+Import Analyse
+</h2>
+
+
+<div class="row">
+
+
+<div class="item">
+<span>Land</span>
+<span id="land">—</span>
+</div>
+
+
+<div class="item">
+<span>BPM verwachting</span>
+<span id="bpm">—</span>
+</div>
+
+
+<div class="item">
+<span>Transport indicatie</span>
+<span id="transport">—</span>
+</div>
+
+
+<div class="item">
+<span>Import potentieel</span>
+<span id="potentieel">—</span>
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="card" id="riskCard">
+
+<h2>
+Risico Analyse
+</h2>
+
+
+<div class="row">
+
+
+<div class="item">
+<span>Technische risico's</span>
+<span id="techniek">—</span>
+</div>
+
+
+<div class="item">
+<span>Historie controle</span>
+<span id="historie">—</span>
+</div>
+
+
+<div class="item">
+<span>Prijsrisico</span>
+<span id="risicoPrijs">—</span>
+</div>
+
+
+<div class="item">
+<span>Eindoordeel</span>
+<span id="eindoordeel">—</span>
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="box">
+
+
+<div class="title">
+APEXclusive Expert Rapport
+</div>
+
+
+<p id="rapport" style="
+font-size:13px;
+color:#888;
+line-height:2;
+letter-spacing:.05em;
+">
+
+Upload een advertentie om een volledige voertuigbeoordeling te ontvangen.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+<footer>
+<div class="fg">
+<div>
+<a href="https://apexclusive.nl" class="brand"><span class="brand-apex">APEX</span><span class="brand-sep" aria-hidden="true"></span><span class="brand-excl">EXCLUSIVE</span></a>
+<p>Onafhankelijke begeleiding bij aankoop en import van exclusieve auto's.<br>Maastricht · Nederland</p>
+</div>
+<div>
+<p class="fh">Juridisch</p>
+<ul class="fl">
+<li><a href="https://apexclusive.nl/algemenevoorwaarden.html">Algemene voorwaarden</a></li>
+</ul>
+</div>
+<div>
+<p class="fh">Contact</p>
+<ul class="fl">
+<li><a href="mailto:info@apexclusive.nl">E-mail: info@apexclusive.nl</a></li>
+<li><a href="https://wa.me/31624735939">WhatsApp: +31 6 24 73 59 39</a></li>
+<li><a href="https://apexclusive.nl">Maastricht, Nederland</a></li>
+</ul>
+</div>
+</div>
+<div class="fb footer-bottom">
+<span>&copy; <span id="yr">2026</span> APEXclusive &middot; Automotive Advisory &middot; Maastricht</span>
+<span>Driven by Excellence.<span class="tric"></span>Gran turismo, geregeld.</span>
+</div>
+<div class="site-credit">Website ontworpen en gebouwd door <a href="https://mpxstudio.nl" target="_blank" rel="noreferrer noopener">MPX Studio</a></div>
+</footer>
+
+<script>
+
+
+document.getElementById("foto").addEventListener(
+"change",
+function(e){
+
+
+let file=e.target.files[0];
+
+
+if(file){
+
+
+let reader=new FileReader();
+
+
+reader.onload=function(event){
+
+
+let img=document.getElementById("preview");
+
+img.src=event.target.result;
+
+img.style.display="block";
+
+
+}
+
+
+reader.readAsDataURL(file);
+
+
+}
+
+
+});
+
+
+
+
+
+async function analyse(){
+
+
+let url=document.getElementById("url").value;
+
+
+let result=document.getElementById("result");
+
+
+/*
+Basis analyse simulatie
+Hier kan later de AI API koppeling worden geplaatst
+*/
+
+
+let voertuig={
+
+merk:"Onbekend",
+
+model:"Analyse via advertentie",
+
+bouwjaar:"—",
+
+km:"—",
+
+brandstof:"—",
+
+vermogen:"—",
+
+transmissie:"—"
+
+};
+
+
+
+/*
+Advertentie URL herkenning
+*/
+
+
+let land="Nederland";
+
+
+if(url.includes("mobile.de")){
+
+land="Duitsland";
+
+}
+
+
+if(url.includes("autoscout24")){
+
+land="Europa";
+
+}
+
+
+
+
+
+document.getElementById("merkModel").innerHTML=
+voertuig.merk+" "+voertuig.model;
+
+
+document.getElementById("bouwjaar").innerHTML=
+voertuig.bouwjaar;
+
+
+document.getElementById("km").innerHTML=
+voertuig.km;
+
+
+document.getElementById("brandstof").innerHTML=
+voertuig.brandstof;
+
+
+document.getElementById("vermogen").innerHTML=
+voertuig.vermogen;
+
+
+document.getElementById("transmissie").innerHTML=
+voertuig.transmissie;
+
+
+
+
+
+document.getElementById("prijs").innerHTML=
+"Wordt uit advertentie gehaald";
+
+
+document.getElementById("markt").innerHTML=
+"Marktvergelijking";
+
+
+document.getElementById("prijsadvies").innerHTML=
+"AI waardebepaling";
+
+
+document.getElementById("onderhandeling").innerHTML=
+"Indicatie beschikbaar";
+
+
+
+
+
+document.getElementById("land").innerHTML=
+land;
+
+
+document.getElementById("bpm").innerHTML=
+"Berekening vereist";
+
+
+document.getElementById("transport").innerHTML=
+"Indicatie €500 - €1500";
+
+
+document.getElementById("potentieel").innerHTML=
+"Wordt beoordeeld";
+
+
+
+
+
+document.getElementById("techniek").innerHTML=
+"Controle vereist";
+
+
+document.getElementById("historie").innerHTML=
+"VIN controle aanbevolen";
+
+
+document.getElementById("risicoPrijs").innerHTML=
+"Wordt beoordeeld";
+
+
+document.getElementById("eindoordeel").innerHTML=
+"Analyse wordt gegenereerd";
+
+
+
+
+
+document.getElementById("rapport").innerHTML=
+
+"APEXclusive analyseert deze advertentie op voertuigwaarde, marktpositie, importmogelijkheden, technische aandachtspunten en mogelijke risico's. " +
+
+"Voor een volledige aankoopbeslissing adviseren wij altijd aanvullende controle van historie, onderhoud en voertuigdocumentatie.";
+
+
+
+document.querySelectorAll(".card").forEach(function(card){
+
+
+card.style.display="block";
+
+
+});
+
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>
