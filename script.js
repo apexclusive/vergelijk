@@ -320,7 +320,8 @@ function parseRdwYear(candidate) {
 async function fetchRdwByPlate(plate) {
   const key = normalizePlate(plate);
   if (!key) return null;
-  const proxyPorts = [5000, 5001];
+  // Only probe development proxies locally; production should use RDW directly.
+  const proxyPorts = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) ? [5000, 5001] : [];
   for (const port of proxyPorts) {
     const url = `http://127.0.0.1:${port}/rdw?kenteken=${encodeURIComponent(key)}`;
     try {
