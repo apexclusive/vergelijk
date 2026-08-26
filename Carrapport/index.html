@@ -432,7 +432,7 @@ Advertentie invoeren
 <input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" placeholder="Plak advertentie URL (Marktplaats / mobile.de)...">
 
 
-<label class="upload" for="foto">
+<label class="upload" for="foto" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('foto').click()}">
 
 Upload advertentiefoto
 
