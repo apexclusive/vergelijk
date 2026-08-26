@@ -507,7 +507,7 @@ Advertentie invoeren
 
 <form id="checkForm" novalidate>
 <label class="sr-only" for="url">Advertentie URL</label>
-<input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" maxlength="2048" aria-invalid="false" aria-describedby="inputHelp" placeholder="Plak advertentie-URL (Marktplaats / mobile.de)…">
+<input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" maxlength="2048" aria-invalid="false" aria-describedby="inputHelp formStatus" placeholder="Plak advertentie-URL (Marktplaats / mobile.de)…">
 <p class="field-help" id="inputHelp">Alleen de invoer wordt lokaal gecontroleerd; er wordt geen advertentie geopend of uitgelezen.</p>
 
 
@@ -516,7 +516,7 @@ Advertentie invoeren
 <span class="upload-text">Upload advertentiefoto</span>
 <span class="upload-meta" id="uploadHelp">JPG, PNG of WebP · maximaal 10 MB</span>
 
-<input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="uploadHelp" hidden>
+<input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="uploadHelp formStatus" hidden>
 
 <img id="preview" alt="Voorbeeld van lokaal geselecteerde advertentieafbeelding" decoding="async">
 

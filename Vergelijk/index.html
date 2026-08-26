@@ -28,15 +28,15 @@
   <a class="skip-link" href="#compare-app">Direct naar de vergelijker</a>
   <div id="progress"></div>
 
-  <button class="apex-bubble" type="button" onclick="apexToggle()" aria-label="Open chat">
+  <button class="apex-bubble" type="button" onclick="apexToggle()" aria-label="Open chat" aria-controls="apex-chat-win" aria-expanded="false">
     <span class="apex-bubble-dot"></span>Chat met ons
   </button>
 
-  <div class="apex-chat-win" id="apex-chat-win" aria-live="polite">
+  <div class="apex-chat-win" id="apex-chat-win" role="dialog" aria-modal="false" aria-labelledby="chat-title" aria-live="polite">
     <div class="chat-hdr">
       <div class="chat-hdr-av" aria-hidden="true">A</div>
       <div class="chat-hdr-info">
-        <div class="chat-hdr-name">APEX exclusive</div>
+        <div class="chat-hdr-name" id="chat-title">APEX exclusive</div>
         <div class="chat-hdr-sub">Private Vehicle Advisory</div>
         <div class="chat-online">AI-ondersteunde adviseur · stel uw vraag</div>
       </div>
@@ -117,7 +117,7 @@
                     </div>
                     <div class="plate-eu-country">NL</div>
                   </div>
-                  <input class="plate-input fi" id="vehicle1-plate" name="vehicle1Plate" type="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 1" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+                  <input class="plate-input fi" id="vehicle1-plate" name="vehicle1Plate" type="text" inputmode="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 1" aria-describedby="vehicle1-status" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
                   <span class="plate-hint" aria-hidden="true"></span>
                 </div>
               </div>
@@ -180,7 +180,7 @@
                     </div>
                     <div class="plate-eu-country">NL</div>
                   </div>
-                  <input class="plate-input fi" id="vehicle2-plate" name="vehicle2Plate" type="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 2" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+                  <input class="plate-input fi" id="vehicle2-plate" name="vehicle2Plate" type="text" inputmode="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 2" aria-describedby="vehicle2-status" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
                   <span class="plate-hint" aria-hidden="true"></span>
                 </div>
               </div>
@@ -218,12 +218,12 @@
           </section>
         </div>
 
-        <div class="compare-summary" id="compare-summary" hidden>
+        <div class="compare-summary" id="compare-summary" role="region" aria-live="polite" aria-labelledby="compare-summary-title" hidden>
           <p class="compare-note">Voer beide kentekens in en ontvang direct een indicatief kostenprofiel voor verzekering, belasting, afschrijving, brandstof en onderhoud.</p>
           <div class="compare-summary-head">
             <div>
               <span class="section-lbl">RESULTAAT</span>
-              <p class="section-copy">Resultaat vergelijking</p>
+              <h2 class="section-copy" id="compare-summary-title">Resultaat vergelijking</h2>
             </div>
             <div class="compare-winner" id="compare-winner"></div>
           </div>

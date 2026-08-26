@@ -1830,32 +1830,32 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
             </p>
           </div>
           <div class="fear-grid rv">
-            <div class="fi-item" onclick="fearToggle(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="fi-item" onclick="fearToggle(this)" role="button" tabindex="0" aria-labelledby="faq-question-1" aria-expanded="false" aria-controls="faq-answer-1">
               <div class="fi-header">
-                <div class="fi-question">&ldquo;Stel dat ik een auto koop met verborgen schade?&rdquo;</div>
+                <div class="fi-question" id="faq-question-1">&ldquo;Stel dat ik een auto koop met verborgen schade?&rdquo;</div>
                 <div class="fi-icon" aria-hidden="true"></div>
               </div>
-              <div class="fi-body"><div class="fi-inner">
+              <div class="fi-body" id="faq-answer-1" aria-hidden="true"><div class="fi-inner">
                 <div class="fi-divider"></div>
                 <p>Op verzoek regelen wij een onafhankelijke aankoopkeuring ter plaatse bij de verkoper. Zo krijgt u extra inzicht voordat u beslist; de uiteindelijke aankoopbeslissing blijft bij u.</p>
               </div></div>
             </div>
-            <div class="fi-item" onclick="fearToggle(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="fi-item" onclick="fearToggle(this)" role="button" tabindex="0" aria-labelledby="faq-question-2" aria-expanded="false" aria-controls="faq-answer-2">
               <div class="fi-header">
-                <div class="fi-question">&ldquo;Is de BPM niet veel duurder dan ik verwacht &mdash; en spreek ik de taal niet eens?&rdquo;</div>
+                <div class="fi-question" id="faq-question-2">&ldquo;Is de BPM niet veel duurder dan ik verwacht &mdash; en spreek ik de taal niet eens?&rdquo;</div>
                 <div class="fi-icon" aria-hidden="true"></div>
               </div>
-              <div class="fi-body"><div class="fi-inner">
+              <div class="fi-body" id="faq-answer-2" aria-hidden="true"><div class="fi-inner">
                 <div class="fi-divider"></div>
                 <p>Bereken het direct met onze BPM Calculator. Wij regelen de officiële taxatie via erkende partners &mdash; transparant, geen verrassingen. En voor communicatie, onderhandeling en lokale inspecties in Duitsland, Italië, België of Spanje: wij zijn uw verlengde arm.</p>
               </div></div>
             </div>
-            <div class="fi-item" onclick="fearToggle(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="fi-item" onclick="fearToggle(this)" role="button" tabindex="0" aria-labelledby="faq-question-3" aria-controls="faq-answer-3" aria-expanded="false">
               <div class="fi-header">
-                <div class="fi-question">&ldquo;Papieren en registratie zijn te ingewikkeld.&rdquo;</div>
+                <div class="fi-question" id="faq-question-3">&ldquo;Papieren en registratie zijn te ingewikkeld.&rdquo;</div>
                 <div class="fi-icon" aria-hidden="true"></div>
               </div>
-              <div class="fi-body"><div class="fi-inner">
+              <div class="fi-body" id="faq-answer-3" aria-hidden="true"><div class="fi-inner">
                 <div class="fi-divider"></div>
                 <p>RDW-keuring, kentekenregistratie en montage aan huis. U rijdt pas als alles klopt &mdash; wij regelen het volledig voor u, van import tot platen op de auto.</p>
               </div></div>
@@ -2095,10 +2095,14 @@ function fearToggle(el) {
   document.querySelectorAll('.fi-item.open').forEach(function(i){
     i.classList.remove('open');
     i.setAttribute('aria-expanded','false');
+    var answer = document.getElementById(i.getAttribute('aria-controls'));
+    if (answer) answer.setAttribute('aria-hidden','true');
   });
   if (!isOpen) {
     el.classList.add('open');
     el.setAttribute('aria-expanded','true');
+    var answer = document.getElementById(el.getAttribute('aria-controls'));
+    if (answer) answer.setAttribute('aria-hidden','false');
   }
 }
 document.querySelectorAll('.fi-item').forEach(function(item){
