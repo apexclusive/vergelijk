@@ -90,6 +90,8 @@ a{color:inherit;text-decoration:none}
 p,li,h1,h2,h3,h4{overflow-wrap:anywhere}
 button,input,textarea,select{font:inherit}
 *:focus-visible{outline:2px solid rgba(198,203,209,.86);outline-offset:2px}
+.skip-link{position:fixed;left:1rem;top:1rem;z-index:10001;transform:translateY(-180%);padding:.7rem 1rem;background:var(--pt);color:var(--ink);font:500 .78rem/1 var(--ss);letter-spacing:.04em;transition:transform .2s ease}
+.skip-link:focus{transform:none}
 a:focus-visible,.btn:focus-visible,.navlinks a:focus-visible,.tc:focus-visible,.fi-item:focus-visible,.proj:focus-visible,.brand:focus-visible{outline-color:var(--pt);outline-offset:4px;border-radius:6px}
 ::selection{background:var(--pt);color:var(--ink)}
 ::-webkit-scrollbar{width:4px}
@@ -1332,6 +1334,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
 <script src="header-scroll.js" defer></script>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Ga naar hoofdinhoud</a>
 
 <!-- SPLASH -->
 <div id="splash" role="presentation" aria-hidden="true">
@@ -1440,6 +1443,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
 </div>
 
 <!-- HERO -->
+<main id="main-content">
 <header class="hero initial-visible" id="top">
   <div class="hero-bg">
     <img
@@ -2033,6 +2037,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
 </section>
 
 <!-- FOOTER -->
+ </main>
 <footer>
   <div class="fg">
     <div>
