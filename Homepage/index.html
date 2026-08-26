@@ -1365,7 +1365,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
 <div id="progress"></div>
 
 <!-- CHAT BUBBLE -->
-<button class="apex-bubble" id="apex-chat-launcher" type="button" onclick="apexToggle()" aria-label="Open chat" aria-controls="apex-chat-win" aria-expanded="false">
+<button class="apex-bubble" id="apex-chat-launcher" type="button" onclick="apexToggle()" aria-label="Open chat met APEXclusive" aria-controls="apex-chat-win" aria-expanded="false">
   <span class="apex-bubble-dot"></span>Chat met ons
 </button>
 <a class="whatsapp-float" href="https://wa.me/31624735939?text=Goedendag%2C%20ik%20wil%20graag%20meer%20weten%20over%20aankoopbegeleiding%20of%20auto-import." target="_blank" rel="noreferrer noopener" aria-label="Open WhatsApp met APEXclusive" title="WhatsApp met APEXclusive">
@@ -1383,7 +1383,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
     </div>
     <button class="chat-x" type="button" onclick="apexToggle()" aria-label="Sluit chat">✕</button>
   </div>
-  <div id="apex-msgs" class="chat-msgs"></div>
+  <div id="apex-msgs" class="chat-msgs" aria-live="polite" aria-atomic="false"></div>
   <div id="apex-toast" class="chat-toast"></div>
   <div class="chat-contact-form" id="apex-contact-form">
     <input id="apex-contact-name"  class="chat-contact-input" type="text"  placeholder="Naam" aria-label="Naam" autocomplete="name" required>

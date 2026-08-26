@@ -429,25 +429,24 @@ Advertentie invoeren
 
 
 <label class="sr-only" for="url">Advertentie URL</label>
-<input class="input" id="url" placeholder="Plak advertentie URL (Marktplaats / mobile.de)...">
+<input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" placeholder="Plak advertentie URL (Marktplaats / mobile.de)...">
 
 
-<div class="upload" onclick="document.getElementById('foto').click()">
+<label class="upload" for="foto">
 
 Upload advertentiefoto
 
-<label class="sr-only" for="foto">Advertentiefoto</label>
 <input id="foto" type="file" accept="image/*" hidden>
 
 <img id="preview" alt="Voorbeeld van de geanalyseerde advertentie">
 
-</div>
+</label>
 
 
 <br>
 
 
-<button class="btn" onclick="analyse()">
+<button class="btn" type="button" onclick="analyse()" aria-controls="result priceCard importCard riskCard" aria-describedby="rapport">
 Start analyse
 </button>
 
@@ -642,7 +641,7 @@ APEXclusive Expert Rapport
 </div>
 
 
-<p id="rapport" style="
+<p id="rapport" aria-live="polite" style="
 font-size:13px;
 color:#888;
 line-height:2;
