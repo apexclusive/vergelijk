@@ -7,6 +7,7 @@
 <meta name="description" content="Droomauto uit Europa importeren zonder risico? APEXclusive begeleidt u van zoektocht tot sleuteloverdracht. Onafhankelijk, discreet, A tot Z geregeld.">
 <meta name="author" content="APEXclusive">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta property="og:title" content="APEXclusive | Private Vehicle Advisory">
 <meta property="og:site_name" content="APEXclusive">
 <meta property="og:description" content="Onafhankelijke begeleiding bij de aankoop en import van exclusieve auto's uit heel Europa.">
@@ -14,6 +15,7 @@
 <meta property="og:locale" content="nl_NL">
 <meta property="og:url" content="https://apexclusive.nl/">
 <link rel="canonical" href="https://apexclusive.nl/">
+<link rel="preload" as="image" href="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1200,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg" fetchpriority="high">
 <meta property="og:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1600,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
 <meta property="og:image:alt" content="Luxe auto-interieur voor APEXclusive automotive advisory">
 <meta name="twitter:card" content="summary_large_image">
@@ -351,6 +353,10 @@ nav::after{content:'';position:absolute;left:12%;right:12%;bottom:0;height:1px;b
 .no-js nav{flex-wrap:wrap;gap:.7rem 1rem;padding-bottom:1rem}
 .no-js .navlinks{display:flex;position:static;transform:none;order:2;width:100%;justify-content:center;flex-wrap:wrap;gap:.7rem 1rem}
 .no-js .navlinks a{font-size:.62rem}
+.no-js .rv{opacity:1;transform:none}
+.no-js .step p{max-height:none;opacity:1;margin:.4rem 0 0}
+.no-js .step-toggle,.no-js .proj-toggle{display:none}
+.no-js .fi-body,.no-js .proj-story{max-height:none}
 
 /* ══ HERO ══ */
 .hero{
@@ -1381,7 +1387,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
   </div>
 </div>
 
-<div id="progress"></div>
+<div id="progress" role="progressbar" aria-label="Leesvoortgang" aria-hidden="true"></div>
 
 <!-- CHAT BUBBLE -->
 <button class="apex-bubble" id="apex-chat-launcher" type="button" onclick="apexToggle()" aria-label="Open chat met APEXclusive" aria-controls="apex-chat-win" aria-expanded="false">
@@ -1835,7 +1841,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
                 <div class="fi-question" id="faq-question-1">&ldquo;Stel dat ik een auto koop met verborgen schade?&rdquo;</div>
                 <div class="fi-icon" aria-hidden="true"></div>
               </div>
-              <div class="fi-body" id="faq-answer-1" aria-hidden="true"><div class="fi-inner">
+              <div class="fi-body" id="faq-answer-1"><div class="fi-inner">
                 <div class="fi-divider"></div>
                 <p>Op verzoek regelen wij een onafhankelijke aankoopkeuring ter plaatse bij de verkoper. Zo krijgt u extra inzicht voordat u beslist; de uiteindelijke aankoopbeslissing blijft bij u.</p>
               </div></div>
@@ -1845,7 +1851,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
                 <div class="fi-question" id="faq-question-2">&ldquo;Is de BPM niet veel duurder dan ik verwacht &mdash; en spreek ik de taal niet eens?&rdquo;</div>
                 <div class="fi-icon" aria-hidden="true"></div>
               </div>
-              <div class="fi-body" id="faq-answer-2" aria-hidden="true"><div class="fi-inner">
+              <div class="fi-body" id="faq-answer-2"><div class="fi-inner">
                 <div class="fi-divider"></div>
                 <p>Bereken het direct met onze BPM Calculator. Wij regelen de officiële taxatie via erkende partners &mdash; transparant, geen verrassingen. En voor communicatie, onderhandeling en lokale inspecties in Duitsland, Italië, België of Spanje: wij zijn uw verlengde arm.</p>
               </div></div>
@@ -1855,7 +1861,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
                 <div class="fi-question" id="faq-question-3">&ldquo;Papieren en registratie zijn te ingewikkeld.&rdquo;</div>
                 <div class="fi-icon" aria-hidden="true"></div>
               </div>
-              <div class="fi-body" id="faq-answer-3" aria-hidden="true"><div class="fi-inner">
+              <div class="fi-body" id="faq-answer-3"><div class="fi-inner">
                 <div class="fi-divider"></div>
                 <p>RDW-keuring, kentekenregistratie en montage aan huis. U rijdt pas als alles klopt &mdash; wij regelen het volledig voor u, van import tot platen op de auto.</p>
               </div></div>
@@ -1918,7 +1924,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
     </div>
     <div class="p-grid">
 
-      <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">
+      <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false" aria-controls="project-story-1">
         <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786123838/WhatsApp_Image_2025-05-20_at_01.01.02_nh95ep.jpg" width="720" height="540" alt="Lamborghini Hurac&aacute;n LP610 Spyder" loading="lazy" decoding="async"></div>
         <div class="cap">
           <span class="tag">Persoonlijke import &middot; Zweden</span>
@@ -1926,7 +1932,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
           <p>610 pk &middot; V10 &middot; &Eacute;&eacute;n eigenaar &middot; Volledig PPF &middot; Titanium F1-uitlaat</p>
           <div class="proj-toggle"><span>Lees het verhaal</span><span class="proj-toggle-arrow">&#8595;</span></div>
         </div>
-        <div class="proj-story"><div class="proj-story-inner">
+        <div class="proj-story" id="project-story-1"><div class="proj-story-inner">
           <p>Deze Hurac&aacute;n LP610 Spyder had zijn leven begonnen in Zweden &mdash; &eacute;&eacute;n eigenaar, perfecte onderhoudshistorie en voorzien van een volledig PPF-folie en een titanium F1-uitlaat. Na de nodige research stond hij te koop bij een priv&eacute;verkoper in Noord-Duitsland. Ter plaatse persoonlijk beoordeeld, onderhandeld en aangeschaft.</p>
           <div class="story-meta">
             <span class="story-tag">Import uit Noord-Duitsland</span>
@@ -1937,7 +1943,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
         </div></div>
       </article>
 
-      <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">
+      <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false" aria-controls="project-story-2">
         <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786111940/987D691B-FFBF-4137-9766-15DEF62F5CD4_1_201_a_k1eyvp.jpg" width="720" height="540" alt="Lamborghini Urus" loading="lazy" decoding="async"></div>
         <div class="cap">
           <span class="tag">Persoonlijke import &middot; Luxemburg</span>
@@ -1945,7 +1951,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
           <p>650 pk &middot; V8 Twin-Turbo &middot; Eerste eigenaar &middot; Garantie t/m 10-05-2027</p>
           <div class="proj-toggle"><span>Lees het verhaal</span><span class="proj-toggle-arrow">&#8595;</span></div>
         </div>
-        <div class="proj-story"><div class="proj-story-inner">
+        <div class="proj-story" id="project-story-2"><div class="proj-story-inner">
           <p>Deze Urus werd aangekocht bij een zeer exclusieve Lamborghini-dealer in Luxemburg. Het voertuig werd per gesloten transport naar Nederland gebracht. Ter plaatse, aan huis, vonden de BPM-taxatie en de RDW-keuring plaats. Een volledig zorgeloos traject &mdash; precies zoals het hoort.</p>
           <div class="story-meta">
             <span class="story-tag">Luxemburgse premium dealer</span>
@@ -1956,7 +1962,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
         </div></div>
       </article>
 
-      <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">
+      <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false" aria-controls="project-story-3">
         <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786112182/8112FE63-03BD-4C6D-9A40-1217FCD5910F_1_201_a_vbazdb.jpg" width="720" height="540" alt="Audi RS6 Avant C8" loading="lazy" decoding="async"></div>
         <div class="cap">
           <span class="tag">Aankoopbegeleiding &middot; Duitsland</span>
@@ -1964,7 +1970,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
           <p>600 pk &middot; V8 TFSI &middot; &Eacute;&eacute;n eigenaar &middot; Audi Approved &middot; 12 maanden garantie</p>
           <div class="proj-toggle"><span>Lees het verhaal</span><span class="proj-toggle-arrow">&#8595;</span></div>
         </div>
-        <div class="proj-story"><div class="proj-story-inner">
+        <div class="proj-story" id="project-story-3"><div class="proj-story-inner">
           <p>Een zeldzame vondst: deze RS6 C8 was eigendom van een fysiotherapeut die iedere drie jaar via een leasecontract een nieuwe RS6 ontving. &Eacute;&eacute;n eigenaar, perfect onderhouden, weinig kilometers &mdash; geleverd met 12 maanden Audi-garantie via het Audi Approved-programma.</p>
           <div class="story-meta">
             <span class="story-tag">1 eigenaar &middot; Fysiotherapeut</span>
@@ -2106,6 +2112,8 @@ function fearToggle(el) {
   }
 }
 document.querySelectorAll('.fi-item').forEach(function(item){
+  var answer=document.getElementById(item.getAttribute('aria-controls'));
+  if(answer) answer.setAttribute('aria-hidden','true');
   item.addEventListener('keydown', function(e){
     if (e.key==='Enter'||e.key===' '){ e.preventDefault(); fearToggle(item); }
   });
@@ -2117,12 +2125,20 @@ function projToggle(el) {
   document.querySelectorAll('.proj.open').forEach(function(p){
     p.classList.remove('open');
     p.setAttribute('aria-expanded','false');
+    var story=document.getElementById(p.getAttribute('aria-controls'));
+    if(story) story.setAttribute('aria-hidden','true');
   });
   if (!isOpen) {
     el.classList.add('open');
     el.setAttribute('aria-expanded','true');
+    var story=document.getElementById(el.getAttribute('aria-controls'));
+    if(story) story.setAttribute('aria-hidden','false');
   }
 }
+document.querySelectorAll('.proj').forEach(function(project){
+  var story=document.getElementById(project.getAttribute('aria-controls'));
+  if(story) story.setAttribute('aria-hidden','true');
+});
 function projKeydown(event,el) {
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault();
@@ -2151,7 +2167,7 @@ var wordsInited = false;
 function initQuoteWords() {
   if (wordsInited) return;
   wordsInited = true;
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var bq = document.getElementById('bq');
   if (!bq) return;
   if (reduced) {
@@ -2386,7 +2402,7 @@ window.addEventListener('scroll',function(){
   var h=document.body.scrollHeight-innerHeight;
   document.getElementById('progress').style.transform='scaleX('+(h>0?y/h:0)+')';
 
-  var secs=['tools','werkwijze','over','projecten','contact'];
+  var secs=['aanbod','tools','werkwijze','over','projecten','contact'];
   var active='';
   secs.forEach(function(id){
     var el=document.getElementById(id);
@@ -2471,27 +2487,37 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ══ REVEAL ON SCROLL ══ */
-var rvObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(entry){
-    if(entry.isIntersecting){
-      entry.target.classList.add('in');
-      var h2=entry.target.querySelector('h2');
-      if(h2) h2.classList.add('in');
-    }
-  });
-},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.rv,.step').forEach(function(el){ rvObs.observe(el); });
+function revealElement(el){
+  el.classList.add('in');
+  var h2=el.querySelector('h2');
+  if(h2) h2.classList.add('in');
+}
+if('IntersectionObserver' in window){
+  var rvObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting) revealElement(entry.target);
+    });
+  },{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv,.step').forEach(function(el){ rvObs.observe(el); });
+}else{
+  document.querySelectorAll('.rv,.step').forEach(revealElement);
+}
 
 /* ══ EYEBROW OBSERVER ══ */
-var eyObs=new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting) e.target.classList.add('tri-in');
-  });
-},{threshold:.5});
-document.querySelectorAll('.ey').forEach(function(el){ eyObs.observe(el); });
+if('IntersectionObserver' in window){
+  var eyObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting) e.target.classList.add('tri-in');
+    });
+  },{threshold:.5});
+  document.querySelectorAll('.ey').forEach(function(el){ eyObs.observe(el); });
+}else{
+  document.querySelectorAll('.ey').forEach(function(el){ el.classList.add('tri-in'); });
+}
 
 /* ══ CHAT ENTER KEY ══ */
-document.getElementById('apex-inp').addEventListener('keydown',function(e){
+var chatInput=document.getElementById('apex-inp');
+if(chatInput) chatInput.addEventListener('keydown',function(e){
   if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); apexSend(); }
 });
 
