@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://waarde.apexclusive.nl/sitemap.xml

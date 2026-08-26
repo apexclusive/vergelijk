@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://advertentie.apexclusive.nl/sitemap.xml
