@@ -249,6 +249,7 @@ color:#fff;
 padding:18px;
 font-family:'DM Sans',sans-serif;
 font-size:13px;
+border-radius:0;
 margin-bottom:15px
 }
 
@@ -256,6 +257,10 @@ margin-bottom:15px
 .input:focus{
 outline:none;
 border-color:var(--car-accent)
+}
+
+.input[aria-invalid="true"],.upload[aria-invalid="true"]{
+border-color:#e4a39b
 }
 
 
@@ -299,6 +304,12 @@ cursor:pointer
 border-color:var(--car-accent)
 }
 
+.upload:focus-within{
+border-color:var(--car-accent);
+outline:2px solid var(--car-accent-light);
+outline-offset:3px
+}
+
 
 #preview{
 max-width:100%;
@@ -338,7 +349,7 @@ gap:20px
 display:block;
 font-size:9px;
 letter-spacing:.2em;
-color:#555;
+color:rgba(244,241,235,.62);
 text-transform:uppercase;
 margin-bottom:5px
 }
@@ -369,6 +380,9 @@ footer:before{margin:0 -20px}
 .row{
 grid-template-columns:1fr
 }
+
+.input{font-size:16px}
+.btn{width:100%;min-height:48px}
 
 }
 
@@ -412,12 +426,14 @@ text-align:left
 .footer-links a:hover{color:#f4f1eb}
 .footer-bottom{max-width:1120px;margin:auto;border-top:1px solid rgba(244,241,235,.14);padding:18px 0;color:rgba(244,241,235,.46);display:flex;justify-content:space-between;gap:20px;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:20px;top:12px;z-index:200;padding:10px 14px;background:var(--car-accent-light);color:#0a0d0e;font-size:12px;font-weight:600;text-decoration:none;transform:translateY(-160%);transition:transform .2s}
+.skip-link:focus{transform:translateY(0);outline:3px solid #fff;outline-offset:2px}
 .form-status{min-height:1.5em;margin:14px 0 0;color:#d5a77f;font-size:12px;line-height:1.6}
 .form-status[data-state="error"]{color:#e4a39b}
 .field-help{margin:-4px 0 18px;color:rgba(244,241,235,.58);font-size:11px;line-height:1.6}
 .input:focus-visible,.upload:focus-visible,.btn:focus-visible,.footer-links a:focus-visible,.brand:focus-visible,.back-btn:focus-visible{outline:2px solid #f5e6a3;outline-offset:3px}
 .card:focus{outline:2px solid var(--car-accent-light);outline-offset:3px}
-.upload{display:block}
+.upload{display:block;min-height:112px}
 .upload-text{display:block}
 .upload-meta{display:block;margin-top:8px;color:rgba(244,241,235,.54);font-size:11px;line-height:1.5;overflow-wrap:anywhere}
 .tool-links{list-style:none;margin-top:12px;display:grid;gap:9px}
@@ -443,6 +459,7 @@ header{display:flex;align-items:center;justify-content:space-between;background:
 </head>
 
 <body>
+<a class="skip-link" href="#main-content">Ga naar hoofdinhoud</a>
 
 
 <header>
@@ -457,7 +474,7 @@ Terug naar website
 </a>
 </header>
 
-
+<main id="main-content">
 <div class="hero">
 
 <div class="hl">
@@ -469,8 +486,8 @@ Advertentiecontrole
 </h1>
 
 <p>
-Upload een Marktplaats, mobile.de of andere voertuigadvertentie.
-Controleer de invoer en bereid een onafhankelijke beoordeling voor.
+Controleer lokaal of een advertentie-URL of afbeelding geldig is.
+Er wordt niets geopend, opgehaald of geanalyseerd.
 </p>
 
 </div>
@@ -490,18 +507,18 @@ Advertentie invoeren
 
 <form id="checkForm" novalidate>
 <label class="sr-only" for="url">Advertentie URL</label>
-<input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" maxlength="2048" aria-invalid="false" aria-describedby="inputHelp" placeholder="Plak advertentie URL (Marktplaats / mobile.de)...">
+<input class="input" id="url" name="url" type="url" inputmode="url" autocomplete="url" spellcheck="false" maxlength="2048" aria-invalid="false" aria-describedby="inputHelp" placeholder="Plak advertentie-URL (Marktplaats / mobile.de)…">
 <p class="field-help" id="inputHelp">Alleen de invoer wordt lokaal gecontroleerd; er wordt geen advertentie geopend of uitgelezen.</p>
 
 
-<label class="upload" for="foto" role="button" tabindex="0" aria-describedby="uploadHelp">
+<label class="upload" for="foto" role="button" tabindex="0" aria-describedby="uploadHelp" aria-label="Upload advertentiefoto">
 
 <span class="upload-text">Upload advertentiefoto</span>
 <span class="upload-meta" id="uploadHelp">JPG, PNG of WebP · maximaal 10 MB</span>
 
-<input id="foto" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+<input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="uploadHelp" hidden>
 
-<img id="preview" alt="Geselecteerde advertentieafbeelding">
+<img id="preview" alt="Voorbeeld van lokaal geselecteerde advertentieafbeelding" decoding="async">
 
 </label>
 
@@ -521,7 +538,7 @@ Controleer invoer
 <div class="card" id="result" role="region" aria-labelledby="vehicleTitle" tabindex="-1">
 
 <h2 id="vehicleTitle">
-Invoer gecontroleerd
+Lokale controle voltooid
 </h2>
 
 
@@ -702,7 +719,7 @@ Risicogegevens
 
 
 <div class="title">
-APEXclusive Expert Rapport
+Toelichting op de controle
 </div>
 
 
@@ -713,7 +730,7 @@ line-height:2;
 letter-spacing:.05em;
 ">
 
-Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppelde analysebron worden geen voertuiggegevens getoond.
+Voer een URL of afbeelding in om de invoer lokaal te controleren. Deze controle valideert alleen de invoer; voertuiggegevens worden niet opgehaald.
 
 </p>
 
@@ -721,7 +738,7 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
 </div>
 
 
-</div>
+</main>
 
 
 
@@ -740,13 +757,13 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
 <div>
 <p class="footer-heading">Meer APEX-tools</p>
 <ul class="tool-links">
-<li><a href="https://kentekencheck.apexclusive.nl/" target="_blank" rel="noreferrer">Kentekencheck</a></li>
-<li><a href="https://bpm.apexclusive.nl/" target="_blank" rel="noreferrer">BPM Calculator</a></li>
-<li><a href="https://vergelijk.apexclusive.nl/" target="_blank" rel="noreferrer">Auto vergelijken</a></li>
-<li><a href="https://waarde.apexclusive.nl/" target="_blank" rel="noreferrer">Auto waarde</a></li>
-<li><a href="https://verzekering.apexclusive.nl/" target="_blank" rel="noreferrer">Verzekering vergelijken</a></li>
-<li><a href="https://lening.apexclusive.nl/" target="_blank" rel="noreferrer">Autolening vergelijken</a></li>
-<li><a href="https://advertentie.apexclusive.nl/" target="_blank" rel="noreferrer">Advertentietips</a></li>
+<li><a href="https://kentekencheck.apexclusive.nl/" target="_blank" rel="noopener noreferrer">Kentekencheck</a></li>
+<li><a href="https://bpm.apexclusive.nl/" target="_blank" rel="noopener noreferrer">BPM Calculator</a></li>
+<li><a href="https://vergelijk.apexclusive.nl/" target="_blank" rel="noopener noreferrer">Auto vergelijken</a></li>
+<li><a href="https://waarde.apexclusive.nl/" target="_blank" rel="noopener noreferrer">Auto waarde</a></li>
+<li><a href="https://verzekering.apexclusive.nl/" target="_blank" rel="noopener noreferrer">Verzekering vergelijken</a></li>
+<li><a href="https://lening.apexclusive.nl/" target="_blank" rel="noopener noreferrer">Autolening vergelijken</a></li>
+<li><a href="https://advertentie.apexclusive.nl/" target="_blank" rel="noopener noreferrer">Advertentietips</a></li>
 </ul>
 </div>
 <div>
@@ -794,6 +811,7 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
     preview.removeAttribute('src');
     preview.style.display = 'none';
     uploadMeta.textContent = 'JPG, PNG of WebP · maximaal 10 MB';
+    uploadLabel.setAttribute('aria-invalid', 'false');
   };
 
   const hideCards = () => {
@@ -810,6 +828,7 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
       fileInput.value = '';
       resetPreview();
       fileInput.setAttribute('aria-invalid', 'true');
+      uploadLabel.setAttribute('aria-invalid', 'true');
       setStatus('Kies een JPG-, PNG- of WebP-afbeelding van maximaal 10 MB.', 'error');
       return;
     }
@@ -819,6 +838,8 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Zonder gekoppe
     preview.src = previewUrl;
     preview.style.display = 'block';
     fileInput.setAttribute('aria-invalid', 'false');
+    uploadLabel.setAttribute('aria-invalid', 'false');
+    urlInput.setAttribute('aria-invalid', 'false');
     uploadMeta.textContent = `${file.name} lokaal geselecteerd`;
     setStatus('Afbeelding lokaal geselecteerd. Er is nog niets geüpload.');
   });
