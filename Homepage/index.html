@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -21,6 +21,7 @@
 <meta name="twitter:description" content="Onafhankelijke begeleiding bij aankoop en import van exclusieve auto's uit heel Europa.">
 <meta name="twitter:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1600,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
 <meta name="theme-color" content="#0d0f10">
+<meta name="color-scheme" content="dark">
 
 <script type="application/ld+json">
 {
@@ -46,7 +47,7 @@
 <link rel="dns-prefetch" href="https://images.unsplash.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@200;300;400;500;600&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@200;300;400;500;600&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@200;300;400;500;600&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <noscript><style>#splash{display:none!important}</style></noscript>
 <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%230a0a0a"/><text x="32" y="46" font-family="Georgia,serif" font-size="42" fill="%23c6cbd1" text-anchor="middle">A</text></svg>'>
@@ -344,6 +345,12 @@ nav::after{content:'';position:absolute;left:12%;right:12%;bottom:0;height:1px;b
 
 @media(max-width:900px){nav>.btn.sm:not(#burger){display:none}}
 @media(min-width:640px) and (max-width:900px){nav .btn.sm{display:inline-flex}}
+
+/* Keep primary navigation and content usable when JavaScript is unavailable. */
+.no-js #burger,.no-js #mm{display:none!important}
+.no-js nav{flex-wrap:wrap;gap:.7rem 1rem;padding-bottom:1rem}
+.no-js .navlinks{display:flex;position:static;transform:none;order:2;width:100%;justify-content:center;flex-wrap:wrap;gap:.7rem 1rem}
+.no-js .navlinks a{font-size:.62rem}
 
 /* ══ HERO ══ */
 .hero{
@@ -1294,6 +1301,8 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
 .lead-form input:user-invalid,.lead-form textarea:user-invalid{border-color:rgba(206,43,55,.85);box-shadow:0 0 0 2px rgba(206,43,55,.12)}
 .lead-form input:focus-visible,.lead-form textarea:focus-visible,.chat-inp:focus-visible,.chat-contact-input:focus-visible{outline:2px solid var(--pt);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){
+  #splash,.splash-inner,.splash-brand,.splash-sub,.splash-progress::before{animation:none!important;transition:none!important}
+  #splash{display:none!important}
   .apex-bubble-dot,.chat-cursor{animation:none}
   .apex-chat-win{animation:none!important}
 }
@@ -1337,6 +1346,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
   html{scroll-behavior:auto}
 }
 </style>
+<script>document.documentElement.classList.replace('no-js','js');</script>
 <script src="header-scroll.js" defer></script>
 </head>
 <body>
@@ -1454,6 +1464,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
   <div class="hero-bg">
     <img
       src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1200,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg"
+      width="1600" height="900"
       srcset="
         https://res.cloudinary.com/sfd8ohjz/image/upload/w_768,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg 768w,
         https://res.cloudinary.com/sfd8ohjz/image/upload/w_1200,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg 1200w,
@@ -1505,7 +1516,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
     </div>
     <a class="offer-visual rv" href="aanbod-urus.html" aria-label="Bekijk de Lamborghini Urus en alle foto's">
       <span class="offer-badge">Beschikbaar</span>
-      <img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_900,q_auto:best,f_auto/v1787155833/Lamborghini-Urus-Nero-Hel%C3%A8ne-11_2025-06-_lq2gne.jpg" alt="Lamborghini Urus te koop via APEXclusive" loading="lazy" decoding="async">
+      <img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_900,q_auto:best,f_auto/v1787155833/Lamborghini-Urus-Nero-Hel%C3%A8ne-11_2025-06-_lq2gne.jpg" width="900" height="675" alt="Lamborghini Urus te koop via APEXclusive" loading="lazy" decoding="async">
       <div class="offer-caption">
         <h3>Lamborghini Urus</h3>
         <p>Bekijk alle foto's &middot; &rarr;</p>
@@ -1759,7 +1770,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
         </div>
         <p style="margin-bottom:.8rem;color:#b8b8b8;font-size:clamp(.9rem,1.9vw,.95rem);line-height:1.7">Eén aanspreekpunt. Van selectie tot aflevering, met rust en controle.</p>
         <div class="sleutels-wrap">
-          <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=700&q=55&auto=format" alt="Sleuteloverdracht" loading="lazy" decoding="async">
+          <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=700&q=55&auto=format" width="700" height="525" alt="Sleuteloverdracht" loading="lazy" decoding="async">
           <div class="sleutels-quote">
             <p>&ldquo;Rust in het proces. Zekerheid bij elke beslissing.&rdquo;</p>
             <cite>&mdash; Martijn Puts &middot; Founder APEXclusive</cite>
@@ -1881,7 +1892,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
       </div>
       <div class="about-visual">
         <div class="about-photo-card">
-          <img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_400,q_auto:best,f_auto/v1786112744/8A26E528-46F4-471D-856C-7D4210809521_1_105_c_uguopr.jpg" alt="Martijn Puts, Founder" loading="lazy" decoding="async">
+          <img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_400,q_auto:best,f_auto/v1786112744/8A26E528-46F4-471D-856C-7D4210809521_1_105_c_uguopr.jpg" width="400" height="300" alt="Martijn Puts, Founder" loading="lazy" decoding="async">
           <div class="about-photo-bar" aria-hidden="true"></div>
         </div>
         <div class="about-meta">
@@ -1908,7 +1919,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
     <div class="p-grid">
 
       <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">
-        <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786123838/WhatsApp_Image_2025-05-20_at_01.01.02_nh95ep.jpg" alt="Lamborghini Hurac&aacute;n LP610 Spyder" loading="lazy" decoding="async"></div>
+        <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786123838/WhatsApp_Image_2025-05-20_at_01.01.02_nh95ep.jpg" width="720" height="540" alt="Lamborghini Hurac&aacute;n LP610 Spyder" loading="lazy" decoding="async"></div>
         <div class="cap">
           <span class="tag">Persoonlijke import &middot; Zweden</span>
           <h3>Lamborghini Hurac&aacute;n LP610 Spyder</h3>
@@ -1927,7 +1938,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
       </article>
 
       <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">
-        <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786111940/987D691B-FFBF-4137-9766-15DEF62F5CD4_1_201_a_k1eyvp.jpg" alt="Lamborghini Urus" loading="lazy" decoding="async"></div>
+        <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786111940/987D691B-FFBF-4137-9766-15DEF62F5CD4_1_201_a_k1eyvp.jpg" width="720" height="540" alt="Lamborghini Urus" loading="lazy" decoding="async"></div>
         <div class="cap">
           <span class="tag">Persoonlijke import &middot; Luxemburg</span>
           <h3>Lamborghini Urus</h3>
@@ -1946,7 +1957,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
       </article>
 
       <article class="proj rv" onclick="projToggle(this)" onkeydown="projKeydown(event,this)" role="button" tabindex="0" aria-expanded="false">
-        <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786112182/8112FE63-03BD-4C6D-9A40-1217FCD5910F_1_201_a_vbazdb.jpg" alt="Audi RS6 Avant C8" loading="lazy" decoding="async"></div>
+        <div class="imgwrap"><img src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786112182/8112FE63-03BD-4C6D-9A40-1217FCD5910F_1_201_a_vbazdb.jpg" width="720" height="540" alt="Audi RS6 Avant C8" loading="lazy" decoding="async"></div>
         <div class="cap">
           <span class="tag">Aankoopbegeleiding &middot; Duitsland</span>
           <h3>Audi RS6 Avant C8</h3>
@@ -2016,7 +2027,7 @@ footer{padding:0 var(--pd);border-top:1px solid rgba(198,203,209,.12);background
       <a class="btn btn-wa" href="https://wa.me/31624735939?text=Goedendag%2C%20ik%20wil%20mijn%20droomauto%20bespreken%20met%20APEXclusive." target="_blank" rel="noreferrer noopener">Start via WhatsApp</a>
       <a class="btn gh" href="mailto:info@apexclusive.nl">E-mail sturen</a>
     </div>
-    <form class="lead-form" id="lead-form" novalidate aria-describedby="lead-form-note">
+    <form class="lead-form" id="lead-form" action="mailto:info@apexclusive.nl" method="post" enctype="text/plain" aria-describedby="lead-form-note">
       <div class="lead-form-head">
         <p class="ey">Of laat uw gegevens achter</p>
         <p class="lead-form-note" id="lead-form-note">Vertel kort waar u naar zoekt. We gebruiken uw gegevens alleen om uw aanvraag te beantwoorden.</p>
