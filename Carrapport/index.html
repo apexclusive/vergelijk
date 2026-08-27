@@ -8,6 +8,7 @@
 <meta name="description" content="Controleer lokaal een voertuigadvertentie-URL of afbeelding. Deze APEXclusive invoercheck haalt geen voertuiggegevens op en geeft geen prijs-, import- of risicoanalyse.">
 <meta name="theme-color" content="#0a0d0e">
 <meta name="application-name" content="APEXclusive">
+<link rel="icon" href="https://apexclusive.nl/apexclusive-schild-randloos.svg" type="image/svg+xml">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://carrapport.apexclusive.nl/">
 <meta property="og:type" content="website">
@@ -274,6 +275,7 @@ font-size:10px;
 letter-spacing:.25em;
 text-transform:uppercase;
 padding:18px 40px;
+margin-top:12px;
 cursor:pointer;
 transition:.35s
 }
@@ -288,6 +290,10 @@ opacity:.55;
 cursor:wait;
 box-shadow:none
 }
+
+.apex-whatsapp{position:fixed;right:20px;bottom:20px;z-index:190;display:inline-flex;align-items:center;gap:8px;padding:12px 15px;background:#20b866;color:#fff;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;box-shadow:0 10px 28px rgba(0,0,0,.28);transition:transform .2s,background .2s}
+.apex-whatsapp:hover,.apex-whatsapp:focus-visible{background:#18a957;color:#fff;transform:translateY(-2px)}
+.apex-whatsapp-mark{font-size:11px}
 
 
 
@@ -521,9 +527,6 @@ Advertentie invoeren
 <img id="preview" alt="Voorbeeld van lokaal geselecteerde advertentieafbeelding" decoding="async">
 
 </label>
-
-
-<br>
 
 
 <button class="btn" id="analyseButton" type="submit" aria-controls="result" aria-describedby="rapport">
@@ -781,6 +784,8 @@ Voer een URL of afbeelding in om de invoer lokaal te controleren. Deze controle 
 </div>
 <div class="site-credit">Website ontworpen en gebouwd door <a href="https://mpxstudio.nl" target="_blank" rel="noreferrer noopener">MPX Studio</a></div>
 </footer>
+
+<a class="apex-whatsapp" href="https://wa.me/31624735939" target="_blank" rel="noreferrer noopener" aria-label="Open WhatsApp met APEXclusive"><span class="apex-whatsapp-mark" aria-hidden="true">WA</span> WhatsApp</a>
 
 <script>
 (() => {
