@@ -1,13 +1,15 @@
 /* ==========================================================================
-   APEXclusive — Premium Auto Vergelijker Stylesheet
-   Directly built on top of apexclusive-modern.css
+   APEXclusive — Premium Auto Vergelijker Master Stylesheet
+   Luxury Dark Automotive Aesthetic · 100% Synchronized with apexclusive.nl
    ========================================================================== */
 
-/* ── Global Enhancements & CSS Variables ─────────────────────────────── */
+/* ── Custom Theme Tokens ─────────────────────────────────────────────── */
 :root {
   --ink: #0b0e0e;
   --ink-card: #121717;
-  --ink-soft: #182020;
+  --ink-card-hover: #161e1e;
+  --ink-soft: #182222;
+  --ink-deep: #060808;
   --paper: #f1eee8;
   --paper-soft: #e5e0d8;
   --text: #f5f3ee;
@@ -15,20 +17,36 @@
   --muted-light: #c7cbc4;
   --copper: #ba7e53;
   --copper-light: #e2b28e;
-  --line: rgba(244, 241, 235, 0.16);
+  --copper-glow: rgba(186, 126, 83, 0.25);
+  --line: rgba(244, 241, 235, 0.14);
   --line-strong: rgba(223, 177, 141, 0.35);
+  --line-subtle: rgba(244, 241, 235, 0.08);
   --max: 1240px;
   --pad: clamp(1.25rem, 5vw, 4rem);
   --serif: 'Playfair Display', Georgia, serif;
   --sans: 'DM Sans', Arial, sans-serif;
   --display: 'Manrope', Arial, sans-serif;
 
+  /* Comparison highlight tokens */
+  --v1-color: #e2b28e;      /* Copper / Gold */
+  --v1-bg: rgba(226, 178, 142, 0.12);
+  --v2-color: #38bdf8;      /* Cyan / Ice Blue */
+  --v2-bg: rgba(56, 189, 248, 0.12);
+  --v3-color: #4ade80;      /* Emerald Green */
+  --v3-bg: rgba(74, 222, 128, 0.12);
+
   --apex-win: #22c55e;
   --apex-win-bg: rgba(34, 197, 94, 0.12);
   --apex-win-light: #4ade80;
 }
 
-/* Base Body Styles */
+/* Base resets & typography */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+  background-color: var(--ink);
+}
+
 body {
   background-color: var(--ink) !important;
   color: var(--text) !important;
@@ -38,6 +56,18 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle luxury grain background */
+body:before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
 }
 
 /* ── Fixed Floating Launchers (WhatsApp & AI Concierge) ──────────────── */
@@ -66,7 +96,7 @@ body {
 }
 
 .whatsapp-launcher:hover {
-  transform: translateY(-3px) scale(1.05) !important;
+  transform: translateY(-3px) scale(1.06) !important;
   background: #20ba59 !important;
 }
 
@@ -106,7 +136,7 @@ body {
 }
 
 .ai-launcher:hover {
-  transform: translateY(-3px) scale(1.05) !important;
+  transform: translateY(-3px) scale(1.06) !important;
   background: #ffffff !important;
 }
 
@@ -129,8 +159,8 @@ body {
   position: fixed;
   right: max(1.5rem, env(safe-area-inset-right));
   bottom: calc(max(1.5rem, env(safe-area-inset-bottom)) + 60px);
-  width: min(390px, calc(100vw - 3rem));
-  max-height: min(600px, calc(100vh - 150px));
+  width: min(400px, calc(100vw - 3rem));
+  max-height: min(620px, calc(100vh - 140px));
   background: #111717;
   border: 1px solid var(--line-strong);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
@@ -191,7 +221,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  max-height: 280px;
+  max-height: 300px;
 }
 
 .ai-message {
@@ -286,7 +316,7 @@ body {
   color: var(--copper-light);
 }
 
-/* ── Page Layout & Hero Section ──────────────────────────────────────── */
+/* ── Hero & Page Header Styling ──────────────────────────────────────── */
 .page-hero {
   padding-top: calc(84px + clamp(2.5rem, 6vw, 4.5rem));
   padding-bottom: clamp(2rem, 5vw, 3.5rem);
@@ -1115,8 +1145,8 @@ body {
 }
 
 .vehicle-logo-icon {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(244, 241, 235, 0.08);
   border: 1px solid var(--line);
@@ -1124,7 +1154,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font: 700 0.9rem/1 var(--display);
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.vehicle-logo-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
 }
 
 .vehicle-name-block h3 {
@@ -1361,6 +1398,71 @@ body {
   border-color: #20ba59;
 }
 
+/* ── 🕸️ 6-Axis Visual Radar / Spider Graphic ────────────────────────── */
+.radar-chart-box {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.radar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.radar-header h3 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--paper);
+}
+
+.radar-header p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+}
+
+.radar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.radar-svg {
+  max-width: 480px;
+  width: 100%;
+  height: auto;
+}
+
+.radar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.2rem;
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.radar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.radar-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
 /* ── ⚡ Drag Race Arena & Simulator ──────────────────────────────────── */
 .drag-race-arena {
   background: var(--ink-card);
@@ -1395,6 +1497,16 @@ body {
   display: flex;
   align-items: center;
   gap: 1.2rem;
+}
+
+.sound-toggle-btn {
+  background: rgba(244, 241, 235, 0.05);
+  border: 1px solid var(--line);
+  color: var(--muted-light);
+  font-size: 0.8rem;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  border-radius: 2px;
 }
 
 .traffic-lights {
@@ -1472,7 +1584,7 @@ body {
 
 .track-strip {
   position: relative;
-  height: 36px;
+  height: 38px;
   background: #090c0c;
   border: 1px dashed rgba(244, 241, 235, 0.15);
   overflow: hidden;
@@ -1492,11 +1604,11 @@ body {
 .car-runner {
   position: absolute;
   left: 5px;
-  width: 42px;
-  height: 24px;
+  width: 48px;
+  height: 26px;
   background: var(--copper);
   color: #fff;
-  font: 700 0.6rem/24px var(--display);
+  font: 700 0.6rem/26px var(--display);
   text-align: center;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
@@ -2424,7 +2536,14 @@ body {
   }
 }
 
+/* ── Professional Print Stylesheet ───────────────────────────────────── */
 @media print {
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 11pt;
+  }
+  body:before,
   .site-header,
   .site-footer,
   .whatsapp-launcher,
@@ -2435,11 +2554,47 @@ body {
   .action-share-bar,
   .sticky-bottom-bar,
   .quiz-game-box,
-  .community-appreciation-box {
+  .community-appreciation-box,
+  .fuel-customizer-panel,
+  .category-filter-bar,
+  .skip-link,
+  .site-progress,
+  .drag-controls-row {
     display: none !important;
   }
-  body {
-    background: #fff !important;
+  .page-hero {
+    padding: 1rem 0 2rem !important;
+    background: none !important;
+    border-bottom: 2px solid #000 !important;
+  }
+  .page-hero h1 {
     color: #000 !important;
+    font-size: 24pt !important;
+  }
+  .form-card,
+  .vehicle-hero-card,
+  .verdict-box,
+  .tco-projection-box,
+  .score-matrix-box,
+  .spec-category-block {
+    background: #ffffff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    color: #000 !important;
+    page-break-inside: avoid;
+    margin-bottom: 1.5rem !important;
+  }
+  .spec-table th {
+    color: #555 !important;
+    border-bottom: 1px solid #eee !important;
+  }
+  .spec-table td {
+    color: #000 !important;
+    border-bottom: 1px solid #eee !important;
+  }
+  .cost-amount-large,
+  .tco-total-figure,
+  .score-num-display {
+    color: #ba7e53 !important;
   }
 }

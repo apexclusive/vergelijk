@@ -1,17 +1,19 @@
 /**
  * APEXclusive — Premium Auto Vergelijker
- * Complete JavaScript Controller (Master Ultra Enhanced Edition)
+ * Master JavaScript Controller & Simulation Engine
  * 
  * Features:
- *  - 100% Matching Official APEXclusive Homepage Theme & Layout
+ *  - 100% Matching Official APEXclusive Homepage Theme & Design Tokens
  *  - 2 or 3 Vehicle Comparison (Driestrijd 3-Way Mode)
+ *  - 🎨 Vector SVG Brand Badges for all major luxury & performance marques
+ *  - 🕸️ 6-Axis Visual Radar / Spider Comparison Chart (Interactive SVG)
  *  - ✨ APEX Quick Highlights & Executive Briefing
- *  - 🏎️ APEX Auto Kenner Battle Quiz (Gamified Engagement)
- *  - ⚡ Interactive Drag Race & 0-100 Sprint Simulator
+ *  - 🏎️ APEX Auto Kenner Battle Quiz (Gamified with Confetti particles)
+ *  - ⚡ Drag Race Simulator with Web Audio API Synthesizer (Beeps & Finish Chime)
  *  - 🏆 APEX Battle Showdown: 6 Category Matchups
  *  - 🔮 10-Year TCO & Residual Value Slider
  *  - 🏖️ European Roadtrip & Vacation Fuel Cost Planner
- *  - 🎁 PDF Aankoopdossier Generator (Freemium 3-Report Counter)
+ *  - 🎁 PDF Aankoopdossier Generator (Freemium 3-Report Counter & Print View)
  *  - 🌿 Community Star Rating & Feedback Integration
  *  - 2026 MRB & Rest-BPM calculation
  *  - Zakelijke Bijtelling 2026 Module (Box 1 Netto)
@@ -24,6 +26,7 @@
 const appState = {
   hasThirdCar: false,
   vehicles: { 1: null, 2: null, 3: null },
+  soundEnabled: true,
   settings: {
     kmPerYear: 15000,
     province: 'noord-holland',
@@ -75,7 +78,102 @@ const ROADTRIP_DESTINATIONS = {
   barcelona: { name: 'Barcelona (Spanje)', distKm: 1550, tollEur: 115 }
 };
 
-// Comprehensive High-Fidelity Mock Database
+// ═══════════════════════════════════════════════════════════════════════════
+// BRAND VECTOR SVG REGISTRY
+// ═══════════════════════════════════════════════════════════════════════════
+
+const BRAND_SVGS = {
+  BMW: `<svg viewBox="0 0 30 30" fill="currentColor"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2"/><line x1="15" y1="2" x2="15" y2="28" stroke="currentColor" stroke-width="2"/><line x1="2" y1="15" x2="28" y2="15" stroke="currentColor" stroke-width="2"/></svg>`,
+  'MERCEDES-BENZ': `<svg viewBox="0 0 30 30" fill="currentColor"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 2v15l-11.5 7M15 17l11.5 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+  AUDI: `<svg viewBox="0 0 140 30" fill="currentColor"><circle cx="25" cy="15" r="12" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="50" cy="15" r="12" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="75" cy="15" r="12" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="100" cy="15" r="12" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>`,
+  PORSCHE: `<svg viewBox="0 0 120 30" fill="currentColor"><path d="M10 5h18c6 0 10 4 10 10s-4 10-10 10h-8v-6h8c2.5 0 4.5-1.8 4.5-4s-2-4-4.5-4H16v14h-6Zm38 0h18c6 0 10 4 10 10s-4 10-10 10H48Zm6 6v8h12c2.5 0 4.5-1.8 4.5-4s-2-4-4.5-4Zm30-6h18c6 0 10 4 10 10s-4 10-10 10H84Zm6 6v8h12c2.5 0 4.5-1.8 4.5-4s-2-4-4.5-4Z"/></svg>`,
+  LAMBORGHINI: `<svg viewBox="0 0 120 30" fill="currentColor"><path d="M60 2C44 2 30 7 30 13v4c0 6 14 11 30 11s30-5 30-11v-4C90 7 76 2 60 2Zm0 3c13 0 25 4 25 8 0 1-.5 2-1.5 3l-5-6h-3l5 7c-4 2-10 3-16 3h-8c-6 0-12-1-16-3l5-7h-3l-5 6c-1-1-1.5-2-1.5-3 0-4 12-8 25-8Zm-4 13h8v5c-1 0-3 .5-4 .5s-3-.5-4-.5Z"/></svg>`,
+  FERRARI: `<svg viewBox="0 0 100 30" fill="currentColor"><path d="M5 5h30v5H11v4h22v5H11v6h24v5H5Zm38 0h30v5H49v4h22v5H49v11h-6Z"/></svg>`,
+  TESLA: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5c2.8 0 5.4.7 7.7 1.9l.8-2C18 3.3 15.1 2.5 12 2.5s-6 .8-8.5 1.9l.8 2C6.6 5.2 9.2 4.5 12 4.5zm0 2.5c-2.4 0-4.6.5-6.5 1.4L6 10c1.7-.8 3.7-1.3 6-1.3s4.3.5 6 1.3l.5-1.6C16.6 7.5 14.4 7 12 7zm1 3.5h-2v11h2V10.5z"/></svg>`,
+  VOLVO: `<svg viewBox="0 0 30 30" fill="currentColor"><circle cx="15" cy="15" r="12" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 8l4-4m-4 0h4v4" fill="none" stroke="currentColor" stroke-width="2"/><text x="15" y="17" font-family="Arial,sans-serif" font-size="6" font-weight="bold" fill="currentColor" text-anchor="middle">VOLVO</text></svg>`,
+  VOLKSWAGEN: `<svg viewBox="0 0 30 30" fill="currentColor"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 10l3 10 3-10 3 10 3-10" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>`,
+  FORD: `<svg viewBox="0 0 30 30" fill="currentColor"><ellipse cx="15" cy="15" rx="14" ry="9" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="15" y="18" font-family="Georgia,serif" font-style="italic" font-weight="bold" font-size="9" fill="currentColor" text-anchor="middle">Ford</text></svg>`,
+  TOYOTA: `<svg viewBox="0 0 30 30" fill="currentColor"><ellipse cx="15" cy="15" rx="13" ry="9" fill="none" stroke="currentColor" stroke-width="1.8"/><ellipse cx="15" cy="11" rx="8" ry="4" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="15" y1="7" x2="15" y2="23" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  MCLAREN: `<svg viewBox="0 0 100 30" fill="currentColor"><path d="M50 3C30 3 15 10 15 15s10 12 35 12 35-7 35-12S70 3 50 3Zm0 4c15 0 28 5 28 8s-8 8-28 8-28-5-28-8 13-8 28-8Z"/></svg>`,
+  BENTLEY: `<svg viewBox="0 0 120 30" fill="currentColor"><ellipse cx="60" cy="15" rx="10" ry="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M50 15H8M70 15h42" stroke="currentColor" stroke-width="2"/><path d="M8 15l15-7M8 15l15 7M112 15l-15-7M112 15l-15 7" stroke="currentColor" stroke-width="1.5"/></svg>`
+};
+
+function getBrandLogoSvg(brandName) {
+  const b = String(brandName || '').toUpperCase().trim();
+  for (const [key, svg] of Object.entries(BRAND_SVGS)) {
+    if (b.includes(key) || key.includes(b)) return svg;
+  }
+  return `<span style="font-family:var(--serif); font-size:1.2rem; font-weight:700; color:var(--copper-light);">${b.slice(0, 1) || 'A'}</span>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WEB AUDIO SYNTHESIZER (Pure Client-Side Sound FX for Drag Race)
+// ═══════════════════════════════════════════════════════════════════════════
+
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playBeep(freq = 440, duration = 0.12, type = 'sine') {
+  if (!appState.soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch (e) {}
+}
+
+function playEngineStart() {
+  if (!appState.soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(80, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + 0.6);
+    osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 1.2);
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 1.2);
+  } catch (e) {}
+}
+
+function playFinishFanfare() {
+  if (!appState.soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+      setTimeout(() => playBeep(freq, 0.25, 'triangle'), idx * 100);
+    });
+  } catch (e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HIGH-FIDELITY MOCK VEHICLE DATABASE
+// ═══════════════════════════════════════════════════════════════════════════
+
 const MOCK_VEHICLES = {
   '25RKZ3': {
     kenteken: '25RKZ3',
@@ -745,7 +843,7 @@ function calculateApexScore(v, costs) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// RDW LIVE API & MOCK ENGINE
+// RDW LIVE API & DATA NORMALIZER
 // ═══════════════════════════════════════════════════════════════════════════
 
 async function fetchRdwVehicle(plateRaw) {
@@ -991,46 +1089,49 @@ function updateComparisonView() {
   // 5. ⚡ Render Interactive Drag Race Arena
   renderDragRaceArena(v1, v2);
 
-  // 6. 🏆 Render 6-Matchup Battle Showdown Matrix
+  // 6. 🕸️ Render 6-Axis Visual Radar / Spider Chart
+  renderRadarChart(v1, v2, v3, costs1, costs2, costs3, bpm1, bpm2, bpm3);
+
+  // 7. 🏆 Render 6-Matchup Battle Showdown Matrix
   renderBattleMatrix(v1, v2, costs1, costs2, bpm1, bpm2);
 
-  // 7. Render Import Opportunity Card
+  // 8. Render Import Opportunity Card
   renderImportOpportunity(v1, v2, costs1, costs2, bpm1, bpm2);
 
-  // 8. Render APEX 5-Pillar Score Matrix
+  // 9. Render APEX 5-Pillar Score Matrix
   renderScoreMatrix(v1, v2, score1, score2);
 
-  // 9. 🔮 Render 10-Year TCO & Residual Value Projection Simulator
+  // 10. 🔮 Render 10-Year TCO & Residual Value Projection Simulator
   render10YearProjection(v1, v2, costs1, costs2);
 
-  // 10. 🏖️ Render Roadtrip & Vacation Cost Planner
+  // 11. 🏖️ Render Roadtrip & Vacation Cost Planner
   renderRoadtripPlanner(v1, v2);
 
-  // 11. Render TCO Stacked Breakdown
+  // 12. Render TCO Stacked Breakdown
   renderTcoProjection(v1, v2, v3, costs1, costs2, costs3);
 
-  // 12. Render Cumulative Savings Timeline
+  // 13. Render Cumulative Savings Timeline
   renderSavingsTimeline(v1, v2, costs1, costs2);
 
-  // 13. Render Performance Visualizer
+  // 14. Render Performance Visualizer
   renderPerfVisualizer(v1, v2);
 
-  // 14. Render Risk Analysis & Buying Checklist
+  // 15. Render Risk Analysis & Buying Checklist
   renderRiskAnalysis(v1, v2, v3, bpm1, bpm2, bpm3);
 
-  // 15. Render Zakelijke Bijtelling Module
+  // 16. Render Zakelijke Bijtelling Module
   renderBijtellingModule(v1, v2);
 
-  // 16. Render Caravan Safety & Towing Module
+  // 17. Render Caravan Safety & Towing Module
   renderCaravanModule(v1, v2);
 
-  // 17. Render Milieuzones Module
+  // 18. Render Milieuzones Module
   renderMilieuzoneModule(v1, v2);
 
-  // 18. Render Proefrit & Aankoop Tips
+  // 19. Render Proefrit & Aankoop Tips
   renderProefritTips(v1, v2);
 
-  // 19. Render Full Detailed Matrix
+  // 20. Render Full Detailed Matrix
   renderDetailedMatrix(v1, v2, v3, costs1, costs2, costs3, bpm1, bpm2, bpm3);
 
   if (appState.settings.diffOnly) toggleDiffOnly(true);
@@ -1088,6 +1189,145 @@ function renderExecutiveHighlights(v1, v2, v3, c1, c2, c3) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// 🕸️ 6-AXIS VISUAL RADAR / SPIDER COMPARISON GRAPHIC
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderRadarChart(v1, v2, v3, c1, c2, c3, bpm1, bpm2, bpm3) {
+  const container = document.getElementById('radar-chart-container');
+  if (!container) return;
+
+  // 6 standard axes:
+  // 1: Vermogen (0-700 pk)
+  // 2: Sprint (14s down to 3s)
+  // 3: TCO Maandlasten Efficiency (€1500 down to €300)
+  // 4: Eco / Zuinigheid (CO2 / Brandstof)
+  // 5: Praktisch / Trekgewicht (0-2500 kg)
+  // 6: Waardevastheid / Rest-BPM (0-100%)
+
+  function calcMetrics(v, c, b) {
+    const p1 = Math.min(100, Math.max(15, (v.vermogenPk / 650) * 100));
+    const p2 = Math.min(100, Math.max(15, ((13 - Math.min(13, v.acceleratie)) / 9.5) * 100));
+    const p3 = Math.min(100, Math.max(15, 100 - ((c.totalMonthly - 300) / 1200) * 100));
+    const p4 = v.co2Uitstoot === 0 ? 98 : Math.min(100, Math.max(15, 100 - (v.co2Uitstoot / 300) * 100));
+    const p5 = Math.min(100, Math.max(15, (v.maximumTrekkenGeremd / 2400) * 100));
+    const p6 = Math.min(100, Math.max(15, b.restBpmPct));
+    return [p1, p2, p3, p4, p5, p6];
+  }
+
+  const m1 = calcMetrics(v1, c1, bpm1);
+  const m2 = calcMetrics(v2, c2, bpm2);
+  const m3 = v3 && c3 && bpm3 ? calcMetrics(v3, c3, bpm3) : null;
+
+  const labels = [
+    'Vermogen (PK)',
+    'Sprint (0-100)',
+    'TCO Voordeel',
+    'Zuinigheid / Eco',
+    'Trekkracht',
+    'Rest-BPM Waarde'
+  ];
+
+  const cx = 200, cy = 200, r = 130;
+  const numAxes = 6;
+
+  function getPoint(index, pct) {
+    const angle = (Math.PI * 2 / numAxes) * index - Math.PI / 2;
+    const dist = (pct / 100) * r;
+    return {
+      x: (cx + dist * Math.cos(angle)).toFixed(1),
+      y: (cy + dist * Math.sin(angle)).toFixed(1)
+    };
+  }
+
+  function getPolygonPoints(metrics) {
+    return metrics.map((val, idx) => {
+      const pt = getPoint(idx, val);
+      return `${pt.x},${pt.y}`;
+    }).join(' ');
+  }
+
+  // Generate background spiderweb rings
+  const gridRings = [0.25, 0.5, 0.75, 1.0].map(scale => {
+    const pts = [0,1,2,3,4,5].map(i => {
+      const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
+      return `${(cx + r * scale * Math.cos(angle)).toFixed(1)},${(cy + r * scale * Math.sin(angle)).toFixed(1)}`;
+    }).join(' ');
+    return `<polygon points="${pts}" fill="none" stroke="rgba(244,241,235,0.1)" stroke-width="1"/>`;
+  }).join('');
+
+  // Generate spokes & labels
+  const spokesAndLabels = [0,1,2,3,4,5].map(i => {
+    const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
+    const xEnd = cx + r * Math.cos(angle);
+    const yEnd = cy + r * Math.sin(angle);
+    const xLabel = cx + (r + 28) * Math.cos(angle);
+    const yLabel = cy + (r + 28) * Math.sin(angle);
+    return `
+      <line x1="${cx}" y1="${cy}" x2="${xEnd}" y2="${yEnd}" stroke="rgba(244,241,235,0.15)" stroke-width="1"/>
+      <text x="${xLabel}" y="${yLabel + 4}" text-anchor="middle" font-family="'Manrope', sans-serif" font-size="9" font-weight="600" fill="#abb0ad" letter-spacing="0.05em">
+        ${labels[i]}
+      </text>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="radar-header">
+      <div>
+        <h3>🕸️ 6-Pijler Radar Vergelijking</h3>
+        <p>Visuele balans tussen vermogen, sprinttijd, maandlasten, milieu, trekkracht en waardevastheid</p>
+      </div>
+    </div>
+
+    <div class="radar-container">
+      <svg class="radar-svg" viewBox="0 0 400 400">
+        ${gridRings}
+        ${spokesAndLabels}
+        
+        <!-- Polygon 1 (Copper / Gold) -->
+        <polygon points="${getPolygonPoints(m1)}" fill="rgba(226, 178, 142, 0.3)" stroke="#e2b28e" stroke-width="2.5"/>
+        ${m1.map((val, idx) => {
+          const pt = getPoint(idx, val);
+          return `<circle cx="${pt.x}" cy="${pt.y}" r="4" fill="#e2b28e" stroke="#121717" stroke-width="1.5"/>`;
+        }).join('')}
+
+        <!-- Polygon 2 (Cyan / Ice Blue) -->
+        <polygon points="${getPolygonPoints(m2)}" fill="rgba(56, 189, 248, 0.25)" stroke="#38bdf8" stroke-width="2.5"/>
+        ${m2.map((val, idx) => {
+          const pt = getPoint(idx, val);
+          return `<circle cx="${pt.x}" cy="${pt.y}" r="4" fill="#38bdf8" stroke="#121717" stroke-width="1.5"/>`;
+        }).join('')}
+
+        <!-- Polygon 3 (Optional Green) -->
+        ${m3 ? `
+          <polygon points="${getPolygonPoints(m3)}" fill="rgba(74, 222, 128, 0.25)" stroke="#4ade80" stroke-width="2.5"/>
+          ${m3.map((val, idx) => {
+            const pt = getPoint(idx, val);
+            return `<circle cx="${pt.x}" cy="${pt.y}" r="4" fill="#4ade80" stroke="#121717" stroke-width="1.5"/>`;
+          }).join('')}
+        ` : ''}
+      </svg>
+    </div>
+
+    <div class="radar-legend">
+      <div class="radar-legend-item">
+        <span class="radar-legend-dot" style="background:#e2b28e;"></span>
+        <strong style="color:var(--paper);">${v1.merk} ${v1.handelsbenaming}</strong>
+      </div>
+      <div class="radar-legend-item">
+        <span class="radar-legend-dot" style="background:#38bdf8;"></span>
+        <strong style="color:var(--paper);">${v2.merk} ${v2.handelsbenaming}</strong>
+      </div>
+      ${v3 ? `
+        <div class="radar-legend-item">
+          <span class="radar-legend-dot" style="background:#4ade80;"></span>
+          <strong style="color:var(--paper);">${v3.merk} ${v3.handelsbenaming}</strong>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // 🏎️ APEX AUTO KENNER BATTLE QUIZ (GAMIFIED ENGAGEMENT)
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -1096,7 +1336,7 @@ function setupQuizQuestions(v1, v2, c1, c2) {
   appState.quiz.currentQ = 0;
   appState.quiz.questions = [
     {
-      q: 'Welke auto is sneller op de 0–100 km/u sprint?',
+      q: 'Welke auto is het snelst op de 0–100 km/u sprint?',
       options: [
         { label: `${v1.merk} (${v1.acceleratie}s)`, isCorrect: v1.acceleratie <= v2.acceleratie },
         { label: `${v2.merk} (${v2.acceleratie}s)`, isCorrect: v2.acceleratie <= v1.acceleratie }
@@ -1126,6 +1366,14 @@ function setupQuizQuestions(v1, v2, c1, c2) {
         { label: `${v2.merk} (${v2.co2Uitstoot}g CO2)`, isCorrect: v2.co2Uitstoot <= v1.co2Uitstoot }
       ],
       explanation: `De ${v1.co2Uitstoot <= v2.co2Uitstoot ? v1.merk : v2.merk} stoot ${Math.min(v1.co2Uitstoot, v2.co2Uitstoot)}g/km uit en heeft energielabel ${v1.co2Uitstoot <= v2.co2Uitstoot ? v1.zuinigheidslabel : v2.zuinigheidslabel}.`
+    },
+    {
+      q: 'Welke auto heeft de hoogste topsnelheid volgens het RDW-kentekenregister?',
+      options: [
+        { label: `${v1.merk} (${v1.topsnelheid} km/u)`, isCorrect: v1.topsnelheid >= v2.topsnelheid },
+        { label: `${v2.merk} (${v2.topsnelheid} km/u)`, isCorrect: v2.topsnelheid >= v1.topsnelheid }
+      ],
+      explanation: `De ${v1.topsnelheid >= v2.topsnelheid ? v1.merk : v2.merk} bereikt een topsnelheid van ${Math.max(v1.topsnelheid, v2.topsnelheid)} km/u.`
     }
   ];
 
@@ -1139,11 +1387,14 @@ function renderQuizQuestion() {
   const qData = appState.quiz.questions[appState.quiz.currentQ];
   if (!qData) {
     // Quiz completed screen
+    const isPerfect = appState.quiz.score === appState.quiz.questions.length;
+    if (isPerfect) playFinishFanfare();
+
     container.innerHTML = `
       <div class="quiz-game-box" style="text-align:center;">
         <h3 style="font-family:var(--serif); font-size:1.6rem; color:var(--paper);">🏆 Gefeliciteerd! Quiz Voltooid</h3>
         <p style="color:var(--muted); margin:0.6rem 0 1.2rem;">
-          Uw score: <strong>${appState.quiz.score} van de ${appState.quiz.questions.length} juist</strong> — ${appState.quiz.score >= 3 ? 'Echte Auto Kenner! 🌟' : 'Blijf vergelijken en leren! 🚗'}
+          Uw score: <strong>${appState.quiz.score} van de ${appState.quiz.questions.length} juist</strong> — ${isPerfect ? 'U bent een rasechte Auto Kenner! 🌟' : 'Blijf vergelijken en ontdekken! 🚗'}
         </p>
         <button class="action-btn" type="button" onclick="setupQuizQuestions(appState.vehicles[1], appState.vehicles[2], calculateMonthlyCosts(appState.vehicles[1], appState.settings), calculateMonthlyCosts(appState.vehicles[2], appState.settings))">
           Speel Opnieuw ↺
@@ -1165,7 +1416,7 @@ function renderQuizQuestion() {
 
       <div class="quiz-body">
         <div class="quiz-question-card">
-          <span class="quiz-q-num">Vraag ${appState.quiz.currentQ + 1}</span>
+          <span class="quiz-q-num">Vraag ${appState.quiz.currentQ + 1} van ${appState.quiz.questions.length}</span>
           <div class="quiz-q-text">${qData.q}</div>
 
           <div class="quiz-options-grid">
@@ -1183,6 +1434,9 @@ function renderQuizQuestion() {
 function answerQuiz(optIndex, btnEl) {
   const qData = appState.quiz.questions[appState.quiz.currentQ];
   const isCorrect = qData.options[optIndex].isCorrect;
+
+  if (isCorrect) playBeep(880, 0.15, 'sine');
+  else playBeep(220, 0.25, 'sawtooth');
 
   const allBtns = btnEl.parentElement.querySelectorAll('.quiz-opt-btn');
   allBtns.forEach((b, idx) => {
@@ -1221,10 +1475,11 @@ function downloadPdfReport() {
 }
 
 function setStarRating(num) {
+  playBeep(660 + num * 60, 0.1);
   document.querySelectorAll('.star-btn').forEach((btn, idx) => {
     btn.classList.toggle('active', idx < num);
   });
-  showToast(`Bedankt voor uw ${num}-sterren waardering! ⭐`);
+  showToast(`Hartelijk dank voor uw ${num}-sterren waardering! ⭐`);
 }
 
 function sendToolFeedback() {
@@ -1233,6 +1488,7 @@ function sendToolFeedback() {
     showToast('Vul a.u.b. eerst uw suggestie of feedback in.');
     return;
   }
+  playBeep(587.33, 0.15);
   showToast('Hartelijk dank! Uw feedback is rechtstreeks verzonden naar Martijn.');
   document.getElementById('tool-feedback-text').value = '';
 }
@@ -1257,7 +1513,7 @@ function renderVehicleHero(side, v, costs, score, isWinner) {
 
   if (nameEl) nameEl.textContent = `${v.merk} ${v.handelsbenaming}`;
   if (subEl) subEl.textContent = `${formatPlate(v.kenteken)} · Bouwjaar ${v.bouwjaar} · ${v.brandstofOmschrijving}`;
-  if (logoEl) logoEl.textContent = v.merk.slice(0, 1);
+  if (logoEl) logoEl.innerHTML = getBrandLogoSvg(v.merk);
 
   if (avatarBox) {
     avatarBox.innerHTML = `<img src="${v.afbeeldingUrl}" alt="${v.merk} ${v.handelsbenaming}" loading="lazy">`;
@@ -1338,6 +1594,9 @@ function renderDragRaceArena(v1, v2) {
         <p>Real-time acceleratievergelijking op vermogen-gewichtsverhouding en sprintcurve</p>
       </div>
       <div class="drag-controls-row">
+        <button class="sound-toggle-btn" type="button" onclick="toggleSound()" title="Geluid aan/uit">
+          ${appState.soundEnabled ? '🔊 Geluid Aan' : '🔇 Geluid Uit'}
+        </button>
         <div class="traffic-lights" id="traffic-lights">
           <div class="light-dot red" id="light-red"></div>
           <div class="light-dot yellow" id="light-yellow"></div>
@@ -1377,6 +1636,13 @@ function renderDragRaceArena(v1, v2) {
   `;
 }
 
+function toggleSound() {
+  appState.soundEnabled = !appState.soundEnabled;
+  if (appState.soundEnabled) playBeep(523.25, 0.1);
+  const btn = document.querySelector('.sound-toggle-btn');
+  if (btn) btn.textContent = appState.soundEnabled ? '🔊 Geluid Aan' : '🔇 Geluid Uit';
+}
+
 function startDragRace() {
   const v1 = appState.vehicles[1];
   const v2 = appState.vehicles[2];
@@ -1402,17 +1668,21 @@ function startDragRace() {
   lightRed?.classList.add('active');
   lightYellow?.classList.remove('active');
   lightGreen?.classList.remove('active');
+  playBeep(440, 0.1);
 
   setTimeout(() => {
     lightRed?.classList.remove('active');
     lightYellow?.classList.add('active');
+    playBeep(440, 0.1);
   }, 600);
 
   setTimeout(() => {
     lightYellow?.classList.remove('active');
     lightGreen?.classList.add('active');
+    playBeep(880, 0.25);
+    playEngineStart();
 
-    const trackWidth = runner1?.parentElement?.clientWidth ? runner1.parentElement.clientWidth - 60 : 400;
+    const trackWidth = runner1?.parentElement?.clientWidth ? runner1.parentElement.clientWidth - 70 : 400;
     const acc1 = Number(v1.acceleratie) || 8.0;
     const acc2 = Number(v2.acceleratie) || 8.0;
 
@@ -1433,6 +1703,7 @@ function startDragRace() {
     const diffTime = Math.abs(acc1 - acc2).toFixed(1);
 
     setTimeout(() => {
+      playFinishFanfare();
       if (resultBox) {
         resultBox.classList.add('is-active');
         resultBox.innerHTML = `
@@ -1692,6 +1963,7 @@ function loadRandomDuel() {
   const pair = available[Math.floor(Math.random() * available.length)] || RANDOM_DUEL_PAIRS[0];
 
   loadPreset(pair[0], pair[1]);
+  playBeep(493.88, 0.15);
   showToast('🎲 Nieuw spannend duel geladen!');
 }
 
