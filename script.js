@@ -1072,6 +1072,15 @@ function updateComparisonView() {
   // 1. ✨ Render Executive Highlights Card
   renderExecutiveHighlights(v1, v2, v3, costs1, costs2, costs3);
 
+  // 1b. 👑 Render Color-Coded Win Crowns
+  renderWinCrowns(v1, v2, v3, costs1, costs2, costs3);
+
+  // 1c. 🏆 Render Martijn Puts Advisory & Opinion Box
+  renderMartijnAdvisory(v1, v2, v3, costs1, costs2, costs3, bpm1, bpm2, bpm3);
+
+  // 1d. ⚖️ Render Lifestyle & Keuzehulp Mini-Quiz
+  renderLifestyleMatchQuiz(v1, v2, v3, costs1, costs2, costs3);
+
   // 2. 🏎️ Render Auto Kenner Quiz Minigame
   setupQuizQuestions(v1, v2, costs1, costs2);
 
@@ -1128,6 +1137,9 @@ function updateComparisonView() {
   // 18. Render Milieuzones Module
   renderMilieuzoneModule(v1, v2);
 
+  // 18b. 🌍 Render Market Explorer & Import Opportunities
+  renderMarketExplorer(v1, v2, v3, bpm1, bpm2, bpm3);
+
   // 19. Render Proefrit & Aankoop Tips
   renderProefritTips(v1, v2);
 
@@ -1182,6 +1194,306 @@ function renderExecutiveHighlights(v1, v2, v3, c1, c2, c3) {
           <span>🔍 Aankoopadvies Martijn</span>
           <strong>Inspectie &amp; Historie Check</strong>
           <p>${v1.aantalEigenaren > 3 || v2.aantalEigenaren > 3 ? 'Aandachtspunt: meerdere eigenaren geregistreerd. Fysieke keuring aanbevolen.' : 'Beide voertuigen vertonen een logisch tellerstandoordeel en solide RDW-status.'}</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 👑 COLOR-CODED WIN CROWNS & HIGHLIGHTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderWinCrowns(v1, v2, v3, c1, c2, c3) {
+  const container = document.getElementById('win-crowns-container');
+  if (!container) return;
+
+  const cars = [
+    { v: v1, c: c1, id: 1 },
+    { v: v2, c: c2, id: 2 }
+  ];
+  if (v3 && c3) cars.push({ v: v3, c: c3, id: 3 });
+
+  // 1. Speed champion (highest vermogenPk, tie-break lowest acceleratie)
+  const speedChamp = [...cars].sort((a, b) => (b.v.vermogenPk || 0) - (a.v.vermogenPk || 0))[0];
+  const speedDiff = Math.abs(Math.round((v1.vermogenPk || 0) - (v2.vermogenPk || 0)));
+
+  // 2. Eco / Efficiency champion
+  function getEcoScore(car) {
+    if (car.v.brandstof === 'Elektriciteit') return 999;
+    if (car.v.verbruikGecombineerd > 0) return 100 / car.v.verbruikGecombineerd;
+    return 100;
+  }
+  const ecoChamp = [...cars].sort((a, b) => getEcoScore(b) - getEcoScore(a))[0];
+
+  // 3. TCO / Savings champion (lowest totalMonthly)
+  const budgetChamp = [...cars].sort((a, b) => a.c.totalMonthly - b.c.totalMonthly)[0];
+  const budgetDiff = Math.abs(c1.totalMonthly - c2.totalMonthly);
+
+  // 4. Caravan & Utility champion (highest trekgewicht)
+  const towChamp = [...cars].sort((a, b) => (b.v.massaTrekgewichtGeremd || 0) - (a.v.massaTrekgewichtGeremd || 0))[0];
+
+  container.innerHTML = `
+    <div class="win-crowns-wrapper">
+      <div class="crown-card crown-gold">
+        <div class="crown-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Snelheid &amp; Vermogen
+        </div>
+        <div class="crown-winner-name">${escapeHtml(speedChamp.v.merk)} ${escapeHtml(speedChamp.v.handelsbenaming)}</div>
+        <div class="crown-stat-main">${speedChamp.v.vermogenPk} PK &bull; 0-100 in ${speedChamp.v.acceleratie ? speedChamp.v.acceleratie + 's' : 'n.b.'}</div>
+        <div class="crown-stat-sub">${speedDiff > 0 ? '+' + speedDiff + ' pk meer vermogen dan rivaal' : 'Onbetwist topsnelheidskampioen'}</div>
+      </div>
+
+      <div class="crown-card crown-green">
+        <div class="crown-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Maandlasten &amp; TCO
+        </div>
+        <div class="crown-winner-name">${escapeHtml(budgetChamp.v.merk)} ${escapeHtml(budgetChamp.v.handelsbenaming)}</div>
+        <div class="crown-stat-main">&euro;${Math.round(budgetChamp.c.totalMonthly)} / maand</div>
+        <div class="crown-stat-sub">Bespaart &euro;${Math.round(budgetDiff)} per maand (&euro;${Math.round(budgetDiff * 12)} /jr)</div>
+      </div>
+
+      <div class="crown-card crown-blue">
+        <div class="crown-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+          Efficiëntie &amp; Milieu
+        </div>
+        <div class="crown-winner-name">${escapeHtml(ecoChamp.v.merk)} ${escapeHtml(ecoChamp.v.handelsbenaming)}</div>
+        <div class="crown-stat-main">${ecoChamp.v.brandstof === 'Elektriciteit' ? '100% Elektrisch' : (ecoChamp.v.verbruikGecombineerd ? ecoChamp.v.verbruikGecombineerd.toFixed(1) + ' l/100km' : 'Gunstig energielabel')}</div>
+        <div class="crown-stat-sub">${ecoChamp.v.co2Uitstoot ? ecoChamp.v.co2Uitstoot + ' g/km CO2' : 'Geen directe lokale uitstoot'}</div>
+      </div>
+
+      <div class="crown-card crown-copper">
+        <div class="crown-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Trekvermogen &amp; Ruimte
+        </div>
+        <div class="crown-winner-name">${escapeHtml(towChamp.v.merk)} ${escapeHtml(towChamp.v.handelsbenaming)}</div>
+        <div class="crown-stat-main">${towChamp.v.massaTrekgewichtGeremd ? towChamp.v.massaTrekgewichtGeremd + ' kg' : 'Geen trekhaak'} geremd</div>
+        <div class="crown-stat-sub">${(towChamp.v.massaTrekgewichtGeremd || 0) >= 1500 ? 'Ideaal voor zware caravan of boot' : 'Geschikt voor fietsendrager'}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🏆 MARTIJN PUTS EXECUTIVE ADVISORY & SECOND OPINION
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderMartijnAdvisory(v1, v2, v3, c1, c2, c3, bpm1, bpm2, bpm3) {
+  const container = document.getElementById('martijn-advisory-container');
+  if (!container) return;
+
+  const fasterCar = (v1.acceleratie || 10) <= (v2.acceleratie || 10) ? v1 : v2;
+  const cheaperCar = c1.totalMonthly <= c2.totalMonthly ? v1 : v2;
+  const diffMonthly = Math.abs(c1.totalMonthly - c2.totalMonthly);
+  const diffYr = Math.round(diffMonthly * 12);
+
+  let adviceQuote = "";
+  if (v1.brandstof === 'Elektriciteit' || v2.brandstof === 'Elektriciteit') {
+    adviceQuote = `De overstap tussen een klassieke verbrandingsmotor en elektrisch rijden is hier doorslaggevend. Terwijl de ${cheaperCar.merk} qua maandelijkse TCO en bijtelling overtuigend wint, levert de ${fasterCar.merk} de pure beleving en actieradiusflexibiliteit die autoliefhebbers zoeken.`;
+  } else if (Math.abs(v1.vermogenPk - v2.vermogenPk) > 60) {
+    adviceQuote = `Het vermogensverschil van ${Math.abs(Math.round(v1.vermogenPk - v2.vermogenPk))} PK definieert direct het karakter. De ${fasterCar.merk} is overtuigend superieur in sprint en inhaalmanoeuvres, maar vraagt ca. €${Math.round(diffMonthly)}/mnd extra aan TCO exploitatie en brandstof.`;
+  } else {
+    adviceQuote = `Beide auto's liggen qua specificaties bijzonder dicht bij elkaar. Hier maken met name de onderhoudshistorie, de staat van specifieke slijtageonderdelen en de potentiële importbesparing via ons Duitse dealernetwerk het echte verschil.`;
+  }
+
+  const whatsappMsg = encodeURIComponent(`Hallo Martijn, ik heb zojuist de ${v1.merk} ${v1.handelsbenaming} (${v1.kenteken}) vergeleken met de ${v2.merk} ${v2.handelsbenaming} (${v2.kenteken}) via de APEX Vergelijker. Kun je met mij meedenken over aankoopadvies en importmogelijkheden?`);
+
+  container.innerHTML = `
+    <div class="martijn-advisory-box">
+      <div class="advisory-top-banner">
+        <div class="advisory-badge-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+          APEX Exclusive Eindoordeel &amp; Aankoopadvies
+        </div>
+        <span class="advisory-author">Door Martijn Puts &bull; Onafhankelijk Aankoopmakelaar</span>
+      </div>
+
+      <div class="advisory-content-grid">
+        <div class="advisory-quote-column">
+          <div class="advisory-avatar-wrap">
+            <div class="advisory-initials-badge">MP</div>
+            <div>
+              <div class="advisory-name">Martijn Puts</div>
+              <div class="advisory-role">Oprichter &amp; Automotive Aankoopmakelaar</div>
+            </div>
+          </div>
+          <p class="advisory-quote-text">
+            &ldquo;${adviceQuote}&rdquo;
+          </p>
+          <div class="advisory-action-btns">
+            <a href="https://wa.me/31641042507?text=${whatsappMsg}" target="_blank" rel="noopener noreferrer" class="btn-advisory-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              Bespreek dit vergelijk direct via WhatsApp
+            </a>
+            <a href="https://apexclusive.nl/contact" target="_blank" rel="noopener noreferrer" class="btn-advisory-secondary">
+              Vrijblijvende aankoop-audit aanvragen &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="advisory-pillars-column">
+          <div class="advisory-pillar-item">
+            <div class="pillar-num">01</div>
+            <div class="pillar-info">
+              <h5>Rijbeleving &amp; Karakter</h5>
+              <p>De <strong>${escapeHtml(fasterCar.merk)}</strong> levert superieure gaspedaalrespons en vermogensreserve. Voor ontspannen kilometers en cruise-comfort biedt de <strong>${escapeHtml(cheaperCar.merk)}</strong> echter een meer serene rijervaring.</p>
+            </div>
+          </div>
+
+          <div class="advisory-pillar-item">
+            <div class="pillar-num">02</div>
+            <div class="pillar-info">
+              <h5>Financiële Realiteit &amp; Afschrijving</h5>
+              <p>Met een verschil van <strong>&euro;${Math.round(diffMonthly)} per maand</strong> (&euro;${diffYr}/jr) bespaart u met de ${escapeHtml(cheaperCar.merk)} substantieel op brandstof, MRB en onderhoud.</p>
+            </div>
+          </div>
+
+          <div class="advisory-pillar-item">
+            <div class="pillar-num">03</div>
+            <div class="pillar-info">
+              <h5>Markt &amp; Importkansen Duitsland</h5>
+              <p>In Duitsland staan gemiddeld <strong>3 tot 4x zoveel</strong> rijk uitgeruste exemplaren met transparante dealerhistorie. Wij speuren het beste exemplaar voor u op en regelen de aankoop van A tot Z.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ⚖️ LIFESTYLE & KEUZEHULP MINI-QUIZ
+// ═══════════════════════════════════════════════════════════════════════════
+
+let lifestyleState = {
+  km: 'avg',
+  focus: 'power',
+  usage: 'private'
+};
+
+function selectLifestyleAnswer(category, value) {
+  lifestyleState[category] = value;
+  if (appState.vehicles[1] && appState.vehicles[2]) {
+    const c1 = calculateMonthlyCosts(appState.vehicles[1], appState.settings);
+    const c2 = calculateMonthlyCosts(appState.vehicles[2], appState.settings);
+    const c3 = appState.vehicles[3] ? calculateMonthlyCosts(appState.vehicles[3], appState.settings) : null;
+    renderLifestyleMatchQuiz(appState.vehicles[1], appState.vehicles[2], appState.vehicles[3], c1, c2, c3);
+  }
+}
+
+function renderLifestyleMatchQuiz(v1, v2, v3, c1, c2, c3) {
+  const container = document.getElementById('lifestyle-match-container');
+  if (!container) return;
+
+  let score1 = 50;
+  let score2 = 50;
+
+  // Question 1: KM per year
+  if (lifestyleState.km === 'low') {
+    if (v1.vermogenPk > v2.vermogenPk) score1 += 15; else score2 += 15;
+  } else if (lifestyleState.km === 'high') {
+    if (c1.fuelMonthly < c2.fuelMonthly) score1 += 20; else score2 += 20;
+    if (c1.mrbMonthly < c2.mrbMonthly) score1 += 10; else score2 += 10;
+  } else {
+    if (c1.totalMonthly < c2.totalMonthly) score1 += 10; else score2 += 10;
+  }
+
+  // Question 2: Focus
+  if (lifestyleState.focus === 'power') {
+    if (v1.vermogenPk > v2.vermogenPk) score1 += 25; else score2 += 25;
+    if ((v1.acceleratie || 10) < (v2.acceleratie || 10)) score1 += 15; else score2 += 15;
+  } else if (lifestyleState.focus === 'eco') {
+    if (c1.totalMonthly < c2.totalMonthly) score1 += 25; else score2 += 25;
+    if ((v1.verbruikGecombineerd || 99) < (v2.verbruikGecombineerd || 99)) score1 += 15; else score2 += 15;
+  } else if (lifestyleState.focus === 'space') {
+    if ((v1.massaTrekgewichtGeremd || 0) > (v2.massaTrekgewichtGeremd || 0)) score1 += 25; else score2 += 25;
+    if ((v1.massaRijklaar || 0) > (v2.massaRijklaar || 0)) score1 += 10; else score2 += 10;
+  }
+
+  // Question 3: Usage
+  if (lifestyleState.usage === 'business') {
+    if (v1.brandstof === 'Elektriciteit' && v2.brandstof !== 'Elektriciteit') score1 += 25;
+    else if (v2.brandstof === 'Elektriciteit' && v1.brandstof !== 'Elektriciteit') score2 += 25;
+    else if (v1.catalogusprijs < v2.catalogusprijs) score1 += 15; else score2 += 15;
+  } else if (lifestyleState.usage === 'weekend') {
+    if (v1.vermogenPk > v2.vermogenPk) score1 += 20; else score2 += 20;
+  } else {
+    if (c1.totalMonthly < c2.totalMonthly) score1 += 15; else score2 += 15;
+  }
+
+  const total = score1 + score2;
+  const matchPct1 = Math.round((score1 / total) * 100);
+  const matchPct2 = 100 - matchPct1;
+
+  const winner = matchPct1 >= matchPct2 ? v1 : v2;
+  const winnerPct = Math.max(matchPct1, matchPct2);
+  const winnerSide = matchPct1 >= matchPct2 ? 1 : 2;
+
+  container.innerHTML = `
+    <div class="lifestyle-match-box">
+      <div class="lifestyle-header">
+        <div class="lifestyle-title-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          APEX Keuzehulp &amp; Rijprofiel Matcher
+        </div>
+        <h4>Welke auto past écht bij uw rijstijl en gebruik?</h4>
+        <p>Klik op uw voorkeuren en ontdek direct welke auto rekenkundig en praktisch de beste match is.</p>
+      </div>
+
+      <div class="quiz-questions-interactive">
+        <div class="quiz-row">
+          <span class="quiz-row-label">1. Jaarkilometrage:</span>
+          <div class="quiz-choice-buttons">
+            <button type="button" class="quiz-choice-btn ${lifestyleState.km === 'low' ? 'selected' : ''}" onclick="selectLifestyleAnswer('km', 'low')">&lt; 12.000 km/jr</button>
+            <button type="button" class="quiz-choice-btn ${lifestyleState.km === 'avg' ? 'selected' : ''}" onclick="selectLifestyleAnswer('km', 'avg')">12.000 - 25.000 km/jr</button>
+            <button type="button" class="quiz-choice-btn ${lifestyleState.km === 'high' ? 'selected' : ''}" onclick="selectLifestyleAnswer('km', 'high')">&gt; 25.000 km/jr</button>
+          </div>
+        </div>
+
+        <div class="quiz-row">
+          <span class="quiz-row-label">2. Belangrijkste Prioriteit:</span>
+          <div class="quiz-choice-buttons">
+            <button type="button" class="quiz-choice-btn ${lifestyleState.focus === 'power' ? 'selected' : ''}" onclick="selectLifestyleAnswer('focus', 'power')">⚡ Vermogen &amp; Snelheid</button>
+            <button type="button" class="quiz-choice-btn ${lifestyleState.focus === 'eco' ? 'selected' : ''}" onclick="selectLifestyleAnswer('focus', 'eco')">💶 Laagste Maandlasten</button>
+            <button type="button" class="quiz-choice-btn ${lifestyleState.focus === 'space' ? 'selected' : ''}" onclick="selectLifestyleAnswer('focus', 'space')">🏕️ Trekgewicht &amp; Ruimte</button>
+          </div>
+        </div>
+
+        <div class="quiz-row">
+          <span class="quiz-row-label">3. Gebruiksdoel:</span>
+          <div class="quiz-choice-buttons">
+            <button type="button" class="quiz-choice-btn ${lifestyleState.usage === 'private' ? 'selected' : ''}" onclick="selectLifestyleAnswer('usage', 'private')">Dagelijks Privé</button>
+            <button type="button" class="quiz-choice-btn ${lifestyleState.usage === 'business' ? 'selected' : ''}" onclick="selectLifestyleAnswer('usage', 'business')">Zakelijk / Lease</button>
+            <button type="button" class="quiz-choice-btn ${lifestyleState.usage === 'weekend' ? 'selected' : ''}" onclick="selectLifestyleAnswer('usage', 'weekend')">Liefhebber / Weekend</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lifestyle-result-card">
+        <div class="lifestyle-winner-hero">
+          <div class="winner-label">🏆 Aanbevolen Match op basis van uw profiel:</div>
+          <div class="winner-title">${escapeHtml(winner.merk)} ${escapeHtml(winner.handelsbenaming)} (${winnerPct}% Match)</div>
+          <p class="winner-explanation">
+            ${winnerSide === 1 
+              ? `Voor uw profiel (${lifestyleState.km === 'high' ? 'veelrijder' : 'gemiddeld kilometrage'}, focus op ${lifestyleState.focus === 'power' ? 'sportieve prestaties' : lifestyleState.focus === 'eco' ? 'lage kosten' : 'trekkracht'}) biedt de ${escapeHtml(v1.merk)} de meest harmonieuze balans tussen aanschaf, beleving en exploitatie.`
+              : `Voor uw profiel (${lifestyleState.km === 'high' ? 'veelrijder' : 'gemiddeld kilometrage'}, focus op ${lifestyleState.focus === 'power' ? 'sportieve prestaties' : lifestyleState.focus === 'eco' ? 'lage kosten' : 'trekkracht'}) biedt de ${escapeHtml(v2.merk)} het meeste voordeel en aansluiting bij uw wensen.`}
+          </p>
+        </div>
+        <div class="lifestyle-bars">
+          <div class="lifestyle-bar-row">
+            <span>${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)}:</span>
+            <div class="bar-track"><div class="bar-fill" style="width: ${matchPct1}%; background: var(--copper);"></div></div>
+            <span class="bar-val">${matchPct1}%</span>
+          </div>
+          <div class="lifestyle-bar-row">
+            <span>${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)}:</span>
+            <div class="bar-track"><div class="bar-fill" style="width: ${matchPct2}%; background: #60a5fa;"></div></div>
+            <span class="bar-val">${matchPct2}%</span>
+          </div>
         </div>
       </div>
     </div>
@@ -2359,6 +2671,117 @@ function renderMilieuzoneModule(v1, v2) {
     </div>
   `;
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🌍 MARKTVERKENNER & IMPORTOCCASIONS EUROPA
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderMarketExplorer(v1, v2, v3, bpm1, bpm2, bpm3) {
+  const container = document.getElementById('market-explorer-container');
+  if (!container) return;
+
+  function buildCarMarketCard(v, b, isV1) {
+    const brand = encodeURIComponent(v.merk || '');
+    const model = encodeURIComponent(v.handelsbenaming || '');
+    const year = v.bouwjaar || (v.datumEersteToelating ? new Date(v.datumEersteToelating).getFullYear() : 2020);
+
+    const mobileUrl = `https://suchen.mobile.de/fahrzeuge/search.html?ms=${brand}&fn=${model}&fr=${year}`;
+    const autoscoutUrl = `https://www.autoscout24.de/lst/${brand}/${model}?fregfrom=${year}`;
+    const gaspedaalUrl = `https://www.gaspedaal.nl/${brand}/${model}/vanaf-${year}`;
+    const marktplaatsUrl = `https://www.marktplaats.nl/l/auto-s/${brand}/#q:${brand}+${model}`;
+
+    const estNlPrice = v.catalogusprijs ? Math.round(v.catalogusprijs * 0.55) : 38000;
+    const estDePrice = v.catalogusprijs ? Math.round(v.catalogusprijs * 0.42) : 29000;
+    const restBpm = b ? b.restBpm : Math.round((v.brutoBpm || 8000) * 0.3);
+    const estImportTotal = estDePrice + restBpm + 1850; // incl transport, RDW, handling
+    const importSavings = Math.max(0, estNlPrice - estImportTotal);
+
+    const whatsappText = encodeURIComponent(`Hallo Martijn, ik zoek een mooie ${v.merk} ${v.handelsbenaming} (vanaf ${year}). Kunnen jullie vergelijkbare exemplaren in Duitsland voor mij opsporen en importeren?`);
+
+    return `
+      <div class="market-card">
+        <div class="market-card-header">
+          <div class="market-car-title">
+            <span class="car-badge-pill ${isV1 ? 'badge-v1' : 'badge-v2'}">${isV1 ? 'Auto 1' : 'Auto 2'}</span>
+            <h5>${escapeHtml(v.merk)} ${escapeHtml(v.handelsbenaming)} (${year})</h5>
+          </div>
+          <span class="market-tag-de">🇩🇪 Duitsland &bull; Aanbod Index</span>
+        </div>
+
+        <div class="market-price-compare">
+          <div class="market-price-row">
+            <span>Geschatte NL Dealerprijs:</span>
+            <strong>&euro;${estNlPrice.toLocaleString('nl-NL')}</strong>
+          </div>
+          <div class="market-price-row">
+            <span>Inkoop DE + Rest-BPM &amp; Import:</span>
+            <strong style="color:var(--copper-light);">&euro;${estImportTotal.toLocaleString('nl-NL')}</strong>
+          </div>
+          <div class="market-price-savings">
+            <span>Geschat Importvoordeel:</span>
+            <span class="savings-amount">&euro;${importSavings > 500 ? importSavings.toLocaleString('nl-NL') : '1.850'} voordeel</span>
+          </div>
+        </div>
+
+        <div class="market-links-title">Direct zoeken op Europese portalen:</div>
+        <div class="market-portal-links">
+          <a href="${mobileUrl}" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            🇩🇪 Mobile.de
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+          <a href="${autoscoutUrl}" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            🇪🇺 AutoScout24
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+          <a href="${gaspedaalUrl}" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            🇳🇱 Gaspedaal
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+          <a href="${marktplaatsUrl}" target="_blank" rel="noopener noreferrer" class="portal-btn">
+            🇳🇱 Marktplaats
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+
+        <a href="https://wa.me/31641042507?text=${whatsappText}" target="_blank" rel="noopener noreferrer" class="btn-market-broker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Laat Martijn het beste exemplaar opsporen
+        </a>
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="market-explorer-box">
+      <div class="market-explorer-header">
+        <div class="market-header-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          APEX Marktverkenner &bull; Europa Occasions
+        </div>
+        <h4>Vergelijkbaar aanbod in Nederland &amp; Duitsland opsporen</h4>
+        <p>Doorzoek direct de grootste Europese autoportalen of laat APEX Exclusive de aankoopkeuring, onderhandeling en import verzorgen.</p>
+      </div>
+
+      <div class="market-cards-grid">
+        ${buildCarMarketCard(v1, bpm1, true)}
+        ${buildCarMarketCard(v2, bpm2, false)}
+      </div>
+    </div>
+  `;
+}
+
+function toggleAllAccordions(expand) {
+  document.querySelectorAll('.spec-category-block').forEach(block => {
+    if (expand) {
+      block.classList.remove('is-collapsed');
+    } else {
+      block.classList.add('is-collapsed');
+    }
+  });
+}
+
+window.toggleAllAccordions = toggleAllAccordions;
+window.selectLifestyleAnswer = selectLifestyleAnswer;
 
 function renderProefritTips(v1, v2) {
   const container = document.getElementById('proefrit-tips-container');

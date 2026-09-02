@@ -36,8 +36,10 @@
   --v3-bg: rgba(74, 222, 128, 0.12);
 
   --apex-win: #22c55e;
-  --apex-win-bg: rgba(34, 197, 94, 0.12);
+  --apex-win-bg: rgba(34, 197, 94, 0.14);
   --apex-win-light: #4ade80;
+  --apex-gold: #f59e0b;
+  --apex-gold-bg: rgba(245, 158, 11, 0.14);
 }
 
 /* Base resets & typography */
@@ -814,7 +816,359 @@ body:before {
   border-top: 1px solid var(--line);
 }
 
-/* ✨ Executive Highlights Card */
+/* 👑 Crowns & Color-Coded Win Highlights */
+.win-crowns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.win-crown-card {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  padding: 1.1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.win-crown-card.crown-gold { border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), var(--ink-soft)); }
+.win-crown-card.crown-green { border-color: rgba(34, 197, 94, 0.4); background: linear-gradient(145deg, rgba(34, 197, 94, 0.08), var(--ink-soft)); }
+.win-crown-card.crown-blue { border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(145deg, rgba(56, 189, 248, 0.08), var(--ink-soft)); }
+.win-crown-card.crown-copper { border-color: rgba(223, 177, 141, 0.4); background: linear-gradient(145deg, rgba(223, 177, 141, 0.08), var(--ink-soft)); }
+
+.win-crown-badge {
+  font: 700 0.58rem/1 var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.crown-gold .win-crown-badge { color: #f59e0b; }
+.crown-green .win-crown-badge { color: #4ade80; }
+.crown-blue .win-crown-badge { color: #38bdf8; }
+.crown-copper .win-crown-badge { color: #e2b28e; }
+
+.win-crown-car {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--paper);
+  display: block;
+}
+
+.win-crown-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+  line-height: 1.45;
+}
+
+/* 🏆 Deep APEX Executive Advisory Box by Martijn Puts */
+.martijn-advisory-box {
+  background: linear-gradient(145deg, #182424 0%, #0d1212 100%);
+  border: 1px solid var(--line-strong);
+  padding: 2.2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.martijn-advisory-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  border-bottom: 1px solid rgba(223, 177, 141, 0.25);
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.4rem;
+}
+
+.martijn-avatar-small {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--copper);
+}
+
+.martijn-advisory-title-group span {
+  font: 600 0.58rem/1 var(--display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--copper-light);
+  display: block;
+}
+
+.martijn-advisory-title-group h3 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--paper);
+  margin-top: 0.2rem;
+}
+
+.martijn-advisory-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.8rem;
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.advisory-car-block strong {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--paper);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.advisory-car-block p {
+  color: var(--muted-light);
+}
+
+.martijn-verdict-summary {
+  grid-column: 1 / -1;
+  background: rgba(11, 14, 14, 0.6);
+  border: 1px solid var(--line);
+  padding: 1.2rem 1.4rem;
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.martijn-verdict-summary p {
+  color: var(--paper);
+  font-size: 0.88rem;
+  max-width: 70ch;
+}
+
+/* 🔍 Market Explorer / Similar Vehicles for Sale */
+.market-explorer-box {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  padding: 2rem;
+  margin-top: 2.5rem;
+}
+
+.market-explorer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.market-explorer-header h4 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--paper);
+}
+
+.market-explorer-header p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+}
+
+.similar-cars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.similar-car-card {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s;
+  display: flex;
+  flex-direction: column;
+}
+
+.similar-car-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--copper);
+}
+
+.similar-car-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  filter: brightness(0.85);
+}
+
+.similar-car-body {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.similar-car-body strong {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--paper);
+}
+
+.similar-car-body span {
+  font-size: 0.75rem;
+  color: var(--copper-light);
+  margin-top: 0.2rem;
+}
+
+.similar-car-specs {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin: 0.6rem 0 1rem;
+}
+
+.similar-car-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.similar-btn {
+  flex: 1;
+  background: rgba(244, 241, 235, 0.06);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  font: 600 0.62rem/1 var(--display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.65rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.similar-btn:hover {
+  background: var(--copper);
+  color: #fff;
+  border-color: var(--copper);
+}
+
+/* ⚖️ "Welke auto past bij mij?" Interactive Match Quiz */
+.lifestyle-match-box {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.lifestyle-header h4 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--paper);
+}
+
+.lifestyle-header p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+}
+
+.lifestyle-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-top: 1.4rem;
+}
+
+.lifestyle-control-card {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  padding: 1rem;
+}
+
+.lifestyle-control-card label {
+  font: 600 0.6rem/1 var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--copper-light);
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.lifestyle-select {
+  width: 100%;
+  background: #0b0e0e !important;
+  border: 1px solid var(--line) !important;
+  color: var(--paper) !important;
+  padding: 0.6rem 0.8rem !important;
+  font-size: 0.82rem !important;
+  outline: none;
+}
+
+.lifestyle-result-strip {
+  margin-top: 1.4rem;
+  padding: 1.2rem;
+  background: rgba(186, 126, 83, 0.08);
+  border: 1px solid var(--line-strong);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.lifestyle-match-col {
+  text-align: center;
+}
+
+.lifestyle-match-pct {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  color: var(--copper-light);
+}
+
+/* ── Accordion Master Controls ───────────────────────────────────────── */
+.accordion-master-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.accordion-master-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  color: var(--paper);
+}
+
+.accordion-toggle-all-btn {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--copper-light);
+  font: 500 0.62rem/1 var(--display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.accordion-toggle-all-btn:hover {
+  background: var(--copper);
+  color: #fff;
+  border-color: var(--copper);
+}
+
+/* ✨ Quick Highlights & Executive Briefing Card */
 .executive-highlights-card {
   background: linear-gradient(135deg, rgba(186, 126, 83, 0.14) 0%, rgba(17, 23, 23, 0.95) 70%);
   border: 1px solid var(--line-strong);
@@ -2031,7 +2385,7 @@ body:before {
 
 /* ── Detailed Accordion Specs Matrix ─────────────────────────────────── */
 .spec-accordion-group {
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -2040,6 +2394,7 @@ body:before {
 .spec-category-block {
   background: var(--ink-card);
   border: 1px solid var(--line);
+  transition: border-color 0.2s;
 }
 
 .spec-category-header {
@@ -2106,6 +2461,12 @@ body:before {
   padding: 0.9rem 1.6rem;
   font-size: 0.88rem;
   color: var(--paper);
+}
+
+.spec-table td.winner-cell {
+  color: var(--apex-win-light);
+  font-weight: 600;
+  background: rgba(34, 197, 94, 0.04);
 }
 
 /* ── 🎁 Community Appreciation & Feedback Box ────────────────────────── */
@@ -2518,9 +2879,13 @@ body:before {
   .vehicle-hero-grid.has-three {
     grid-template-columns: 1fr;
   }
-  .delta-kpi-grid {
-    grid-template-columns: 1fr 1fr;
+  .delta-kpi-grid,
+  .win-crowns-grid,
+  .martijn-advisory-body {
+    grid-template-columns: 1fr;
   }
+  .similar-cars-grid,
+  .lifestyle-controls-grid,
   .highlights-bullet-grid,
   .battle-grid,
   .score-pillar-grid,
@@ -2559,7 +2924,9 @@ body:before {
   .category-filter-bar,
   .skip-link,
   .site-progress,
-  .drag-controls-row {
+  .drag-controls-row,
+  .lifestyle-match-box,
+  .accordion-toggle-all-btn {
     display: none !important;
   }
   .page-hero {
@@ -2576,7 +2943,9 @@ body:before {
   .verdict-box,
   .tco-projection-box,
   .score-matrix-box,
-  .spec-category-block {
+  .spec-category-block,
+  .martijn-advisory-box,
+  .market-explorer-box {
     background: #ffffff !important;
     border: 1px solid #ccc !important;
     box-shadow: none !important;
