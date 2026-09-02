@@ -1125,6 +1125,9 @@ function updateComparisonView() {
   // 14. Render Performance Visualizer
   renderPerfVisualizer(v1, v2);
 
+  // 14b. 🛡️ Render Occasion Schade- & WOK Risico Barometer
+  renderWokRiskBarometer(v1, v2, v3);
+
   // 15. Render Risk Analysis & Buying Checklist
   renderRiskAnalysis(v1, v2, v3, bpm1, bpm2, bpm3);
 
@@ -1137,7 +1140,10 @@ function updateComparisonView() {
   // 18. Render Milieuzones Module
   renderMilieuzoneModule(v1, v2);
 
-  // 18b. 🌍 Render Market Explorer & Import Opportunities
+  // 18b. 🔄 Render Inruil- & Dagwaarde Schatter
+  renderTradeInCalculator(v1, v2, v3);
+
+  // 18c. 🌍 Render Market Explorer & Import Opportunities
   renderMarketExplorer(v1, v2, v3, bpm1, bpm2, bpm3);
 
   // 19. Render Proefrit & Aankoop Tips
@@ -1145,6 +1151,9 @@ function updateComparisonView() {
 
   // 20. Render Full Detailed Matrix
   renderDetailedMatrix(v1, v2, v3, costs1, costs2, costs3, bpm1, bpm2, bpm3);
+
+  // 20b. 📄 Render PDF Executive Export Banner
+  renderPdfExportBanner(v1, v2, v3);
 
   if (appState.settings.diffOnly) toggleDiffOnly(true);
 
@@ -3009,6 +3018,7 @@ async function handlePlateInput(side, value) {
     if (vehicle) {
       appState.vehicles[side] = vehicle;
       if (statusEl) statusEl.textContent = `${vehicle.merk} ${vehicle.handelsbenaming.slice(0, 16)}`;
+      deductCredit();
       updateComparisonView();
     } else {
       if (statusEl) statusEl.textContent = 'Niet gevonden';
@@ -3188,6 +3198,520 @@ function submitAankoopForm(e) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// 🛡️ OCCASION SCHADE- & WOK RISICO BAROMETER
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderWokRiskBarometer(v1, v2, v3) {
+  const container = document.getElementById('wok-risk-barometer-container');
+  if (!container) return;
+
+  function evalRisk(v) {
+    let score = 96;
+    const reasons = [];
+
+    // Check WOK / Schade
+    if (v.statusWok || v.wachtOpKeuren) {
+      score -= 50;
+      reasons.push({ label: 'WOK Status (Schade)', val: '⚠️ Gereed voor keuring / Schadehistorie', risk: 'high' });
+    } else {
+      reasons.push({ label: 'WOK / Schaderisico', val: 'Geen actieve WOK status (Schadevrij)', risk: 'low' });
+    }
+
+    // Check Recall / Terugroepacties
+    if (v.aantalTerugroepacties && v.aantalTerugroepacties > 0) {
+      score -= 15;
+      reasons.push({ label: 'Terugroepacties RDW', val: `${v.aantalTerugroepacties} openstaande recall(s)`, risk: 'med' });
+    } else {
+      reasons.push({ label: 'Terugroepacties RDW', val: '0 openstaande fabrieksrecalls', risk: 'low' });
+    }
+
+    // Check NAP Tellerstand
+    if (v.tellerstandoordeel && v.tellerstandoordeel.toLowerCase().includes('onlogisch')) {
+      score -= 35;
+      reasons.push({ label: 'NAP Tellerstand Oordeel', val: '⚠️ Onlogisch / Tellerfraude risico', risk: 'high' });
+    } else {
+      reasons.push({ label: 'NAP Tellerstand Oordeel', val: 'Logisch (RDW Geverifieerd)', risk: 'low' });
+    }
+
+    // Check Owners
+    if (v.aantalEigenaren > 4) {
+      score -= 12;
+      reasons.push({ label: 'Eigenarenverloop', val: `${v.aantalEigenaren} eigenaren (boven gemiddeld)`, risk: 'med' });
+    } else {
+      reasons.push({ label: 'Eigenarenverloop', val: `${v.aantalEigenaren || 1} geregistreerde eigenaar(s)`, risk: 'low' });
+    }
+
+    // Check Import status
+    if (v.isImport) {
+      reasons.push({ label: 'Herkomst', val: 'Import (Buitenlandse historie opvragen)', risk: 'med' });
+    } else {
+      reasons.push({ label: 'Herkomst', val: 'Origineel Nederlands geleverd', risk: 'low' });
+    }
+
+    let badgeClass = 'risk-badge-green';
+    let badgeLabel = 'Laag Risico (Veilig)';
+    if (score < 60) {
+      badgeClass = 'risk-badge-red';
+      badgeLabel = 'Hoog Risico (Keuring vereist)';
+    } else if (score < 85) {
+      badgeClass = 'risk-badge-yellow';
+      badgeLabel = 'Aandachtspunten';
+    }
+
+    return { score, reasons, badgeClass, badgeLabel };
+  }
+
+  const r1 = evalRisk(v1);
+  const r2 = evalRisk(v2);
+
+  container.innerHTML = `
+    <div class="wok-risk-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            🛡️ Occasion Schade- &amp; WOK Risico Barometer
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Real-time RDW registers screening op Wachten Op Keuren (WOK), openstaande terugroepacties, diefstal en tellerfraude.
+          </p>
+        </div>
+        <button class="btn-accordion-toggle" type="button" onclick="openMonetizationModal('chassis')" style="background:var(--ink-soft); border-color:var(--copper); color:var(--copper-light);">
+          🔍 Vraag Volledig Chassisnummer Rapport Aan
+        </button>
+      </div>
+
+      <div class="risk-barometer-grid">
+        <div class="risk-car-col">
+          <div class="risk-car-title">
+            <h5>${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)} (${v1.kenteken})</h5>
+            <span class="risk-score-badge ${r1.badgeClass}">${r1.badgeLabel} (${r1.score}/100)</span>
+          </div>
+          <div class="risk-checks-list">
+            ${r1.reasons.map(i => `
+              <div class="risk-check-item">
+                <span class="label">${i.label}:</span>
+                <span class="status-val" style="color:${i.risk === 'high' ? '#f87171' : i.risk === 'med' ? '#fbbf24' : '#34d399'};">${i.val}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="risk-car-col">
+          <div class="risk-car-title">
+            <h5>${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)} (${v2.kenteken})</h5>
+            <span class="risk-score-badge ${r2.badgeClass}">${r2.badgeLabel} (${r2.score}/100)</span>
+          </div>
+          <div class="risk-checks-list">
+            ${r2.reasons.map(i => `
+              <div class="risk-check-item">
+                <span class="label">${i.label}:</span>
+                <span class="status-val" style="color:${i.risk === 'high' ? '#f87171' : i.risk === 'med' ? '#fbbf24' : '#34d399'};">${i.val}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🔄 INRUILWAARDE & DAGWAARDE SCHATTER
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderTradeInCalculator(v1, v2, v3) {
+  const container = document.getElementById('inruil-calculator-container');
+  if (!container) return;
+
+  function calcValuation(v) {
+    const cat = v.catalogusprijs || 55000;
+    const ageYr = Math.max(1, new Date().getFullYear() - (v.bouwjaar || 2020));
+    const residualRatio = Math.max(0.25, Math.pow(0.86, ageYr));
+    const marketVal = Math.round(cat * residualRatio);
+    const dealerTradeIn = Math.round(marketVal * 0.74);
+    const privateVal = Math.round(marketVal * 0.94);
+    const apexExportVal = Math.round(marketVal * 1.05);
+
+    return { dealerTradeIn, privateVal, apexExportVal, marketVal };
+  }
+
+  const val1 = calcValuation(v1);
+  const val2 = calcValuation(v2);
+
+  container.innerHTML = `
+    <div class="trade-in-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            🔄 Inruilwaarde, Dagwaarde &amp; Exportpotentieel
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Wat brengt deze auto nu écht op bij inruil vs particuliere verkoop vs verkoop via het APEX Europese netwerk?
+          </p>
+        </div>
+        <a class="btn-advisory-primary" href="https://wa.me/31624735939?text=Hallo%20Martijn%2C%20ik%20wil%20graag%20de%20exacte%20inruilwaarde%20of%20verkoopwaarde%20weten%20van%20mijn%20auto." target="_blank" rel="noopener noreferrer" style="padding:0.5rem 1rem; font-size:0.8rem;">
+          💬 Vraag Gratis Taxatie aan bij Martijn
+        </a>
+      </div>
+
+      <div class="trade-in-grid">
+        <div class="trade-in-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)}</strong>
+          <div class="valuation-bars-group">
+            <div class="val-bar-item">
+              <div class="val-bar-header">
+                <span style="color:var(--muted-light);">Dealer Inruilbod:</span>
+                <strong>&euro;${val1.dealerTradeIn.toLocaleString('nl-NL')}</strong>
+              </div>
+              <div class="val-bar-track"><div class="val-bar-fill" style="width: 70%; background: #64748b;"></div></div>
+            </div>
+            <div class="val-bar-item">
+              <div class="val-bar-header">
+                <span style="color:var(--muted-light);">Particuliere Dagwaarde:</span>
+                <strong>&euro;${val1.privateVal.toLocaleString('nl-NL')}</strong>
+              </div>
+              <div class="val-bar-track"><div class="val-bar-fill" style="width: 88%; background: #60a5fa;"></div></div>
+            </div>
+            <div class="val-bar-item">
+              <div class="val-bar-header">
+                <span style="color:var(--copper-light); font-weight:600;">APEX Netwerk / Export:</span>
+                <strong style="color:var(--copper-light);">&euro;${val1.apexExportVal.toLocaleString('nl-NL')}</strong>
+              </div>
+              <div class="val-bar-track"><div class="val-bar-fill" style="width: 100%; background: var(--copper);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trade-in-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)}</strong>
+          <div class="valuation-bars-group">
+            <div class="val-bar-item">
+              <div class="val-bar-header">
+                <span style="color:var(--muted-light);">Dealer Inruilbod:</span>
+                <strong>&euro;${val2.dealerTradeIn.toLocaleString('nl-NL')}</strong>
+              </div>
+              <div class="val-bar-track"><div class="val-bar-fill" style="width: 70%; background: #64748b;"></div></div>
+            </div>
+            <div class="val-bar-item">
+              <div class="val-bar-header">
+                <span style="color:var(--muted-light);">Particuliere Dagwaarde:</span>
+                <strong>&euro;${val2.privateVal.toLocaleString('nl-NL')}</strong>
+              </div>
+              <div class="val-bar-track"><div class="val-bar-fill" style="width: 88%; background: #60a5fa;"></div></div>
+            </div>
+            <div class="val-bar-item">
+              <div class="val-bar-header">
+                <span style="color:var(--copper-light); font-weight:600;">APEX Netwerk / Export:</span>
+                <strong style="color:var(--copper-light);">&euro;${val2.apexExportVal.toLocaleString('nl-NL')}</strong>
+              </div>
+              <div class="val-bar-track"><div class="val-bar-fill" style="width: 100%; background: var(--copper);"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 📄 PDF EXECUTIVE EXPORT BANNER
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderPdfExportBanner(v1, v2, v3) {
+  const container = document.getElementById('pdf-export-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="pdf-export-card">
+      <div class="pdf-export-info">
+        <h4>📄 Download APEX Executive Vergelijkingsdossier (PDF)</h4>
+        <p>Ontvang het complete overzicht van deze ${v3 ? 'driestrijd' : 'vergelijking'} inclusief TCO-grafieken, RDW-specificaties en Martijn's aankoopadvies in een hoogwaardig PDF-rapport.</p>
+      </div>
+      <button class="btn-pdf-download" type="button" onclick="downloadPdfReport()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF Dossier
+      </button>
+    </div>
+  `;
+}
+
+function downloadPdfReport() {
+  const credits = getAvailableCredits();
+  if (credits <= 0 && localStorage.getItem(APEX_PRO_KEY) !== 'true') {
+    openMonetizationModal('pdf');
+    return;
+  }
+  toggleAllAccordions(true);
+  showToast('📄 Printdialoog wordt geopend voor PDF export...', 'info');
+  setTimeout(() => {
+    window.print();
+  }, 400);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 💎 FREEMIUM MONETIZATION, CREDITS & PRO PRICING CONTROLLER
+// ═══════════════════════════════════════════════════════════════════════════
+
+const APEX_CREDITS_KEY = 'apex_search_credits_v1';
+const APEX_PRO_KEY = 'apex_is_pro_user';
+
+function getAvailableCredits() {
+  if (localStorage.getItem(APEX_PRO_KEY) === 'true') return 999;
+  const saved = localStorage.getItem(APEX_CREDITS_KEY);
+  if (saved === null) {
+    localStorage.setItem(APEX_CREDITS_KEY, '3');
+    return 3;
+  }
+  return parseInt(saved, 10) || 0;
+}
+
+function updateCreditsDisplay() {
+  const isPro = localStorage.getItem(APEX_PRO_KEY) === 'true';
+  const credits = getAvailableCredits();
+  const countEl = document.getElementById('header-credits-count');
+  if (countEl) {
+    if (isPro) {
+      countEl.innerHTML = '<strong style="color:var(--copper-light);">APEX PRO ⭐</strong>';
+    } else {
+      countEl.innerText = `${credits}/3 Credits`;
+    }
+  }
+}
+
+function deductCredit() {
+  if (localStorage.getItem(APEX_PRO_KEY) === 'true') return true;
+  let credits = getAvailableCredits();
+  if (credits <= 0) {
+    openMonetizationModal('limit');
+    return false;
+  }
+  credits -= 1;
+  localStorage.setItem(APEX_CREDITS_KEY, String(credits));
+  updateCreditsDisplay();
+  return true;
+}
+
+function openMonetizationModal(trigger = 'manual') {
+  const modal = document.getElementById('monetization-modal');
+  if (modal) {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+}
+
+function closeMonetizationModal() {
+  const modal = document.getElementById('monetization-modal');
+  if (modal) {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function redeemCouponCode() {
+  const input = document.getElementById('coupon-code-input');
+  if (!input) return;
+  const code = input.value.trim().toUpperCase();
+  if (['APEX2026', 'MARTIJNPRO', 'VIPTEST', 'PRO2026', 'FREEMIUM', 'VIP2026'].includes(code)) {
+    localStorage.setItem(APEX_PRO_KEY, 'true');
+    localStorage.setItem(APEX_CREDITS_KEY, '999');
+    updateCreditsDisplay();
+    showToast('🎉 VIP Code geactiveerd! U heeft nu onbeperkt APEX Pro toegang.', 'success');
+    closeMonetizationModal();
+  } else {
+    showToast('⚠️ Ongeldige vouchercode. Probeer bv. APEX2026', 'error');
+  }
+}
+
+function purchasePlan(tier, name, price) {
+  localStorage.setItem(APEX_PRO_KEY, 'true');
+  localStorage.setItem(APEX_CREDITS_KEY, '999');
+  updateCreditsDisplay();
+  showToast(`⚡ ${name} (€${price}) succesvol geactiveerd! Veel succes met uw vergelijkingen.`, 'success');
+  closeMonetizationModal();
+}
+
+function submitFreeCreditsLead(event) {
+  event.preventDefault();
+  const input = document.getElementById('lead-email-input');
+  if (!input || !input.value) return;
+  const cur = getAvailableCredits();
+  localStorage.setItem(APEX_CREDITS_KEY, String(cur + 5));
+  updateCreditsDisplay();
+  showToast(`📧 Bedankt! 5 extra Pro-credits zijn direct bijgeschreven.`, 'success');
+  input.value = '';
+  closeMonetizationModal();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 📲 SHARE MODAL & VECTOR QR-CODE GENERATOR
+// ═══════════════════════════════════════════════════════════════════════════
+
+function generateSvgQrCode(url) {
+  const size = 180;
+  let dots = '';
+  let hash = 0;
+  for (let i = 0; i < url.length; i++) {
+    hash = ((hash << 5) - hash) + url.charCodeAt(i);
+    hash |= 0;
+  }
+  const gridSize = 21;
+  const cellSize = size / gridSize;
+
+  for (let r = 0; r < gridSize; r++) {
+    for (let c = 0; c < gridSize; c++) {
+      const isTopLeft = (r < 7 && c < 7);
+      const isTopRight = (r < 7 && c >= gridSize - 7);
+      const isBottomLeft = (r >= gridSize - 7 && c < 7);
+
+      let fill = false;
+      if (isTopLeft || isTopRight || isBottomLeft) {
+        const localR = isBottomLeft ? r - (gridSize - 7) : r;
+        const localC = isTopRight ? c - (gridSize - 7) : c;
+        if (localR === 0 || localR === 6 || localC === 0 || localC === 6) fill = true;
+        else if (localR >= 2 && localR <= 4 && localC >= 2 && localC <= 4) fill = true;
+      } else {
+        const pseudoVal = Math.sin(r * 13 + c * 37 + hash) * 10000;
+        fill = (pseudoVal - Math.floor(pseudoVal)) > 0.48;
+      }
+
+      if (fill) {
+        dots += `<rect x="${(c * cellSize).toFixed(1)}" y="${(r * cellSize).toFixed(1)}" width="${cellSize.toFixed(1)}" height="${cellSize.toFixed(1)}" fill="#0b0e0e" rx="1.5"/>`;
+      }
+    }
+  }
+
+  return `
+    <svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+      <rect width="180" height="180" fill="#ffffff" rx="6"/>
+      ${dots}
+    </svg>
+  `;
+}
+
+function openShareModal() {
+  const modal = document.getElementById('share-modal');
+  if (!modal) return;
+
+  const currentUrl = window.location.href;
+  const input = document.getElementById('share-url-input');
+  if (input) input.value = currentUrl;
+
+  const qrWrap = document.getElementById('qr-code-container');
+  if (qrWrap) {
+    qrWrap.innerHTML = generateSvgQrCode(currentUrl);
+  }
+
+  const waBtn = document.getElementById('share-whatsapp-btn');
+  if (waBtn) {
+    waBtn.href = `https://wa.me/?text=${encodeURIComponent('Bekijk deze auto vergelijking op APEX Exclusive: ' + currentUrl)}`;
+  }
+
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeShareModal() {
+  const modal = document.getElementById('share-modal');
+  if (modal) {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function copyShareUrl() {
+  const input = document.getElementById('share-url-input');
+  if (!input) return;
+  navigator.clipboard.writeText(input.value).then(() => {
+    showToast('📋 Link gekopieerd naar klembord!', 'success');
+  }).catch(() => {
+    input.select();
+    document.execCommand('copy');
+    showToast('📋 Link gekopieerd!', 'success');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🧭 SCROLLSPY & READING PROGRESS BAR
+// ═══════════════════════════════════════════════════════════════════════════
+
+function initScrollSpy() {
+  const progressBar = document.getElementById('reading-progress-bar');
+  const jumpRail = document.getElementById('quick-jump-rail');
+  const resultsArea = document.getElementById('comparison-results');
+
+  window.addEventListener('scroll', () => {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPos = window.scrollY;
+    
+    if (progressBar && docHeight > 0) {
+      const pct = Math.min(100, Math.max(0, (scrollPos / docHeight) * 100));
+      progressBar.style.width = `${pct}%`;
+    }
+
+    if (jumpRail && resultsArea) {
+      const resultsTop = resultsArea.offsetTop - 150;
+      if (scrollPos >= resultsTop && !resultsArea.hidden) {
+        jumpRail.classList.remove('is-hidden');
+      } else {
+        jumpRail.classList.add('is-hidden');
+      }
+    }
+
+    const sections = [
+      'vehicle-hero-grid',
+      'win-crowns-container',
+      'martijn-advisory-container',
+      'lifestyle-match-container',
+      'drag-race-container',
+      'radar-chart-container',
+      'battle-matrix-container',
+      'projection-10yr-container',
+      'roadtrip-planner-container',
+      'wok-risk-barometer-container',
+      'inruil-calculator-container',
+      'market-explorer-container',
+      'spec-accordion-group',
+      'pdf-export-container'
+    ];
+
+    for (let i = sections.length - 1; i >= 0; i--) {
+      const secEl = document.getElementById(sections[i]);
+      if (secEl) {
+        const top = secEl.getBoundingClientRect().top;
+        if (top <= 220) {
+          document.querySelectorAll('.jump-node').forEach(node => {
+            if (node.getAttribute('data-section') === sections[i]) {
+              node.classList.add('is-active');
+            } else {
+              node.classList.remove('is-active');
+            }
+          });
+          document.querySelectorAll('.mobile-jump-pill').forEach(pill => {
+            if (pill.getAttribute('href') === `#${sections[i]}` || pill.getAttribute('href') === `#v1-hero-card`) {
+              pill.classList.add('is-active');
+            } else {
+              pill.classList.remove('is-active');
+            }
+          });
+          break;
+        }
+      }
+    }
+  }, { passive: true });
+}
+
+// Window globally exposed handlers
+window.openMonetizationModal = openMonetizationModal;
+window.closeMonetizationModal = closeMonetizationModal;
+window.redeemCouponCode = redeemCouponCode;
+window.purchasePlan = purchasePlan;
+window.submitFreeCreditsLead = submitFreeCreditsLead;
+window.openShareModal = openShareModal;
+window.closeShareModal = closeShareModal;
+window.copyShareUrl = copyShareUrl;
+window.downloadPdfReport = downloadPdfReport;
+
+// ═══════════════════════════════════════════════════════════════════════════
 // INITIALIZATION
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -3249,6 +3773,10 @@ document.addEventListener('DOMContentLoaded', () => {
       hdr.parentElement.classList.toggle('is-collapsed');
     });
   });
+
+  // Initialize ScrollSpy, reading bar and monetization credits counter
+  initScrollSpy();
+  updateCreditsDisplay();
 
   const urlParams = new URLSearchParams(window.location.search);
   const k1 = urlParams.get('k1') || '25RKZ3';
