@@ -272,7 +272,10 @@
         <div class="plate-col" id="plate-col-1">
           <div class="plate-col-label">
             <span>Auto 1 (Links)</span>
-            <span class="plate-status-text" id="plate-status-1">Typ kenteken</span>
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <button type="button" class="btn-scan-plate" onclick="triggerPlateScan(1)" title="Scan kenteken via camera of foto">📷 Scan</button>
+              <span class="plate-status-text" id="plate-status-1">Typ kenteken</span>
+            </div>
           </div>
           <div class="plate-wrapper" id="plate-ui-1">
             <div class="plate-eu-badge" aria-hidden="true">
@@ -309,7 +312,10 @@
         <div class="plate-col" id="plate-col-2">
           <div class="plate-col-label">
             <span>Auto 2 (Midden/Rechts)</span>
-            <span class="plate-status-text" id="plate-status-2">Typ kenteken</span>
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <button type="button" class="btn-scan-plate" onclick="triggerPlateScan(2)" title="Scan kenteken via camera of foto">📷 Scan</button>
+              <span class="plate-status-text" id="plate-status-2">Typ kenteken</span>
+            </div>
           </div>
           <div class="plate-wrapper" id="plate-ui-2">
             <div class="plate-eu-badge" aria-hidden="true">
@@ -365,6 +371,9 @@
           </div>
         </div>
       </div>
+
+      <!-- Hidden OCR File Input for Camera/Photo Scan -->
+      <input type="file" id="plate-ocr-input" accept="image/*" capture="environment" style="display:none;" onchange="handlePlateOcrFile(this)">
 
       <!-- Quick Preset Chips -->
       <div class="preset-bar">
@@ -677,6 +686,9 @@
         <!-- Import Opportunity & Savings Inzicht -->
         <div id="import-opportunity-container"></div>
 
+        <!-- 🧮 BPM TEGENBEWIJS & KOERSLIJST BESPARINGSCALCULATOR -->
+        <div id="bpm-optimization-container"></div>
+
         <!-- APEX 5-Pillar Score Matrix -->
         <div class="score-matrix-box">
           <div class="score-matrix-header">
@@ -692,8 +704,14 @@
         <!-- 📉 DUAL-LINE RESTWAARDE & AFSCHRIJVING SVG GRAFIEK -->
         <div id="depreciation-graph-container"></div>
 
+        <!-- 🏦 FINANCIERING & PRIVATE / FINANCIAL LEASE CALCULATOR -->
+        <div id="finance-lease-container"></div>
+
         <!-- 💡 TRUE COST-PER-KM VISUALIZER & COMMUTE CALCULATOR -->
         <div id="cost-per-km-container"></div>
+
+        <!-- ⚡ EV & HYBRIDE SNELLAADCURVE & LAADPAAL PLANNER -->
+        <div id="ev-charging-container"></div>
 
         <!-- 🏖️ ROADTRIP & VAKANTIE PLANNER -->
         <div class="roadtrip-box" id="roadtrip-planner-container"></div>
@@ -752,6 +770,9 @@
 
         <!-- 🛡️ OCCASION SCHADE- & WOK RISICO BAROMETER -->
         <div id="wok-risk-barometer-container"></div>
+
+        <!-- 📅 CHRONOLOGISCHE VOERTUIG-HISTORIE & LEVENSLOOP TIJDLIN -->
+        <div id="vehicle-timeline-container"></div>
 
         <!-- Risico-Analyse & Aankoopmakelaar Checklist -->
         <div class="risk-checklist-box">

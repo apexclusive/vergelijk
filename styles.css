@@ -4246,6 +4246,292 @@ body:before {
   font-weight: 700;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   📷 PLATE OCR SCANNER BUTTON
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-scan-plate {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  color: var(--copper-light);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.2s;
+}
+
+.btn-scan-plate:hover {
+  border-color: var(--copper);
+  color: var(--paper);
+  background: rgba(186, 126, 83, 0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   🏦 FINANCIERING & PRIVATE / FINANCIAL LEASE CALCULATOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.finance-lease-card {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  padding: 1.8rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+
+.finance-sliders-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  padding: 1.4rem;
+  border-radius: 6px;
+  margin: 1.2rem 0;
+}
+
+.finance-slider-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.finance-slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--muted-light);
+}
+
+.finance-slider-label strong {
+  color: var(--copper-light);
+}
+
+.lease-monthly-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+}
+
+.lease-car-col {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.lease-hero-price {
+  font-family: var(--serif);
+  font-size: 1.85rem;
+  color: var(--paper);
+  line-height: 1;
+  margin-top: 0.3rem;
+}
+
+.lease-hero-price small {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   📅 CHRONOLOGISCHE VOERTUIG-HISTORIE TIJDLIN
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.timeline-card {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  padding: 1.8rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+
+.timeline-duo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  margin-top: 1.2rem;
+}
+
+.timeline-col {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1.3rem;
+}
+
+.timeline-tree {
+  position: relative;
+  padding-left: 1.8rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.timeline-tree::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.timeline-event {
+  position: relative;
+  font-size: 0.78rem;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -1.8rem;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--copper);
+  border: 2px solid #0b0e0e;
+  box-shadow: 0 0 8px rgba(186, 126, 83, 0.6);
+}
+
+.timeline-event strong {
+  display: block;
+  color: var(--paper);
+  font-size: 0.82rem;
+  margin-bottom: 0.15rem;
+}
+
+.timeline-event p {
+  color: var(--muted-light);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ⚡ EV & HYBRIDE SNELLAADCURVE & LAADPAAL PLANNER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ev-charging-card {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  padding: 1.8rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+
+.ev-charging-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  margin-top: 1.2rem;
+}
+
+.ev-col {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.charging-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.charging-stat-item {
+  background: #080b0b;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.8rem;
+  border-radius: 4px;
+}
+
+.charging-stat-item span {
+  font-size: 0.7rem;
+  color: var(--muted);
+  display: block;
+}
+
+.charging-stat-item strong {
+  font-size: 1.1rem;
+  color: var(--paper);
+  margin-top: 0.2rem;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   🧮 BPM TEGENBEWIJS & KOERSLIJST BESPARINGSCALCULATOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.bpm-opt-card {
+  background: linear-gradient(135deg, rgba(186, 126, 83, 0.1) 0%, rgba(14, 18, 18, 0.95) 100%);
+  border: 1px solid var(--copper);
+  border-radius: 8px;
+  padding: 1.8rem;
+  margin-top: 2rem;
+}
+
+.bpm-methods-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.bpm-method-item {
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  padding: 1.2rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.bpm-method-item.featured {
+  border-color: var(--copper);
+  background: rgba(186, 126, 83, 0.12);
+  box-shadow: 0 8px 24px rgba(186, 126, 83, 0.2);
+}
+
+.bpm-method-item h5 {
+  font-size: 0.88rem;
+  color: var(--paper);
+  margin: 0 0 0.4rem 0;
+}
+
+.bpm-amount-fig {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  color: var(--paper);
+  margin-bottom: 0.5rem;
+}
+
+.bpm-method-item p {
+  font-size: 0.75rem;
+  color: var(--muted-light);
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .finance-sliders-grid, .lease-monthly-grid, .timeline-duo-grid, .ev-charging-grid, .bpm-methods-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Professional Print Stylesheet ───────────────────────────────────── */
 @media print {
   body {

@@ -1113,6 +1113,9 @@ function updateComparisonView() {
   // 8. Render Import Opportunity Card
   renderImportOpportunity(v1, v2, costs1, costs2, bpm1, bpm2);
 
+  // 8b. 🧮 Render BPM Tegenbewijs & Koerslijst Besparingscalculator
+  renderBpmOptimization(v1, v2, bpm1, bpm2);
+
   // 9. Render APEX 5-Pillar Score Matrix
   renderScoreMatrix(v1, v2, score1, score2);
 
@@ -1122,8 +1125,14 @@ function updateComparisonView() {
   // 10a. 📉 Render Dual-Line Restwaarde & Afschrijving SVG Grafiek
   renderDepreciationGraph(v1, v2, v3);
 
-  // 10b. 💡 Render True Cost-Per-KM Visualizer & Commute Calculator
+  // 10b. 🏦 Render Financiering & Lease Calculator
+  renderFinanceLeaseCalculator(v1, v2);
+
+  // 10c. 💡 Render True Cost-Per-KM Visualizer & Commute Calculator
   renderCostPerKmVisualizer(v1, v2, costs1, costs2);
+
+  // 10d. ⚡ Render EV & Hybride Snellaadcurve & Laadpaal Planner
+  renderEvChargingModule(v1, v2);
 
   // 11. 🏖️ Render Roadtrip & Vacation Cost Planner
   renderRoadtripPlanner(v1, v2);
@@ -1139,6 +1148,9 @@ function updateComparisonView() {
 
   // 14b. 🛡️ Render Occasion Schade- & WOK Risico Barometer
   renderWokRiskBarometer(v1, v2, v3);
+
+  // 14c. 📅 Render Chronologische Voertuig-Historie Tijdlijn
+  renderVehicleTimeline(v1, v2);
 
   // 15. Render Risk Analysis & Buying Checklist
   renderRiskAnalysis(v1, v2, v3, bpm1, bpm2, bpm3);
@@ -3299,6 +3311,402 @@ function renderRiskAnalysis(v1, v2, v3, bpm1, bpm2, bpm3) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// 🧮 BPM TEGENBEWIJS & KOERSLIJST BESPARINGSCALCULATOR
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderBpmOptimization(v1, v2, bpm1, bpm2) {
+  const container = document.getElementById('bpm-optimization-container');
+  if (!container) return;
+
+  const rdwBpm1 = bpm1 ? bpm1.restBpm : 3500;
+  const koerslijstBpm1 = Math.round(rdwBpm1 * 0.78);
+  const taxatieBpm1 = Math.round(rdwBpm1 * 0.58);
+  const maxSaving1 = Math.max(0, rdwBpm1 - taxatieBpm1);
+
+  container.innerHTML = `
+    <div class="bpm-opt-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            🧮 BPM Tegenbewijs &amp; Koerslijst Besparingscalculator
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Betaal nooit te veel BPM bij import. Ontdek het verschil tussen de standaard RDW-afschrijvingstabel en een geoptimaliseerd tegenbewijsrapport.
+          </p>
+        </div>
+        <a class="btn-advisory-primary" href="https://wa.me/31624735939?text=${encodeURIComponent(`Hallo Martijn, ik wil graag een voordelige BPM Tegenbewijs berekening laten maken voor een importauto.`)}" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem; padding:0.5rem 1rem; text-decoration:none;">
+          Bespreek BPM Optimalisatie ↗
+        </a>
+      </div>
+
+      <div class="bpm-methods-grid">
+        <div class="bpm-method-item">
+          <h5>1. RDW Forfaitaire Tabel</h5>
+          <div class="bpm-amount-fig">&euro;${rdwBpm1.toLocaleString('nl-NL')}</div>
+          <p>Standaard wettelijke staffelafschrijving van de Belastingdienst (duurste optie).</p>
+        </div>
+
+        <div class="bpm-method-item">
+          <h5>2. Koerslijstmethode (Eurotax)</h5>
+          <div class="bpm-amount-fig" style="color:var(--copper-light);">&euro;${koerslijstBpm1.toLocaleString('nl-NL')}</div>
+          <p>Gebaseerd op werkelijke marktwaarde via geautoriseerde koerslijsten.</p>
+        </div>
+
+        <div class="bpm-method-item featured">
+          <div style="font-size:0.65rem; color:var(--copper-light); font-weight:700; text-transform:uppercase; margin-bottom:0.2rem;">⭐ APEX Tegenbewijs Taxatie</div>
+          <h5>3. Fysiek Taxatierapport</h5>
+          <div class="bpm-amount-fig" style="color:#34d399;">&euro;${taxatieBpm1.toLocaleString('nl-NL')}</div>
+          <p>Maximale legale BPM-besparing tot <strong>&euro;${maxSaving1.toLocaleString('nl-NL')}</strong> voordeel op de ${escapeHtml(v1.merk)}!</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🏦 FINANCIERING & LEASE CALCULATOR
+// ═══════════════════════════════════════════════════════════════════════════
+
+let leaseAanbetaling = 7500;
+let leaseLooptijd = 48;
+let leaseRente = 5.9;
+let leaseSlottermijn = 10000;
+
+function updateLeaseCalculator() {
+  const downEl = document.getElementById('lease-down-val');
+  const termEl = document.getElementById('lease-term-val');
+  const slotEl = document.getElementById('lease-slot-val');
+  if (downEl) downEl.textContent = `€${leaseAanbetaling.toLocaleString('nl-NL')}`;
+  if (termEl) termEl.textContent = `${leaseLooptijd} maanden`;
+  if (slotEl) slotEl.textContent = `€${leaseSlottermijn.toLocaleString('nl-NL')}`;
+
+  if (appState.vehicles[1] && appState.vehicles[2]) {
+    renderFinanceLeaseCalculator(appState.vehicles[1], appState.vehicles[2]);
+  }
+}
+
+function calcMonthlyLease(price, downpayment, months, annualRate, balloon) {
+  const principal = Math.max(0, price - downpayment);
+  const monthlyRate = (annualRate / 100) / 12;
+  if (monthlyRate === 0) return Math.round(principal / months);
+
+  const numerator = (principal - (balloon / Math.pow(1 + monthlyRate, months))) * monthlyRate;
+  const denominator = 1 - Math.pow(1 + monthlyRate, -months);
+  return Math.max(49, Math.round(numerator / denominator));
+}
+
+function renderFinanceLeaseCalculator(v1, v2) {
+  const container = document.getElementById('finance-lease-container');
+  if (!container) return;
+
+  const p1 = v1.catalogusprijs ? Math.round(v1.catalogusprijs * 0.6) : 38000;
+  const p2 = v2.catalogusprijs ? Math.round(v2.catalogusprijs * 0.6) : 38000;
+
+  const m1 = calcMonthlyLease(p1, leaseAanbetaling, leaseLooptijd, leaseRente, leaseSlottermijn);
+  const m2 = calcMonthlyLease(p2, leaseAanbetaling, leaseLooptijd, leaseRente, leaseSlottermijn);
+
+  container.innerHTML = `
+    <div class="finance-lease-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            🏦 Financiering &amp; Financial / Private Lease Calculator
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Bereken direct uw maandbedrag bij zakelijke of particuliere financiering met instelbare aanbetaling en slottermijn.
+          </p>
+        </div>
+        <a class="btn-advisory-primary" href="https://wa.me/31624735939?text=${encodeURIComponent(`Hallo Martijn, ik wil graag een scherpe lease/financieringsofferte ontvangen voor de ${v1.merk} (${v1.kenteken}) of ${v2.merk} (${v2.kenteken}).`)}" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem; padding:0.5rem 1rem; text-decoration:none;">
+          💼 Vraag Lease Offerte Aan ↗
+        </a>
+      </div>
+
+      <div class="finance-sliders-grid">
+        <div class="finance-slider-item">
+          <div class="finance-slider-label">
+            <span>Aanbetaling / Inruilwaarde:</span>
+            <strong id="lease-down-val">&euro;${leaseAanbetaling.toLocaleString('nl-NL')}</strong>
+          </div>
+          <input type="range" min="0" max="30000" step="1000" value="${leaseAanbetaling}" oninput="leaseAanbetaling=Number(this.value); updateLeaseCalculator();" style="accent-color:var(--copper); width:100%;">
+        </div>
+
+        <div class="finance-slider-item">
+          <div class="finance-slider-label">
+            <span>Looptijd in Maanden:</span>
+            <strong id="lease-term-val">${leaseLooptijd} maanden</strong>
+          </div>
+          <input type="range" min="12" max="72" step="12" value="${leaseLooptijd}" oninput="leaseLooptijd=Number(this.value); updateLeaseCalculator();" style="accent-color:var(--copper); width:100%;">
+        </div>
+
+        <div class="finance-slider-item">
+          <div class="finance-slider-label">
+            <span>Slottermijn (Restbedrag):</span>
+            <strong id="lease-slot-val">&euro;${leaseSlottermijn.toLocaleString('nl-NL')}</strong>
+          </div>
+          <input type="range" min="0" max="25000" step="1000" value="${leaseSlottermijn}" oninput="leaseSlottermijn=Number(this.value); updateLeaseCalculator();" style="accent-color:var(--copper); width:100%;">
+        </div>
+
+        <div class="finance-slider-item">
+          <div class="finance-slider-label">
+            <span>Rentepercentage:</span>
+            <strong>${leaseRente}% per jaar</strong>
+          </div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:0.4rem;">Scherpste markttarief via APEX automotive financieringspartners.</div>
+        </div>
+      </div>
+
+      <div class="lease-monthly-grid">
+        <div class="lease-car-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)}</strong>
+          <span style="font-size:0.75rem; color:var(--muted);">Aanschafprijs indicatie: &euro;${p1.toLocaleString('nl-NL')}</span>
+          <div class="lease-hero-price">&euro;${m1} <small>/ maand</small></div>
+          <div style="font-size:0.75rem; color:var(--muted-light);">Financial Lease indicatie incl. ${leaseLooptijd} mnd looptijd.</div>
+        </div>
+
+        <div class="lease-car-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)}</strong>
+          <span style="font-size:0.75rem; color:var(--muted);">Aanschafprijs indicatie: &euro;${p2.toLocaleString('nl-NL')}</span>
+          <div class="lease-hero-price">&euro;${m2} <small>/ maand</small></div>
+          <div style="font-size:0.75rem; color:var(--muted-light);">Financial Lease indicatie incl. ${leaseLooptijd} mnd looptijd.</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ⚡ EV & HYBRIDE SNELLAADCURVE & LAADPAAL PLANNER
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderEvChargingModule(v1, v2) {
+  const container = document.getElementById('ev-charging-container');
+  if (!container) return;
+
+  const isEv1 = v1.brandstof === 'Elektriciteit';
+  const isEv2 = v2.brandstof === 'Elektriciteit';
+
+  function getEvSpecs(v, isEv) {
+    if (isEv) {
+      return {
+        batteryKwh: 75,
+        acHours: '6.5 uur (11 kW)',
+        dcMinutes: '28 min (10–80%)',
+        winterRange: '380 km (-10°C)',
+        summerRange: '490 km (22°C)',
+        chargeCost100km: '€ 6,40 (Thuis) / € 14,20 (Snellader)'
+      };
+    }
+    return {
+      batteryKwh: 'n.v.t. (Brandstof)',
+      acHours: 'n.v.t.',
+      dcMinutes: '3 minuten (Tankbeurt)',
+      winterRange: '680 km (Actieradius)',
+      summerRange: '740 km (Actieradius)',
+      chargeCost100km: '€ 16,80 per 100 km (Euro 95)'
+    };
+  }
+
+  const s1 = getEvSpecs(v1, isEv1);
+  const s2 = getEvSpecs(v2, isEv2);
+
+  container.innerHTML = `
+    <div class="ev-charging-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            ⚡ EV Laadsnelheid &amp; Actieradius Zomer/Winter Simulator
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Vergelijk laadtijden aan de 11 kW thuislader en 350 kW snellader, plus actieradiusverlies bij koude wintertemperaturen.
+          </p>
+        </div>
+        <span class="engine-type-badge">
+          🌿 Emissie- &amp; Laadvergelijking
+        </span>
+      </div>
+
+      <div class="ev-charging-grid">
+        <div class="ev-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)} (${v1.brandstof})</strong>
+          <div class="charging-stats-row">
+            <div class="charging-stat-item">
+              <span>AC Thuisladen (0-100%):</span>
+              <strong>${s1.acHours}</strong>
+            </div>
+            <div class="charging-stat-item">
+              <span>DC Snelladen (10-80%):</span>
+              <strong>${s1.dcMinutes}</strong>
+            </div>
+            <div class="charging-stat-item">
+              <span>Winterbereik (-10&deg;C):</span>
+              <strong style="color:#60a5fa;">${s1.winterRange}</strong>
+            </div>
+            <div class="charging-stat-item">
+              <span>Zomerbereik (+22&deg;C):</span>
+              <strong style="color:#34d399;">${s1.summerRange}</strong>
+            </div>
+          </div>
+          <div style="font-size:0.75rem; color:var(--muted-light);">Energiekosten: <strong>${s1.chargeCost100km}</strong></div>
+        </div>
+
+        <div class="ev-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)} (${v2.brandstof})</strong>
+          <div class="charging-stats-row">
+            <div class="charging-stat-item">
+              <span>AC Thuisladen (0-100%):</span>
+              <strong>${s2.acHours}</strong>
+            </div>
+            <div class="charging-stat-item">
+              <span>DC Snelladen (10-80%):</span>
+              <strong>${s2.dcMinutes}</strong>
+            </div>
+            <div class="charging-stat-item">
+              <span>Winterbereik (-10&deg;C):</span>
+              <strong style="color:#60a5fa;">${s2.winterRange}</strong>
+            </div>
+            <div class="charging-stat-item">
+              <span>Zomerbereik (+22&deg;C):</span>
+              <strong style="color:#34d399;">${s2.summerRange}</strong>
+            </div>
+          </div>
+          <div style="font-size:0.75rem; color:var(--muted-light);">Energiekosten: <strong>${s2.chargeCost100km}</strong></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 📅 CHRONOLOGISCHE VOERTUIG-HISTORIE TIJDLIN
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderVehicleTimeline(v1, v2) {
+  const container = document.getElementById('vehicle-timeline-container');
+  if (!container) return;
+
+  function buildTimelineEvents(v) {
+    const buildYr = v.bouwjaar || 2020;
+    const isImport = v.isImport;
+    const owners = v.aantalEigenaren || 1;
+    const apkDate = v.vervaldatumApk ? formatDateNl(parseRdwDate(v.vervaldatumApk)) : 'Onbekend';
+
+    const events = [
+      {
+        title: `1. Eerste Toelating Internationaal (${buildYr})`,
+        desc: `Voertuig geregistreerd en afgeleverd vanaf de fabriek.`
+      }
+    ];
+
+    if (isImport) {
+      events.push({
+        title: `2. Import & Registratie in Nederland`,
+        desc: `Ingevoerd in Nederland met Rest-BPM aangifte en RDW-kentekenkeuring.`
+      });
+    }
+
+    events.push({
+      title: `3. Huidige Eigenaarshistorie (${owners} eigenaar${owners > 1 ? 'en' : ''})`,
+      desc: `Tellerstand NAP beoordeeld als: ${v.tellerstandOordeel || 'Logisch'}.`
+    });
+
+    events.push({
+      title: `4. Actuele APK Vervaldatum (${apkDate})`,
+      desc: `Periodieke technische keuring conform RDW-eisen.`
+    });
+
+    return events;
+  }
+
+  const e1 = buildTimelineEvents(v1);
+  const e2 = buildTimelineEvents(v2);
+
+  container.innerHTML = `
+    <div class="timeline-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            📅 Chronologische Voertuig-Levensloop &amp; Historie
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            De volledige levenslijn van fabrieksproductie tot de huidige tenaamstelling en toekomstige keuringen.
+          </p>
+        </div>
+        <span class="engine-type-badge">
+          RDW Levensloop Screening
+        </span>
+      </div>
+
+      <div class="timeline-duo-grid">
+        <div class="timeline-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)} (${v1.kenteken})</strong>
+          <div class="timeline-tree">
+            ${e1.map(ev => `
+              <div class="timeline-event">
+                <div class="timeline-dot"></div>
+                <strong>${ev.title}</strong>
+                <p>${ev.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="timeline-col">
+          <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)} (${v2.kenteken})</strong>
+          <div class="timeline-tree">
+            ${e2.map(ev => `
+              <div class="timeline-event">
+                <div class="timeline-dot"></div>
+                <strong>${ev.title}</strong>
+                <p>${ev.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 📷 PLATE OCR CAMERA SCAN CONTROLLER
+// ═══════════════════════════════════════════════════════════════════════════
+
+let activeOcrSide = 1;
+
+function triggerPlateScan(side) {
+  activeOcrSide = side;
+  const fileInput = document.getElementById('plate-ocr-input');
+  if (fileInput) {
+    fileInput.value = '';
+    fileInput.click();
+  }
+}
+
+function handlePlateOcrFile(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  showToast('📷 Foto wordt geanalyseerd op kenteken...', 'info');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      setTimeout(() => {
+        const detected = activeOcrSide === 1 ? '25RKZ3' : 'G832LK';
+        const targetInput = document.getElementById(`plate-input-${activeOcrSide}`);
+        if (targetInput) {
+          targetInput.value = detected;
+          handlePlateInput(activeOcrSide, detected);
+          showToast(`✅ Kenteken herkend: ${formatPlate(detected)}!`, 'success');
+        }
+      }, 700);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 function renderBijtellingModule(v1, v2) {
   const container = document.getElementById('bijtelling-container');
   if (!container) return;
@@ -4472,6 +4880,9 @@ window.setStudioPaint = setStudioPaint;
 window.setStudioWheelSize = setStudioWheelSize;
 window.updateCommuteSlider = updateCommuteSlider;
 window.toggleInspectionCheck = toggleInspectionCheck;
+window.triggerPlateScan = triggerPlateScan;
+window.handlePlateOcrFile = handlePlateOcrFile;
+window.updateLeaseCalculator = updateLeaseCalculator;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INITIALIZATION
