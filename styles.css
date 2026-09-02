@@ -4086,6 +4086,166 @@ body:before {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   🔥 POPULAIRE DUELS & INSTANT DUEL PRESETS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.popular-duels-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0.8rem 0 0.4rem 0;
+  scrollbar-width: none;
+}
+.popular-duels-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.popular-duels-label {
+  font-size: 0.72rem;
+  color: var(--copper-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.preset-duel-pill {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  color: var(--muted-light);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.preset-duel-pill:hover {
+  border-color: var(--copper);
+  color: var(--paper);
+  background: var(--ink-soft);
+  transform: translateY(-1px);
+}
+
+.preset-duel-pill strong {
+  color: var(--paper);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ⏳ APK COUNTDOWN PILLS & ENERGIELABEL BADGES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.apk-countdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.apk-valid-green {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10b981;
+  color: #34d399;
+}
+
+.apk-warning-yellow {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid #f59e0b;
+  color: #fbbf24;
+}
+
+.apk-expired-red {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #f87171;
+}
+
+/* Energielabel Badge (A t/m G) */
+.energielabel-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 22px;
+  border-radius: 3px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: #0b0e0e;
+  text-shadow: 0 0 1px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.label-A { background: #009640; color: #fff; }
+.label-B { background: #50b848; color: #fff; }
+.label-C { background: #b4d435; }
+.label-D { background: #fff100; }
+.label-E { background: #fdb813; }
+.label-F { background: #f37023; color: #fff; }
+.label-G { background: #ed1c24; color: #fff; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   📉 DUAL-LINE RESTWAARDE & AFSCHRIJVING SVG GRAFIEK
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.depreciation-graph-box {
+  background: var(--ink-card);
+  border: 1px solid var(--line);
+  padding: 1.8rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+
+.depreciation-svg-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1.2rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   💱 MULTI-CURRENCY & EXPORT-BPM CALCULATOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.currency-toggle-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  padding: 0.25rem;
+  border-radius: 20px;
+}
+
+.currency-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.currency-btn.active {
+  background: var(--copper);
+  color: #0b0e0e;
+  font-weight: 700;
+}
+
 /* ── Professional Print Stylesheet ───────────────────────────────────── */
 @media print {
   body {

@@ -1,0 +1,21 @@
+{
+  "name": "APEX Exclusive Kentekenvergelijking",
+  "short_name": "APEX Vergelijk",
+  "description": "De meest complete auto vergelijkingstool van Nederland op basis van RDW Open Data en TCO maandlasten.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0e0e",
+  "theme_color": "#ba7e53",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

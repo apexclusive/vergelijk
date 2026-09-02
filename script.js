@@ -1119,6 +1119,9 @@ function updateComparisonView() {
   // 10. 🔮 Render 10-Year TCO & Residual Value Projection Simulator
   render10YearProjection(v1, v2, costs1, costs2);
 
+  // 10a. 📉 Render Dual-Line Restwaarde & Afschrijving SVG Grafiek
+  renderDepreciationGraph(v1, v2, v3);
+
   // 10b. 💡 Render True Cost-Per-KM Visualizer & Commute Calculator
   renderCostPerKmVisualizer(v1, v2, costs1, costs2);
 
@@ -1856,11 +1859,38 @@ function renderVehicleHero(side, v, costs, score, isWinner) {
   }
 
   if (tagsEl) {
+    let apkBadge = '';
+    if (v.vervaldatumApk) {
+      const apkDate = parseRdwDate(v.vervaldatumApk);
+      if (apkDate) {
+        const daysLeft = Math.round((apkDate - new Date()) / (1000 * 60 * 60 * 24));
+        if (daysLeft > 60) {
+          apkBadge = `<span class="apk-countdown-pill apk-valid-green">⏳ APK tot ${formatDateNl(apkDate)} (${daysLeft} dgn)</span>`;
+        } else if (daysLeft >= 0) {
+          apkBadge = `<span class="apk-countdown-pill apk-warning-yellow">⚠️ APK verloopt over ${daysLeft} dgn</span>`;
+        } else {
+          apkBadge = `<span class="apk-countdown-pill apk-expired-red">🚨 APK verlopen</span>`;
+        }
+      }
+    }
+
+    let energyLabel = 'C';
+    const co2 = v.co2Uitstoot || 140;
+    if (v.brandstof === 'Elektriciteit' || co2 < 95) energyLabel = 'A';
+    else if (co2 < 120) energyLabel = 'B';
+    else if (co2 < 145) energyLabel = 'C';
+    else if (co2 < 170) energyLabel = 'D';
+    else if (co2 < 205) energyLabel = 'E';
+    else if (co2 < 245) energyLabel = 'F';
+    else energyLabel = 'G';
+
     tagsEl.innerHTML = `
       <span>${v.vermogenPk} PK</span>
       <span>${v.acceleratie}s naar 100</span>
       <span>${formatEuro(v.catalogusprijs)} Cat.</span>
       <span>${v.tellerstandOordeel}</span>
+      <span style="display:inline-flex; align-items:center; gap:0.35rem;">Label <span class="energielabel-badge label-${energyLabel}">${energyLabel}</span></span>
+      ${apkBadge}
     `;
   }
 
@@ -2805,6 +2835,111 @@ function render10YearProjection(v1, v2, c1, c2) {
 
     <div style="margin-top:1.2rem; padding:1rem; background:rgba(186,126,83,0.08); border:1px solid var(--line); font-size:0.85rem; color:var(--paper); text-align:center;">
       💡 <strong>Financieel Inzicht:</strong> Met de <strong>${c1.totalMonthly < c2.totalMonthly ? v1.merk : v2.merk}</strong> bespaart u in totaal <strong>${formatEuro(diffCost)}</strong> over ${years} jaar bezit!
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 📉 DUAL-LINE RESTWAARDE & AFSCHRIJVING SVG GRAFIEK
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderDepreciationGraph(v1, v2, v3) {
+  const container = document.getElementById('depreciation-graph-container');
+  if (!container) return;
+
+  const cat1 = v1.catalogusprijs || 60000;
+  const cat2 = v2.catalogusprijs || 60000;
+  const maxPrice = Math.max(cat1, cat2, 40000);
+
+  const years = [0, 1, 3, 5, 7, 10];
+  const ratios1 = [1.0, 0.80, 0.62, 0.48, 0.38, 0.25];
+  const ratios2 = [1.0, 0.76, 0.56, 0.42, 0.32, 0.20];
+
+  const w = 700;
+  const h = 240;
+  const padX = 60;
+  const padY = 35;
+  const plotW = w - padX * 2;
+  const plotH = h - padY * 2;
+
+  function getX(idx) {
+    return padX + (idx / (years.length - 1)) * plotW;
+  }
+  function getY(val) {
+    return padY + plotH - (val / maxPrice) * plotH;
+  }
+
+  const pts1 = years.map((yr, idx) => {
+    const val = Math.round(cat1 * ratios1[idx]);
+    return { x: getX(idx), y: getY(val), val, yr };
+  });
+
+  const pts2 = years.map((yr, idx) => {
+    const val = Math.round(cat2 * ratios2[idx]);
+    return { x: getX(idx), y: getY(val), val, yr };
+  });
+
+  const path1 = pts1.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  const path2 = pts2.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+
+  container.innerHTML = `
+    <div class="depreciation-graph-box">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            📉 Restwaarde &amp; Waardevastheidscurve (0 t/m 10 Jaar)
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Vergelijk de geprojecteerde afschrijvingscurve en restwaardeontwikkeling vanaf de oorspronkelijke nieuwprijs.
+          </p>
+        </div>
+        <div style="display:flex; gap:1rem; font-size:0.78rem;">
+          <span style="display:flex; align-items:center; gap:0.4rem; color:var(--copper-light);">
+            <span style="width:12px; height:3px; background:var(--copper); border-radius:2px;"></span>
+            ${escapeHtml(v1.merk)}
+          </span>
+          <span style="display:flex; align-items:center; gap:0.4rem; color:#60a5fa;">
+            <span style="width:12px; height:3px; background:#60a5fa; border-radius:2px;"></span>
+            ${escapeHtml(v2.merk)}
+          </span>
+        </div>
+      </div>
+
+      <div class="depreciation-svg-wrap">
+        <svg width="100%" height="240" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="display:block;">
+          <!-- Grid Lines -->
+          <line x1="${padX}" y1="${padY}" x2="${w - padX}" y2="${padY}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3"/>
+          <line x1="${padX}" y1="${padY + plotH / 2}" x2="${w - padX}" y2="${padY + plotH / 2}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3"/>
+          <line x1="${padX}" y1="${padY + plotH}" x2="${w - padX}" y2="${padY + plotH}" stroke="rgba(255,255,255,0.15)"/>
+
+          <!-- Y Axis Labels -->
+          <text x="${padX - 8}" y="${padY + 4}" fill="var(--muted)" font-size="10" text-anchor="end">&euro;${Math.round(maxPrice / 1000)}k</text>
+          <text x="${padX - 8}" y="${padY + plotH / 2 + 4}" fill="var(--muted)" font-size="10" text-anchor="end">&euro;${Math.round(maxPrice / 2000)}k</text>
+          <text x="${padX - 8}" y="${padY + plotH + 4}" fill="var(--muted)" font-size="10" text-anchor="end">&euro;0</text>
+
+          <!-- Year Vertical Lines & Labels -->
+          ${years.map((yr, i) => `
+            <line x1="${getX(i)}" y1="${padY}" x2="${getX(i)}" y2="${padY + plotH}" stroke="rgba(255,255,255,0.04)"/>
+            <text x="${getX(i)}" y="${padY + plotH + 18}" fill="var(--muted-light)" font-size="10" text-anchor="middle">Jaar ${yr}</text>
+          `).join('')}
+
+          <!-- Curves -->
+          <path d="${path1}" fill="none" stroke="var(--copper)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="${path2}" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4,2"/>
+
+          <!-- Points & Values for Car 1 -->
+          ${pts1.map(p => `
+            <circle cx="${p.x}" cy="${p.y}" r="4" fill="#0b0e0e" stroke="var(--copper)" stroke-width="2"/>
+            <text x="${p.x}" y="${p.y - 8}" fill="var(--copper-light)" font-size="9.5" font-weight="600" text-anchor="middle">&euro;${Math.round(p.val / 1000)}k</text>
+          `).join('')}
+
+          <!-- Points & Values for Car 2 -->
+          ${pts2.map(p => `
+            <circle cx="${p.x}" cy="${p.y}" r="4" fill="#0b0e0e" stroke="#60a5fa" stroke-width="2"/>
+            <text x="${p.x}" y="${p.y + 14}" fill="#93c5fd" font-size="9.5" font-weight="600" text-anchor="middle">&euro;${Math.round(p.val / 1000)}k</text>
+          `).join('')}
+        </svg>
+      </div>
     </div>
   `;
 }
