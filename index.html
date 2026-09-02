@@ -1,116 +1,83 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Auto Vergelijker — APEXclusive | Vergelijk Twee of Drie Kentekens &amp; Maandlasten</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Kentekenvergelijking — APEXclusive | Vergelijk Twee of Drie Auto's &amp; Maandlasten</title>
   <meta name="description" content="Vergelijk direct 2 of 3 Nederlandse auto's op alle officiële RDW open data, maandlasten, wegenbelasting 2026, rest-BPM, 0-100 sprintrace, APK-historie en NAP tellerstand. Onafhankelijk aankoopadvies door APEXclusive Maastricht.">
   <meta name="author" content="APEXclusive">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  
-  <!-- Open Graph / Meta -->
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="nl_NL">
-  <meta property="og:title" content="Auto Vergelijker — APEXclusive | Vergelijk Kentekens &amp; Maandlasten">
-  <meta property="og:description" content="Vergelijk direct kentekens op alle RDW specificaties, exploitatiekosten per maand, rest-BPM, sprintrace en aankooprisico's.">
-  <meta property="og:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1600,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
-  <meta property="og:image:alt" content="APEXclusive automotive advisory">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Auto Vergelijker — APEXclusive">
-  <meta name="twitter:description" content="Vergelijk kentekens en bekijk maandelijkse kosten voor afschrijving, verzekering, belasting en brandstof.">
-  <meta name="twitter:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1600,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
   <meta name="theme-color" content="#0b0e0e">
   <link rel="canonical" href="https://vergelijk.apexclusive.nl/">
-  
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:site_name" content="APEXclusive">
+  <meta property="og:title" content="Kentekenvergelijking — APEXclusive | Vergelijk Auto's &amp; Maandlasten">
+  <meta property="og:description" content="Vergelijk direct kentekens op alle officiële RDW-specificaties, maandlasten, rest-BPM, sprintrace en aankooprisico's.">
+  <meta property="og:url" content="https://vergelijk.apexclusive.nl/">
+  <meta property="og:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1200,h_630,c_fill,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
+  <meta property="og:image:alt" content="APEXclusive automotive advisory">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kentekenvergelijking — APEXclusive">
+  <meta name="twitter:description" content="Vergelijk kentekens en bekijk maandelijkse kosten voor afschrijving, verzekering, belasting en brandstof.">
+  <meta name="twitter:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1200,h_630,c_fill,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
+
   <!-- Favicons matching homepage -->
   <link rel="icon" href="favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/schild-32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="mask-icon" href="apexclusive-mask-icon.svg" color="#ba7e53">
-  
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Auto Vergelijker — APEXclusive",
+    "name": "Kentekenvergelijking — APEXclusive",
     "url": "https://vergelijk.apexclusive.nl/",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
-    "description": "Premium interactieve vergelijkingstool voor Nederlandse kentekens op basis van officiële RDW open data en complete maandlastenberekening."
+    "description": "Premium interactieve vergelijkingstool voor Nederlandse kentekens op basis van officiële RDW open data en complete exploitatiemaandlasten."
   }
   </script>
-  
+
   <!-- Google Fonts matching APEXclusive Homepage -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- Core Theme & Tool Stylesheet -->
+  <link rel="stylesheet" href="apexclusive-modern.css?v=20260901-18">
+  <link rel="stylesheet" href="styles.css?v=20260902-01">
 </head>
-<body>
-  <a class="skip-link" href="#compare-main">Direct naar de vergelijker</a>
-  <div class="site-progress" id="site-progress"></div>
+<body id="top">
+  <a class="skip-link" href="#compare-main">Naar de inhoud</a>
+  <div class="site-progress" id="site-progress" aria-hidden="true"></div>
 
   <!-- Toast Notification Container -->
   <div id="toast-msg" class="toast-msg" aria-live="polite"></div>
 
-  <!-- Floating Launchers: WhatsApp on left, AI Concierge on right -->
-  <a class="whatsapp-launcher" href="https://wa.me/31624735939?text=Beste%20Martijn%2C%20ik%20gebruik%20de%20Auto%20Vergelijker%20en%20zou%20graag%20advies%20willen." target="_blank" rel="noopener noreferrer" aria-label="Direct contact via WhatsApp">
-    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-  </a>
-
-  <button class="ai-launcher" id="ai-launcher" type="button" aria-label="APEX Concierge chat openen">
-    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  </button>
-
-  <!-- AI Concierge Panel -->
-  <aside class="ai-panel" id="ai-panel" hidden aria-label="APEX AI Concierge">
-    <div class="ai-head">
-      <div>
-        <div class="ai-label">APEX Concierge</div>
-        <h2>Martijn Puts</h2>
-      </div>
-      <button class="ai-close" id="ai-close" type="button" aria-label="Sluit chat">✕</button>
-    </div>
-    <div class="ai-messages" id="ai-messages">
-      <div class="ai-message ai-bot">
-        Welkom bij APEXclusive. Twijfelt u tussen twee of drie auto's, overweegt u import of wilt u een onafhankelijke aankoopcheck? Stel gerust uw vraag.
-      </div>
-    </div>
-    <div class="ai-quick">
-      <button type="button" onclick="sendAiQuick('Wat kost aankoopbegeleiding?')">Aankoopadvies</button>
-      <button type="button" onclick="sendAiQuick('Hoe werkt BPM bij import?')">BPM &amp; Import</button>
-      <button type="button" onclick="sendAiQuick('Kan Martijn een auto inspecteren?')">Inspectie op locatie</button>
-      <button type="button" onclick="sendAiQuick('Wie is Martijn Puts?')">Over Martijn</button>
-    </div>
-    <form class="ai-form" id="ai-form" onsubmit="handleAiSubmit(event)">
-      <input id="ai-input" type="text" placeholder="Stel uw vraag..." autocomplete="off">
-      <button type="submit" aria-label="Verstuur">↗</button>
-    </form>
-    <div class="ai-foot">
-      <span>Direct contact</span>
-      <a href="https://wa.me/31624735939" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
-      <a href="tel:+31624735939">+31 6 24 73 59 39</a>
-    </div>
-  </aside>
-
-  <!-- Site Header (Matching Homepage Exactly) -->
+  <!-- ═══════════════ HEADER (Identiek aan apexclusive.nl) ═══════════════ -->
   <header class="site-header" id="site-header">
-    <a class="wordmark" href="https://apexclusive.nl" aria-label="APEXclusive home">
+    <a class="wordmark" href="https://apexclusive.nl/" aria-label="APEXclusive home">
       <span>APEX</span><i></i><b>EXCLUSIVE</b>
     </a>
-    
+
     <nav class="desktop-nav" aria-label="Hoofdnavigatie">
       <a href="https://apexclusive.nl/#diensten">Diensten</a>
       <a href="https://apexclusive.nl/#werkwijze">Werkwijze</a>
       <a href="https://apexclusive.nl/#aanbod">Aanbod</a>
       <a href="https://apexclusive.nl/#cases">Dossiers</a>
-      <a href="https://apexclusive.nl/#tools" class="active">Tools</a>
+      <a href="https://apexclusive.nl/kennisbank.html">Kennisbank</a>
+      <a href="https://apexclusive.nl/#tools" class="active">Hulpmiddelen</a>
       <a href="https://apexclusive.nl/#over">Over ons</a>
+      <a href="https://apexclusive.nl/#contact">Contact</a>
     </nav>
 
-    <a class="header-cta" href="https://apexclusive.nl" target="_blank" rel="noopener noreferrer">
-      <span>←</span> Terug naar website
+    <a class="header-cta" href="https://apexclusive.nl/">
+      Terug naar website <span>↗</span>
     </a>
 
     <button class="menu-button" type="button" aria-label="Menu openen" aria-controls="mobile-menu" aria-expanded="false">
@@ -118,36 +85,34 @@
     </button>
   </header>
 
-  <!-- Mobile Menu -->
+  <!-- Mobile Menu (Identiek aan apexclusive.nl) -->
   <div class="mobile-menu" id="mobile-menu" hidden>
     <nav aria-label="Mobiele navigatie">
       <a href="https://apexclusive.nl/#diensten">Diensten</a>
       <a href="https://apexclusive.nl/#werkwijze">Werkwijze</a>
       <a href="https://apexclusive.nl/#aanbod">Aanbod</a>
       <a href="https://apexclusive.nl/#cases">Dossiers</a>
-      <a href="https://apexclusive.nl/#tools">Tools</a>
+      <a href="https://apexclusive.nl/kennisbank.html">Kennisbank</a>
+      <a href="https://apexclusive.nl/#tools">Hulpmiddelen</a>
       <a href="https://apexclusive.nl/#over">Over APEXclusive</a>
       <a href="https://apexclusive.nl/#contact">Kennismaken <span>↗</span></a>
     </nav>
     <p>Private Vehicle Advisory<br>Maastricht · Nederland</p>
   </div>
 
-  <!-- Page Hero -->
-  <section class="page-hero" id="top">
+  <!-- Page Hero (Tool Hero) -->
+  <section class="page-hero">
     <div class="page-width">
       <nav class="breadcrumb" aria-label="Kruimelpad">
         <ol>
           <li><a href="https://apexclusive.nl/">Home</a></li>
           <li><a href="https://apexclusive.nl/#tools">Hulpmiddelen</a></li>
-          <li aria-current="page">Auto Vergelijker</li>
+          <li><span aria-current="page">Kentekenvergelijking</span></li>
         </ol>
       </nav>
 
-      <div class="kicker">
-        <span></span>
-        Gratis hulpmiddel · APEXclusive · Maastricht
-      </div>
-      <h1>Premium Kentekenvergelijking<br><em>Direct inzicht, discreet advies.</em></h1>
+      <p class="kicker"><span></span> Tool 01 · Kentekenvergelijking · Maastricht</p>
+      <h1>Twee of drie auto's.<br><em>Zorgvuldig vergeleken.</em></h1>
       <p class="hero-lead">
         Vergelijk direct 2 of 3 Nederlandse auto's op alle officiële RDW-specificaties, maandlasten, NAP-tellerstandoordeel, APK-historie, rest-BPM, gewichten, vermogen en reële exploitatiekosten. 100% gratis &amp; onafhankelijk.
       </p>
@@ -160,7 +125,7 @@
         <span>Rest-BPM Berekening</span>
         <span>0-100 Drag Race</span>
         <span>Auto Kenner Quiz</span>
-        <span>3-Way Battle Mode</span>
+        <span>3-Way Driestrijd Mode</span>
       </div>
 
       <div class="hero-advisor-strip">
@@ -203,7 +168,7 @@
           <div class="plate-wrapper" id="plate-ui-1">
             <div class="plate-eu-badge" aria-hidden="true">
               <div class="plate-eu-stars">
-                <svg viewBox="0 0 64 64" fill="#f7d23f">
+                <svg viewBox="0 0 64 64" fill="#f7d23f" width="24" height="24">
                   <circle cx="32" cy="32" r="28" fill="none" stroke="#f7d23f" stroke-width="2.5" stroke-dasharray="3, 11"/>
                 </svg>
               </div>
@@ -227,7 +192,7 @@
         <!-- Swap Button (between 1 and 2) -->
         <div class="plate-swap-container" id="swap-container">
           <button class="swap-btn" type="button" onclick="swapPlates()" aria-label="Wissel auto 1 en auto 2 om" title="Wissel kentekens om">
-            <svg viewBox="0 0 24 24"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
           </button>
         </div>
 
@@ -240,7 +205,7 @@
           <div class="plate-wrapper" id="plate-ui-2">
             <div class="plate-eu-badge" aria-hidden="true">
               <div class="plate-eu-stars">
-                <svg viewBox="0 0 64 64" fill="#f7d23f">
+                <svg viewBox="0 0 64 64" fill="#f7d23f" width="24" height="24">
                   <circle cx="32" cy="32" r="28" fill="none" stroke="#f7d23f" stroke-width="2.5" stroke-dasharray="3, 11"/>
                 </svg>
               </div>
@@ -270,7 +235,7 @@
           <div class="plate-wrapper" id="plate-ui-3">
             <div class="plate-eu-badge" aria-hidden="true">
               <div class="plate-eu-stars">
-                <svg viewBox="0 0 64 64" fill="#f7d23f">
+                <svg viewBox="0 0 64 64" fill="#f7d23f" width="24" height="24">
                   <circle cx="32" cy="32" r="28" fill="none" stroke="#f7d23f" stroke-width="2.5" stroke-dasharray="3, 11"/>
                 </svg>
               </div>
@@ -921,23 +886,26 @@
     </div>
   </div>
 
-  <!-- Footer (Matching Homepage Exactly) -->
+  <!-- ═══════════════ FOOTER (Identiek aan apexclusive.nl) ═══════════════ -->
   <footer class="site-footer">
     <div class="page-width footer-grid">
       <div>
-        <a class="wordmark footer-wordmark" href="https://apexclusive.nl" target="_blank" rel="noopener noreferrer">
+        <a class="wordmark footer-wordmark" href="https://apexclusive.nl/">
           <span>APEX</span><i></i><b>EXCLUSIVE</b>
         </a>
-        <p>
-          Onafhankelijke begeleiding bij aankoop en import van exclusieve auto’s.<br>
-          Maastricht · Nederland
-        </p>
+        <p>Private Vehicle Advisory<br>Maastricht · Nederland</p>
       </div>
 
       <div>
-        <h3>Juridisch</h3>
-        <a href="https://apexclusive.nl/algemenevoorwaarden.html" target="_blank" rel="noopener noreferrer">Algemene voorwaarden</a>
-        <a href="https://apexclusive.nl/privacyverklaring.html" target="_blank" rel="noopener noreferrer">Privacyverklaring</a>
+        <h3>Navigatie</h3>
+        <a href="https://apexclusive.nl/#diensten">Diensten</a>
+        <a href="https://apexclusive.nl/#werkwijze">Werkwijze</a>
+        <a href="https://apexclusive.nl/#aanbod">Aanbod</a>
+        <a href="https://apexclusive.nl/#cases">Dossiers</a>
+        <a href="https://apexclusive.nl/kennisbank.html">Kennisbank</a>
+        <a href="https://apexclusive.nl/#tools">Hulpmiddelen</a>
+        <a href="https://apexclusive.nl/#over">Over ons</a>
+        <a href="https://apexclusive.nl/#contact">Contact</a>
       </div>
 
       <div>
@@ -945,22 +913,58 @@
         <a href="mailto:info@apexclusive.nl">info@apexclusive.nl</a>
         <a href="tel:+31624735939">+31 6 24 73 59 39</a>
         <a href="https://wa.me/31624735939" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
-        <a href="https://apexclusive.nl" target="_blank" rel="noopener noreferrer">Maastricht, Nederland</a>
+        <a href="https://www.instagram.com/apexclusive.nl/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
       </div>
     </div>
 
     <div class="footer-bottom page-width">
-      <span>&copy; <span id="yr">2026</span> APEXclusive</span>
+      <span>© <span id="year">2026</span> APEXclusive</span>
       <a href="https://apexclusive.nl/algemenevoorwaarden.html" target="_blank" rel="noopener noreferrer">Algemene voorwaarden</a>
       <a href="https://apexclusive.nl/privacyverklaring.html" target="_blank" rel="noopener noreferrer">Privacyverklaring</a>
       <span>Onafhankelijk. Persoonlijk. Zorgvuldig.</span>
     </div>
-
-    <div class="site-credit">
-      Deze website is ontworpen en gebouwd door <a href="mailto:info@apexclusive.nl?subject=Premium%20website%20aanvraag">APEXclusive.nl</a>.
-    </div>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- ═══════════════ FLOATING LAUNCHERS (Vastgezet aan onderzijde) ═══════════════ -->
+  <a class="whatsapp-launcher" href="https://wa.me/31624735939?text=Hallo%20APEXclusive%2C%20ik%20heb%20een%20vraag%20over%20de%20Auto%20Vergelijker." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp — chat direct met APEXclusive" title="WhatsApp">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" style="width:24px;height:24px;fill:#ffffff;display:block;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <button class="ai-launcher" id="ai-launcher" type="button" aria-label="Open APEXclusive Concierge" title="APEXclusive Concierge" aria-controls="ai-panel" aria-expanded="false">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:2;display:block;"><path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.8 8.8 0 0 1-3.5-.7L4 19.5l1.2-3.2A7.2 7.2 0 0 1 4.5 12 7.5 7.5 0 0 1 12 4.5a7.5 7.5 0 0 1 8 7Z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg>
+  </button>
+
+  <!-- AI Concierge Panel -->
+  <aside class="ai-panel" id="ai-panel" hidden aria-label="APEX AI Concierge">
+    <div class="ai-head">
+      <div>
+        <div class="ai-label">APEX Concierge · digitale assistent</div>
+        <h2>Waar kunnen we u mee helpen?</h2>
+      </div>
+      <button class="ai-close" id="ai-close" type="button" aria-label="Sluit chat">✕</button>
+    </div>
+    <div class="ai-messages" id="ai-messages">
+      <div class="ai-message ai-bot">
+        Goedendag. Ik help u met aankoop, import, BPM en de specificaties van deze vergelijking. Waar bent u naar op zoek?
+      </div>
+    </div>
+    <div class="ai-quick">
+      <button type="button" onclick="sendAiQuick('Wat kost aankoopbegeleiding?')">Aankoopadvies</button>
+      <button type="button" onclick="sendAiQuick('Hoe werkt BPM bij import?')">BPM &amp; Import</button>
+      <button type="button" onclick="sendAiQuick('Kan Martijn een auto inspecteren?')">Inspectie op locatie</button>
+      <button type="button" onclick="sendAiQuick('Wie is Martijn Puts?')">Over Martijn</button>
+    </div>
+    <form class="ai-form" id="ai-form" onsubmit="handleAiSubmit(event)">
+      <input id="ai-input" type="text" placeholder="Stel uw vraag..." autocomplete="off">
+      <button type="submit" aria-label="Verstuur">↗</button>
+    </form>
+    <div class="ai-foot">
+      <span>Liever direct contact?</span>
+      <a href="tel:+31624735939">Bel direct</a>
+      <a href="https://wa.me/31624735939" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+    </div>
+  </aside>
+
+  <script src="script.js?v=20260902-01"></script>
 </body>
 </html>
