@@ -2,278 +2,964 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Auto Vergelijker — APEXclusive | Vergelijk twee kentekens</title>
-  <meta name="description" content="Vergelijk twee Nederlandse kentekens en zie kosten per maand voor verzekering, brandstof, belasting, onderhoud en afschrijving.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Auto Vergelijker — APEXclusive | Vergelijk Twee of Drie Kentekens &amp; Maandlasten</title>
+  <meta name="description" content="Vergelijk direct 2 of 3 Nederlandse auto's op alle officiële RDW open data, maandlasten, wegenbelasting 2026, rest-BPM, 0-100 sprintrace, APK-historie en NAP tellerstand. Onafhankelijk aankoopadvies door APEXclusive Maastricht.">
+  <meta name="author" content="APEXclusive">
   <meta name="robots" content="index,follow,max-image-preview:large">
+  
+  <!-- Open Graph / Meta -->
   <meta property="og:type" content="website">
   <meta property="og:locale" content="nl_NL">
-  <meta property="og:title" content="Auto Vergelijker — APEXclusive">
-  <meta property="og:description" content="Vergelijk direct twee kentekens en zie maandlasten op een rij.">
+  <meta property="og:title" content="Auto Vergelijker — APEXclusive | Vergelijk Kentekens &amp; Maandlasten">
+  <meta property="og:description" content="Vergelijk direct kentekens op alle RDW specificaties, exploitatiekosten per maand, rest-BPM, sprintrace en aankooprisico's.">
   <meta property="og:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1600,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
   <meta property="og:image:alt" content="APEXclusive automotive advisory">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Auto Vergelijker — APEXclusive">
-  <meta name="twitter:description" content="Vergelijk twee kentekens en bekijk maandelijkse kosten voor afschrijving, verzekering, belasting en brandstof.">
+  <meta name="twitter:description" content="Vergelijk kentekens en bekijk maandelijkse kosten voor afschrijving, verzekering, belasting en brandstof.">
   <meta name="twitter:image" content="https://res.cloudinary.com/sfd8ohjz/image/upload/w_1600,q_auto:best,f_auto/v1786112048/Lamborghini_cockpit_zw7pmk.jpg">
-  <meta name="theme-color" content="#0d0d0d">
+  <meta name="theme-color" content="#0b0e0e">
   <link rel="canonical" href="https://vergelijk.apexclusive.nl/">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Auto Vergelijker — APEXclusive","url":"https://vergelijk.apexclusive.nl/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web"}</script>
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%230a0a0a"/><text x="32" y="46" font-family="Georgia,serif" font-size="42" fill="%23c6cbd1" text-anchor="middle">A</text></svg>'>
+  
+  <!-- Favicons matching homepage -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/schild-32.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="mask-icon" href="apexclusive-mask-icon.svg" color="#ba7e53">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Auto Vergelijker — APEXclusive",
+    "url": "https://vergelijk.apexclusive.nl/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "description": "Premium interactieve vergelijkingstool voor Nederlandse kentekens op basis van officiële RDW open data en complete maandlastenberekening."
+  }
+  </script>
+  
+  <!-- Google Fonts matching APEXclusive Homepage -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&family=Oswald:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="apex-tool-theme.css">
-  <style>
-    .field-lbl,.search-lbl{color:#d2d5d6!important}.field-help,.search-help,.field-note,.form-hint,.disclaimer,.legal-note,.empty-sub{color:#aeb4b6!important}input::placeholder,textarea::placeholder,select::placeholder{color:#8f989b!important;opacity:1!important}.hero-points span,.hero-note{color:#c1c6c7!important}.chat-hdr-sub,.chat-online,.chat-qbtn{color:#aeb4b6!important}footer .fg>div>p,footer .fl,footer .fl a{color:#aeb4b6!important}footer .fb,footer .site-credit{color:#8e9598!important}
-  </style>
 </head>
 <body>
-  <a class="skip-link" href="#compare-app">Direct naar de vergelijker</a>
-  <div id="progress"></div>
+  <a class="skip-link" href="#compare-main">Direct naar de vergelijker</a>
+  <div class="site-progress" id="site-progress"></div>
 
-  <button class="apex-bubble" type="button" onclick="apexToggle()" aria-label="Open chat">
-    <span class="apex-bubble-dot"></span>Chat met ons
+  <!-- Toast Notification Container -->
+  <div id="toast-msg" class="toast-msg" aria-live="polite"></div>
+
+  <!-- Floating Launchers: WhatsApp on left, AI Concierge on right -->
+  <a class="whatsapp-launcher" href="https://wa.me/31624735939?text=Beste%20Martijn%2C%20ik%20gebruik%20de%20Auto%20Vergelijker%20en%20zou%20graag%20advies%20willen." target="_blank" rel="noopener noreferrer" aria-label="Direct contact via WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+  </a>
+
+  <button class="ai-launcher" id="ai-launcher" type="button" aria-label="APEX Concierge chat openen">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
   </button>
 
-  <div class="apex-chat-win" id="apex-chat-win" aria-live="polite">
-    <div class="chat-hdr">
-      <div class="chat-hdr-av" aria-hidden="true">A</div>
-      <div class="chat-hdr-info">
-        <div class="chat-hdr-name">APEXclusive</div>
-        <div class="chat-hdr-sub">Private Vehicle Advisory</div>
-        <div class="chat-online">Online · reageert direct</div>
+  <!-- AI Concierge Panel -->
+  <aside class="ai-panel" id="ai-panel" hidden aria-label="APEX AI Concierge">
+    <div class="ai-head">
+      <div>
+        <div class="ai-label">APEX Concierge</div>
+        <h2>Martijn Puts</h2>
       </div>
-      <button class="chat-x" type="button" onclick="apexToggle()" aria-label="Sluit chat">✕</button>
+      <button class="ai-close" id="ai-close" type="button" aria-label="Sluit chat">✕</button>
     </div>
-    <div id="apex-msgs" class="chat-msgs"></div>
-    <div id="apex-toast" class="chat-toast"></div>
-    <div class="chat-contact-form" id="apex-contact-form">
-      <input id="apex-contact-name" class="chat-contact-input" type="text" placeholder="Naam">
-      <input id="apex-contact-email" class="chat-contact-input" type="email" placeholder="E-mailadres">
-      <input id="apex-contact-phone" class="chat-contact-input" type="tel" placeholder="06-nummer">
-      <button class="chat-contact-btn" type="button" onclick="apexSubmitContact()">Verstuur contactgegevens</button>
+    <div class="ai-messages" id="ai-messages">
+      <div class="ai-message ai-bot">
+        Welkom bij APEXclusive. Twijfelt u tussen twee of drie auto's, overweegt u import of wilt u een onafhankelijke aankoopcheck? Stel gerust uw vraag.
+      </div>
     </div>
-    <div class="chat-quick" id="apex-quick">
-      <button class="chat-qbtn" type="button" onclick="apexQuick('BPM kosten')">BPM kosten</button>
-      <button class="chat-qbtn" type="button" onclick="apexQuick('Importproces')">Importproces</button>
-      <button class="chat-qbtn" type="button" onclick="apexQuick('Bijkomende kosten')">Bijkomende kosten</button>
-      <button class="chat-qbtn" type="button" onclick="apexQuick('Over APEXclusive')">Over APEXclusive</button>
-      <button class="chat-qbtn" type="button" onclick="apexRequestTransfer()">Adviseur spreken</button>
+    <div class="ai-quick">
+      <button type="button" onclick="sendAiQuick('Wat kost aankoopbegeleiding?')">Aankoopadvies</button>
+      <button type="button" onclick="sendAiQuick('Hoe werkt BPM bij import?')">BPM &amp; Import</button>
+      <button type="button" onclick="sendAiQuick('Kan Martijn een auto inspecteren?')">Inspectie op locatie</button>
+      <button type="button" onclick="sendAiQuick('Wie is Martijn Puts?')">Over Martijn</button>
     </div>
-    <div class="chat-inp-row">
-      <input id="apex-inp" class="chat-inp" type="text" placeholder="Stel uw vraag..." autocomplete="off">
-      <button id="apex-send" class="chat-send-btn" type="button" onclick="apexSend()" aria-label="Verstuur">→</button>
+    <form class="ai-form" id="ai-form" onsubmit="handleAiSubmit(event)">
+      <input id="ai-input" type="text" placeholder="Stel uw vraag..." autocomplete="off">
+      <button type="submit" aria-label="Verstuur">↗</button>
+    </form>
+    <div class="ai-foot">
+      <span>Direct contact</span>
+      <a href="https://wa.me/31624735939" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+      <a href="tel:+31624735939">+31 6 24 73 59 39</a>
     </div>
-    <div class="chat-foot">APEXclusive · Maastricht · AI Adviseur · Geen financieel advies</div>
-  </div>
+  </aside>
 
-  <header>
-    <a href="https://apexclusive.nl" class="brand" target="_blank" rel="noreferrer">
-      <span class="brand-apex">APEX</span>
-      <span class="brand-sep" aria-hidden="true"><span></span><span></span><span></span></span>
-      <span class="brand-excl">EXCLUSIVE</span>
+  <!-- Site Header (Matching Homepage Exactly) -->
+  <header class="site-header" id="site-header">
+    <a class="wordmark" href="https://apexclusive.nl" aria-label="APEXclusive home">
+      <span>APEX</span><i></i><b>EXCLUSIVE</b>
     </a>
-    <a href="https://apexclusive.nl/#tools" class="back-btn" target="_blank" rel="noreferrer">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      Terug naar tools
+    
+    <nav class="desktop-nav" aria-label="Hoofdnavigatie">
+      <a href="https://apexclusive.nl/#diensten">Diensten</a>
+      <a href="https://apexclusive.nl/#werkwijze">Werkwijze</a>
+      <a href="https://apexclusive.nl/#aanbod">Aanbod</a>
+      <a href="https://apexclusive.nl/#cases">Dossiers</a>
+      <a href="https://apexclusive.nl/#tools" class="active">Tools</a>
+      <a href="https://apexclusive.nl/#over">Over ons</a>
+    </nav>
+
+    <a class="header-cta" href="https://apexclusive.nl" target="_blank" rel="noopener noreferrer">
+      <span>←</span> Terug naar website
     </a>
+
+    <button class="menu-button" type="button" aria-label="Menu openen" aria-controls="mobile-menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
   </header>
-  <div class="page-hero" id="top">
-    <div class="page-hero-inner">
-      <h1>Premium kentekenvergelijking<br><em>Direct inzicht, discreet advies.</em></h1>
-      <div class="hero-meta">
-        <div class="hero-points" aria-label="Tool voordelen">
-          <span>Snelle vergelijking</span>
-          <span>Executive layout</span>
-          <span>Rechtstreeks inzicht</span>
-        </div>
-      </div>
-    </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav aria-label="Mobiele navigatie">
+      <a href="https://apexclusive.nl/#diensten">Diensten</a>
+      <a href="https://apexclusive.nl/#werkwijze">Werkwijze</a>
+      <a href="https://apexclusive.nl/#aanbod">Aanbod</a>
+      <a href="https://apexclusive.nl/#cases">Dossiers</a>
+      <a href="https://apexclusive.nl/#tools">Tools</a>
+      <a href="https://apexclusive.nl/#over">Over APEXclusive</a>
+      <a href="https://apexclusive.nl/#contact">Kennismaken <span>↗</span></a>
+    </nav>
+    <p>Private Vehicle Advisory<br>Maastricht · Nederland</p>
   </div>
-  <main class="wrap" id="compare-app">
-    <div class="form-card rv">
-      <div class="form-inner">
-        <div class="compare-grid">
-          <section class="vehicle-card" data-side="1">
-            <div class="vehicle-card-head">
-              <div class="vehicle-card-brand">
-                <span class="brand-icon" id="vehicle1-logo" aria-hidden="true"></span>
-                <strong class="vehicle-card-title" id="vehicle1-name"></strong>
-              </div>
-            </div>
 
-            <div class="field">
-              <div class="fi-inline">
-                <div class="plate empty" id="vehicle1-plate-ui" aria-hidden="false">
-                  <div class="plate-image" aria-hidden="true"><img class="plate-img-el" src="https://res.cloudinary.com/sfd8ohjz/image/upload/v1786499843/Unknown_zlbfvt.svg?ts=20260812T040230" alt="kenteken plaat"></div>
-                  <div class="plate-eu" aria-hidden="true">
-                    <div class="plate-eu-logo" aria-hidden="true">
-                      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-                        <g transform="translate(32 32) scale(0.45)">
-                          <circle cx="0" cy="0" r="24" fill="none" stroke="none" />
-                          <g fill="#f7d23f">
-                            <polygon points="0,-6 1.6,-2.1 5.7,-2.1 2.4,0.8 3.9,5.9 0,3.2 -3.9,5.9 -2.4,0.8 -5.7,-2.1 -1.6,-2.1" />
-                          </g>
-                          <use xlink:href="#star" transform="rotate(30)" />
-                        </g>
-                      </svg>
-                    </div>
-                    <div class="plate-eu-country">NL</div>
-                  </div>
-                  <input class="plate-input fi" id="vehicle1-plate" name="vehicle1Plate" type="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 1" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
-                  <span class="plate-hint" aria-hidden="true"></span>
-                </div>
-              </div>
-              <span id="vehicle1-badge" class="value-badge" hidden>Gevonden via kenteken</span>
-            </div>
+  <!-- Page Hero -->
+  <section class="page-hero" id="top">
+    <div class="page-width">
+      <nav class="breadcrumb" aria-label="Kruimelpad">
+        <ol>
+          <li><a href="https://apexclusive.nl/">Home</a></li>
+          <li><a href="https://apexclusive.nl/#tools">Hulpmiddelen</a></li>
+          <li aria-current="page">Auto Vergelijker</li>
+        </ol>
+      </nav>
 
-            <div class="vehicle-card-body" id="vehicle1-body">
-              <div class="value-summary-row">
-                <div class="value-summary-card" id="vehicle1-catalogue-value-box">
-                  <span>Cataloguswaarde</span>
-                  <strong>—</strong>
-                </div>
-              </div>
+      <div class="kicker">
+        <span></span>
+        Gratis hulpmiddel · APEXclusive · Maastricht
+      </div>
+      <h1>Premium Kentekenvergelijking<br><em>Direct inzicht, discreet advies.</em></h1>
+      <p class="hero-lead">
+        Vergelijk direct 2 of 3 Nederlandse auto's op alle officiële RDW-specificaties, maandlasten, NAP-tellerstandoordeel, APK-historie, rest-BPM, gewichten, vermogen en reële exploitatiekosten. 100% gratis &amp; onafhankelijk.
+      </p>
 
-            <div class="vehicle-details">
-              <div class="detail-item"><span>Merk</span><strong id="vehicle1-make">—</strong></div>
-              <div class="detail-item"><span>Model</span><strong id="vehicle1-model">—</strong></div>
-              <div class="detail-item"><span>Bouwjaar</span><strong id="vehicle1-year">—</strong></div>
-            </div>
+      <div class="hero-points" aria-label="Tool voordelen">
+        <span>Officiële RDW Open Data</span>
+        <span>APK &amp; Gebrekenhistorie</span>
+        <span>NAP Telleroordeel</span>
+        <span>Wegenbelasting 2026</span>
+        <span>Rest-BPM Berekening</span>
+        <span>0-100 Drag Race</span>
+        <span>Auto Kenner Quiz</span>
+        <span>3-Way Battle Mode</span>
+      </div>
 
-            <div class="cost-breakdown">
-              <div class="cost-row" data-metric="depreciation"><span>Afschrijving</span><strong id="vehicle1-depreciation">—</strong></div>
-              <div class="cost-row" data-metric="insurance"><span>Verzekering</span><strong id="vehicle1-insurance">—</strong></div>
-              <div class="cost-row" data-metric="tax"><span>Wegenbelasting</span><strong id="vehicle1-tax">—</strong></div>
-              <div class="cost-row" data-metric="fuel"><span>Brandstof</span><strong id="vehicle1-fuel">—</strong></div>
-              <div class="cost-row" data-metric="maintenance"><span>Onderhoud</span><strong id="vehicle1-maintenance">—</strong></div>
-            </div>
-
-            <div class="vehicle-total" id="vehicle1-total-box">
-              <span>Totaal per maand</span>
-              <strong id="vehicle1-total">—</strong>
-            </div>
-          </div>
-          </section>
-
-          <section class="vehicle-card" data-side="2">
-            <div class="vehicle-card-head">
-              <div class="vehicle-card-brand">
-                <span class="brand-icon" id="vehicle2-logo" aria-hidden="true"></span>
-                <strong class="vehicle-card-title" id="vehicle2-name"></strong>
-              </div>
-            </div>
-
-            <div class="field">
-              <div class="fi-inline">
-                <div class="plate empty" id="vehicle2-plate-ui" aria-hidden="false">
-                  <div class="plate-image" aria-hidden="true"><img class="plate-img-el" src="https://res.cloudinary.com/sfd8ohjz/image/upload/v1786499843/Unknown_zlbfvt.svg?ts=20260812T040230" alt="kenteken plaat"></div>
-                  <div class="plate-eu" aria-hidden="true">
-                    <div class="plate-eu-logo" aria-hidden="true">
-                      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-                        <g transform="translate(32 32) scale(0.45)">
-                          <circle cx="0" cy="0" r="24" fill="none" stroke="none" />
-                          <g fill="#f7d23f">
-                            <polygon points="0,-6 1.6,-2.1 5.7,-2.1 2.4,0.8 3.9,5.9 0,3.2 -3.9,5.9 -2.4,0.8 -5.7,-2.1 -1.6,-2.1" />
-                          </g>
-                          <use xlink:href="#star" transform="rotate(30)" />
-                        </g>
-                      </svg>
-                    </div>
-                    <div class="plate-eu-country">NL</div>
-                  </div>
-                  <input class="plate-input fi" id="vehicle2-plate" name="vehicle2Plate" type="text" maxlength="10" placeholder="" value="" aria-label="Kenteken auto 2" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
-                  <span class="plate-hint" aria-hidden="true"></span>
-                </div>
-              </div>
-              <span id="vehicle2-badge" class="value-badge" hidden>Gevonden via kenteken</span>
-            </div>
-
-            <div class="vehicle-card-body" id="vehicle2-body">
-              <div class="value-summary-row">
-                <div class="value-summary-card" id="vehicle2-catalogue-value-box">
-                  <span>Cataloguswaarde</span>
-                  <strong>—</strong>
-                </div>
-              </div>
-
-            <div class="vehicle-details">
-              <div class="detail-item"><span>Merk</span><strong id="vehicle2-make">—</strong></div>
-              <div class="detail-item"><span>Model</span><strong id="vehicle2-model">—</strong></div>
-              <div class="detail-item"><span>Bouwjaar</span><strong id="vehicle2-year">—</strong></div>
-            </div>
-
-            <div class="cost-breakdown">
-              <div class="cost-row" data-metric="depreciation"><span>Afschrijving</span><strong id="vehicle2-depreciation">—</strong></div>
-              <div class="cost-row" data-metric="insurance"><span>Verzekering</span><strong id="vehicle2-insurance">—</strong></div>
-              <div class="cost-row" data-metric="tax"><span>Wegenbelasting</span><strong id="vehicle2-tax">—</strong></div>
-              <div class="cost-row" data-metric="fuel"><span>Brandstof</span><strong id="vehicle2-fuel">—</strong></div>
-              <div class="cost-row" data-metric="maintenance"><span>Onderhoud</span><strong id="vehicle2-maintenance">—</strong></div>
-            </div>
-
-            <div class="vehicle-total" id="vehicle2-total-box">
-              <span>Totaal per maand</span>
-              <strong id="vehicle2-total">—</strong>
-            </div>
-          </div>
-          </section>
+      <div class="hero-advisor-strip">
+        <div class="hero-advisor-text">
+          <span style="color:var(--copper-light); font-size:1.1rem;">✔</span>
+          <span>Twijfelt u over een aankoop? <strong>Vraag Martijn om een onafhankelijke second opinion vóór u beslist.</strong></span>
         </div>
-
-        <div class="compare-summary" id="compare-summary" hidden>
-          <p class="compare-note">Voer beide kentekens in en ontvang direct een premium kostenprofiel voor verzekering, belasting, afschrijving, brandstof en onderhoud.</p>
-          <div class="compare-summary-head">
-            <div>
-              <span class="section-lbl">RESULTAAT</span>
-              <p class="section-copy">Resultaat vergelijking</p>
-            </div>
-            <div class="compare-winner" id="compare-winner"></div>
-          </div>
-          <div class="compare-grid-small">
-            <div class="compare-card" id="compare-card-1">
-              <span id="compare-label-1">Totaal auto 1</span>
-              <strong id="compare-total1">—</strong>
-            </div>
-            <div class="compare-card" id="compare-card-2">
-              <span id="compare-label-2">Totaal auto 2</span>
-              <strong id="compare-total2">—</strong>
-            </div>
-          </div>
-          <div class="compare-difference" id="compare-difference">Wanneer beide voertuigen zijn geladen, tonen wij het verschil in kosten.</div>
-
-          <!-- Meer info toggle -->
-          <div style="margin-top:1rem">
-            <button id="more-info-toggle" class="btn">Meer info</button>
-            <div id="more-info-panel" class="more-info-panel" hidden>
-              <div class="more-info-grid">
-                <div class="more-info-item">
-                  <h4>Auto 1</h4>
-                  <div><strong>Aantal eigenaren:</strong> <span id="moreinfo-1-owners">Niet beschikbaar</span></div>
-                  <div><strong>Eerste registratie:</strong> <span id="moreinfo-1-firstreg">Niet beschikbaar</span></div>
-                  <div><strong>APK geldig tot:</strong> <span id="moreinfo-1-apk">Niet beschikbaar</span></div>
-                </div>
-                <div class="more-info-item">
-                  <h4>Auto 2</h4>
-                  <div><strong>Aantal eigenaren:</strong> <span id="moreinfo-2-owners">Niet beschikbaar</span></div>
-                  <div><strong>Eerste registratie:</strong> <span id="moreinfo-2-firstreg">Niet beschikbaar</span></div>
-                  <div><strong>APK geldig tot:</strong> <span id="moreinfo-2-apk">Niet beschikbaar</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="compare-advice" hidden>
-          <span class="advice-label">Advies</span>
-          <h2>Wil je dezelfde auto buiten Nederland kopen?</h2>
-          <p>Twijfel je nog? Neem contact op met APEXclusive voor een persoonlijk koopadvies, importcheck en begeleiding bij de beste deal.</p>
-        </div>
+        <a href="https://wa.me/31624735939?text=Beste%20Martijn%2C%20ik%20overweeg%20de%20aankoop%20van%20een%20auto%20en%20zou%20graag%20vrijblijvend%20weten%20of%20APEXclusive%20hierbij%20kan%20begeleiden." class="hero-advisor-link" target="_blank" rel="noopener noreferrer">
+          Vrijblijvend WhatsApp advies ↗
+        </a>
       </div>
     </div>
+  </section>
+
+  <!-- Main Comparison Area -->
+  <main class="main-wrap" id="compare-main">
+    <div class="form-card">
+      
+      <!-- Input Section Header -->
+      <div class="section-header-row">
+        <div class="section-title-wrap">
+          <h2>Voer kentekens in voor vergelijking</h2>
+          <p>Live gekoppeld aan de officiële RDW registers</p>
+        </div>
+        <div>
+          <button class="add-third-car-btn" id="toggle-car-3-btn" type="button" onclick="toggleThirdCar()">
+            <span>➕</span> 3e Auto Toevoegen (Driestrijd)
+          </button>
+        </div>
+      </div>
+
+      <!-- Plate Inputs Grid -->
+      <div class="plate-grid-container" id="plate-grid-container">
+        <!-- Vehicle 1 Plate -->
+        <div class="plate-col" id="plate-col-1">
+          <div class="plate-col-label">
+            <span>Auto 1 (Links)</span>
+            <span class="plate-status-text" id="plate-status-1">Typ kenteken</span>
+          </div>
+          <div class="plate-wrapper" id="plate-ui-1">
+            <div class="plate-eu-badge" aria-hidden="true">
+              <div class="plate-eu-stars">
+                <svg viewBox="0 0 64 64" fill="#f7d23f">
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="#f7d23f" stroke-width="2.5" stroke-dasharray="3, 11"/>
+                </svg>
+              </div>
+              <div class="plate-eu-text">NL</div>
+            </div>
+            <input 
+              class="plate-input-field" 
+              id="plate-input-1" 
+              type="text" 
+              maxlength="10" 
+              placeholder="25-RKZ-3" 
+              aria-label="Kenteken auto 1" 
+              autocomplete="off" 
+              autocapitalize="characters" 
+              spellcheck="false"
+            >
+            <button class="plate-clear-btn" id="plate-clear-1" type="button" onclick="clearPlate(1)" aria-label="Wis kenteken 1" hidden>✕</button>
+          </div>
+        </div>
+
+        <!-- Swap Button (between 1 and 2) -->
+        <div class="plate-swap-container" id="swap-container">
+          <button class="swap-btn" type="button" onclick="swapPlates()" aria-label="Wissel auto 1 en auto 2 om" title="Wissel kentekens om">
+            <svg viewBox="0 0 24 24"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+          </button>
+        </div>
+
+        <!-- Vehicle 2 Plate -->
+        <div class="plate-col" id="plate-col-2">
+          <div class="plate-col-label">
+            <span>Auto 2 (Midden/Rechts)</span>
+            <span class="plate-status-text" id="plate-status-2">Typ kenteken</span>
+          </div>
+          <div class="plate-wrapper" id="plate-ui-2">
+            <div class="plate-eu-badge" aria-hidden="true">
+              <div class="plate-eu-stars">
+                <svg viewBox="0 0 64 64" fill="#f7d23f">
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="#f7d23f" stroke-width="2.5" stroke-dasharray="3, 11"/>
+                </svg>
+              </div>
+              <div class="plate-eu-text">NL</div>
+            </div>
+            <input 
+              class="plate-input-field" 
+              id="plate-input-2" 
+              type="text" 
+              maxlength="10" 
+              placeholder="G-832-LK" 
+              aria-label="Kenteken auto 2" 
+              autocomplete="off" 
+              autocapitalize="characters" 
+              spellcheck="false"
+            >
+            <button class="plate-clear-btn" id="plate-clear-2" type="button" onclick="clearPlate(2)" aria-label="Wis kenteken 2" hidden>✕</button>
+          </div>
+        </div>
+
+        <!-- Vehicle 3 Plate (Optional 3rd Column) -->
+        <div class="plate-col" id="plate-col-3" style="display: none;">
+          <div class="plate-col-label">
+            <span>Auto 3 (Rechts)</span>
+            <span class="plate-status-text" id="plate-status-3">Typ kenteken</span>
+          </div>
+          <div class="plate-wrapper" id="plate-ui-3">
+            <div class="plate-eu-badge" aria-hidden="true">
+              <div class="plate-eu-stars">
+                <svg viewBox="0 0 64 64" fill="#f7d23f">
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="#f7d23f" stroke-width="2.5" stroke-dasharray="3, 11"/>
+                </svg>
+              </div>
+              <div class="plate-eu-text">NL</div>
+            </div>
+            <input 
+              class="plate-input-field" 
+              id="plate-input-3" 
+              type="text" 
+              maxlength="10" 
+              placeholder="04-HGL-B" 
+              aria-label="Kenteken auto 3" 
+              autocomplete="off" 
+              autocapitalize="characters" 
+              spellcheck="false"
+            >
+            <button class="plate-clear-btn" id="plate-clear-3" type="button" onclick="clearPlate(3)" aria-label="Wis kenteken 3" hidden>✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div class="preset-bar">
+        <span class="preset-label">Populaire Duels:</span>
+        <button class="preset-chip random-btn" type="button" onclick="loadRandomDuel()">🎲 Verras me met een duel!</button>
+        <button class="preset-chip" type="button" onclick="loadPreset('25RKZ3', 'G832LK')">Golf vs 3-Serie</button>
+        <button class="preset-chip" type="button" onclick="loadPreset('24RPLV', 'X789PP')">Audi RS6 vs AMG E63</button>
+        <button class="preset-chip" type="button" onclick="loadPreset('TB145X', 'N563FF')">Tesla Model 3 vs Polestar 2</button>
+        <button class="preset-chip" type="button" onclick="loadPreset('J123KZ', 'X789PP')">Porsche 911 vs AMG E63</button>
+        <button class="preset-chip" type="button" onclick="loadPreset('04HGLB', 'G832LK')">Volvo V60 vs BMW 330i</button>
+        <button class="preset-chip" type="button" onclick="loadPreset('L712BV', 'AB123C')">Focus vs Corolla Hybrid</button>
+        <button class="preset-chip" type="button" onclick="load3WayPreset('25RKZ3', 'G832LK', '04HGLB')">🔥 3-Way: Golf vs BMW vs Volvo</button>
+      </div>
+
+      <!-- Recent Searches Chips -->
+      <div class="recent-bar" id="recent-searches-bar" hidden></div>
+
+      <!-- Settings Panel: Km/jaar & Provincie Selector & Brandstofprijzen -->
+      <div class="settings-panel">
+        <div class="setting-group">
+          <div class="setting-header">
+            <span>Jaarkilometrage</span>
+            <span class="setting-value-badge" id="km-val-display">15.000 km / jaar</span>
+          </div>
+          <div class="slider-container">
+            <input 
+              type="range" 
+              class="range-slider" 
+              id="km-slider" 
+              min="5000" 
+              max="40000" 
+              step="2500" 
+              value="15000" 
+              aria-label="Aantal kilometers per jaar"
+            >
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-header">
+            <span>Provincie Wegenbelasting</span>
+            <span style="color:var(--muted); font-size:0.75rem;">Opcenten 2026</span>
+          </div>
+          <select class="province-select" id="province-select" aria-label="Selecteer provincie voor wegenbelasting">
+            <option value="noord-holland" selected>Noord-Holland (laagste tarief)</option>
+            <option value="utrecht">Utrecht</option>
+            <option value="overijssel">Overijssel</option>
+            <option value="noord-brabant">Noord-Brabant</option>
+            <option value="zeeland">Zeeland</option>
+            <option value="flevoland">Flevoland</option>
+            <option value="limburg">Limburg</option>
+            <option value="friesland">Friesland</option>
+            <option value="gelderland">Gelderland</option>
+            <option value="drenthe">Drenthe</option>
+            <option value="groningen">Groningen</option>
+            <option value="zuid-holland">Zuid-Holland (hoogste tarief)</option>
+          </select>
+        </div>
+
+        <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end;">
+          <button class="fuel-customizer-toggle" type="button" onclick="toggleFuelCustomizer()">
+            <span>⚙️ Brandstof- &amp; Stroomtarieven aanpassen</span>
+          </button>
+        </div>
+
+        <div class="fuel-customizer-panel" id="fuel-customizer-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font: 600 0.72rem/1 var(--display); letter-spacing: 0.15em; text-transform: uppercase; color: var(--copper-light);">
+              Brandstof- &amp; Laadprijzen 2026 (Per Liter / kWh)
+            </strong>
+            <button type="button" onclick="resetFuelPrices()" style="background: none; border: none; color: var(--muted); font-size: 0.72rem; cursor: pointer;">
+              Herstel standaarden ↺
+            </button>
+          </div>
+          <div class="fuel-input-grid">
+            <div class="fuel-inp-group">
+              <label for="price-petrol">Benzine Euro 95 (€/L)</label>
+              <input type="number" id="price-petrol" step="0.01" value="2.05" onchange="updateCustomFuelPrice('petrol', this.value)">
+            </div>
+            <div class="fuel-inp-group">
+              <label for="price-diesel">Diesel (€/L)</label>
+              <input type="number" id="price-diesel" step="0.01" value="1.78" onchange="updateCustomFuelPrice('diesel', this.value)">
+            </div>
+            <div class="fuel-inp-group">
+              <label for="price-lpg">LPG Autogas (€/L)</label>
+              <input type="number" id="price-lpg" step="0.01" value="0.89" onchange="updateCustomFuelPrice('lpg', this.value)">
+            </div>
+            <div class="fuel-inp-group">
+              <label for="price-ev">EV Stroom gemengd (€/kWh)</label>
+              <input type="number" id="price-ev" step="0.01" value="0.32" onchange="updateCustomFuelPrice('ev', this.value)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Results Area -->
+      <div class="comparison-results-area" id="comparison-results" hidden>
+        
+        <!-- ✨ QUICK HIGHLIGHTS & EXECUTIVE BRIEFING CARD -->
+        <div id="executive-highlights-container"></div>
+
+        <!-- 🏎️ APEX AUTO KENNER QUIZ BATTLE (THE GAME!) -->
+        <div id="quiz-game-container"></div>
+
+        <!-- Category Filter Tabs Bar -->
+        <div class="category-filter-bar">
+          <div class="cat-tabs-group">
+            <button class="cat-tab-btn active" data-cat="all" onclick="filterCategory('all')">Alles Weergeven</button>
+            <button class="cat-tab-btn" data-cat="kosten" onclick="filterCategory('kosten')">💶 Kosten &amp; TCO</button>
+            <button class="cat-tab-btn" data-cat="prestaties" onclick="filterCategory('prestaties')">⚡ Prestaties &amp; Drag</button>
+            <button class="cat-tab-btn" data-cat="verbruik" onclick="filterCategory('verbruik')">🌿 Verbruik &amp; EV</button>
+            <button class="cat-tab-btn" data-cat="maten" onclick="filterCategory('maten')">📐 Maten &amp; Caravan</button>
+            <button class="cat-tab-btn" data-cat="historie" onclick="filterCategory('historie')">🛡️ Historie &amp; Risico</button>
+          </div>
+          <label class="diff-toggle-container" title="Verberg rijen waarin alle auto's dezelfde waarde hebben">
+            <span class="switch-control">
+              <input type="checkbox" id="diff-only-switch" onchange="toggleDiffOnly(this.checked)">
+              <span class="switch-slider"></span>
+            </span>
+            <span>Alleen verschillen tonen</span>
+          </label>
+        </div>
+
+        <!-- Top Vehicle Hero Cards (2 or 3 columns) -->
+        <div class="vehicle-hero-grid" id="vehicle-hero-grid">
+          <!-- Vehicle 1 Hero -->
+          <div class="vehicle-hero-card" id="v1-hero-card">
+            <div class="vehicle-hero-header">
+              <div class="vehicle-brand-badge">
+                <div class="vehicle-logo-icon" id="v1-hero-logo">A</div>
+                <div class="vehicle-name-block">
+                  <h3 id="v1-hero-name">Auto 1</h3>
+                  <p id="v1-hero-sub">Laden...</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="vehicle-avatar-box" id="v1-avatar-box"></div>
+
+            <div class="vehicle-pill-tags" id="v1-hero-tags"></div>
+
+            <div class="score-summary-bar">
+              <span class="score-badge-label">APEX Score</span>
+              <strong class="score-num-display" id="v1-score-val">—/100</strong>
+            </div>
+
+            <div class="vehicle-cost-highlight" id="v1-cost-box">
+              <div class="cost-label-col">
+                <span>Totaal Maandlasten</span>
+                <strong>Exploitatie raming</strong>
+              </div>
+              <div class="cost-value-col">
+                <div class="cost-amount-large" id="v1-cost-total">—</div>
+                <div class="cost-period-sub">per maand</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle 2 Hero -->
+          <div class="vehicle-hero-card" id="v2-hero-card">
+            <div class="vehicle-hero-header">
+              <div class="vehicle-brand-badge">
+                <div class="vehicle-logo-icon" id="v2-hero-logo">B</div>
+                <div class="vehicle-name-block">
+                  <h3 id="v2-hero-name">Auto 2</h3>
+                  <p id="v2-hero-sub">Laden...</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="vehicle-avatar-box" id="v2-avatar-box"></div>
+
+            <div class="vehicle-pill-tags" id="v2-hero-tags"></div>
+
+            <div class="score-summary-bar">
+              <span class="score-badge-label">APEX Score</span>
+              <strong class="score-num-display" id="v2-score-val">—/100</strong>
+            </div>
+
+            <div class="vehicle-cost-highlight" id="v2-cost-box">
+              <div class="cost-label-col">
+                <span>Totaal Maandlasten</span>
+                <strong>Exploitatie raming</strong>
+              </div>
+              <div class="cost-value-col">
+                <div class="cost-amount-large" id="v2-cost-total">—</div>
+                <div class="cost-period-sub">per maand</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle 3 Hero (Optional) -->
+          <div class="vehicle-hero-card" id="v3-hero-card" style="display: none;">
+            <div class="vehicle-hero-header">
+              <div class="vehicle-brand-badge">
+                <div class="vehicle-logo-icon" id="v3-hero-logo">C</div>
+                <div class="vehicle-name-block">
+                  <h3 id="v3-hero-name">Auto 3</h3>
+                  <p id="v3-hero-sub">Laden...</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="vehicle-avatar-box" id="v3-avatar-box"></div>
+
+            <div class="vehicle-pill-tags" id="v3-hero-tags"></div>
+
+            <div class="score-summary-bar">
+              <span class="score-badge-label">APEX Score</span>
+              <strong class="score-num-display" id="v3-score-val">—/100</strong>
+            </div>
+
+            <div class="vehicle-cost-highlight" id="v3-cost-box">
+              <div class="cost-label-col">
+                <span>Totaal Maandlasten</span>
+                <strong>Exploitatie raming</strong>
+              </div>
+              <div class="cost-value-col">
+                <div class="cost-amount-large" id="v3-cost-total">—</div>
+                <div class="cost-period-sub">per maand</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Executive Verdict & KPI Deltas -->
+        <div class="verdict-box">
+          <div class="verdict-header">
+            <div>
+              <div class="verdict-eyebrow">APEX VERGELIJKINGSOORDEEL</div>
+              <h3 class="verdict-title" id="verdict-title">Vergelijking geladen</h3>
+            </div>
+          </div>
+
+          <p class="verdict-text" id="verdict-text">
+            Beide voertuigen worden naast elkaar geanalyseerd op kosten, prestaties, herkomst en historie.
+          </p>
+
+          <div class="delta-kpi-grid">
+            <div class="delta-card">
+              <span>Kostenverschil</span>
+              <strong id="kpi-cost-diff">—</strong>
+              <p>Maandelijkse besparing</p>
+            </div>
+            <div class="delta-card">
+              <span>Vermogensverschil</span>
+              <strong id="kpi-power-diff">—</strong>
+              <p>PK verhouding</p>
+            </div>
+            <div class="delta-card">
+              <span>Verbruiksverschil</span>
+              <strong id="kpi-fuel-diff">—</strong>
+              <p>WLTP gecombineerd</p>
+            </div>
+            <div class="delta-card">
+              <span>Wegenbelasting</span>
+              <strong id="kpi-tax-diff">—</strong>
+              <p>MRB per maand</p>
+            </div>
+          </div>
+
+          <!-- Action & Share Bar -->
+          <div class="action-share-bar">
+            <button class="action-btn pdf-btn" type="button" onclick="downloadPdfReport()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Download PDF Rapport (Gratis 1/3)</span>
+            </button>
+
+            <button class="action-btn" type="button" onclick="shareComparisonLink()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              Deel Link
+            </button>
+
+            <button class="action-btn" type="button" onclick="printComparison()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Print Rapport
+            </button>
+
+            <a class="action-btn whatsapp-cta" id="cta-wa-bar" href="#" target="_blank" rel="noopener noreferrer">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+              Bespreek met Martijn (WhatsApp)
+            </a>
+          </div>
+        </div>
+
+        <!-- ⚡ INTERACTIVE DRAG RACE ARENA & SPRINT SIMULATOR -->
+        <div class="drag-race-arena" id="drag-race-container"></div>
+
+        <!-- 🏆 APEX BATTLE SHOWDOWN MATRIX -->
+        <div class="battle-matrix-box" id="battle-matrix-container"></div>
+
+        <!-- Import Opportunity & Savings Inzicht -->
+        <div id="import-opportunity-container"></div>
+
+        <!-- APEX 5-Pillar Score Matrix -->
+        <div class="score-matrix-box">
+          <div class="score-matrix-header">
+            <h4>APEX 5-Pijler Scorematrix (0–100)</h4>
+            <span style="font-size:0.8rem; color:var(--muted);">Gewogen vergelijking op prestaties, kosten, historie &amp; verbruik</span>
+          </div>
+          <div class="score-pillar-grid" id="score-pillars-container"></div>
+        </div>
+
+        <!-- 🔮 10-YEAR TCO & RESIDUAL VALUE PROJECTION SIMULATOR -->
+        <div class="projection-box" id="projection-10yr-container"></div>
+
+        <!-- 🏖️ ROADTRIP & VAKANTIE PLANNER -->
+        <div class="roadtrip-box" id="roadtrip-planner-container"></div>
+
+        <!-- TCO Exploitatie Prognose & Kostenopbouw -->
+        <div class="tco-projection-box">
+          <div class="tco-header-row">
+            <div>
+              <h4>Exploitatie Prognose (TCO) &amp; Kosten per Kilometer</h4>
+              <p style="font-size:0.82rem; color:var(--muted);">Inclusief afschrijving, brandstof/stroom, MRB, verzekering en onderhoud</p>
+            </div>
+            <div class="tco-period-tabs">
+              <button class="tco-tab-btn" type="button" data-months="12" onclick="setTcoPeriod(12)">1 Jaar</button>
+              <button class="tco-tab-btn active" type="button" data-months="36" onclick="setTcoPeriod(36)">3 Jaar</button>
+              <button class="tco-tab-btn" type="button" data-months="60" onclick="setTcoPeriod(60)">5 Jaar</button>
+            </div>
+          </div>
+
+          <div class="tco-comparison-grid" id="tco-comparison-grid">
+            <div class="tco-vehicle-panel">
+              <span style="font: 500 0.65rem/1 var(--display); letter-spacing:0.15em; text-transform:uppercase; color:var(--copper-light);">Auto 1 Totale Kosten</span>
+              <strong class="tco-total-figure" id="tco-v1-total">—</strong>
+              <div class="tco-km-rate" id="tco-v1-kmrate">—</div>
+              <div class="tco-stacked-bar" id="tco-v1-bar"></div>
+            </div>
+
+            <div class="tco-vehicle-panel">
+              <span style="font: 500 0.65rem/1 var(--display); letter-spacing:0.15em; text-transform:uppercase; color:var(--copper-light);">Auto 2 Totale Kosten</span>
+              <strong class="tco-total-figure" id="tco-v2-total">—</strong>
+              <div class="tco-km-rate" id="tco-v2-kmrate">—</div>
+              <div class="tco-stacked-bar" id="tco-v2-bar"></div>
+            </div>
+
+            <div class="tco-vehicle-panel" id="tco-v3-panel" style="display: none;">
+              <span style="font: 500 0.65rem/1 var(--display); letter-spacing:0.15em; text-transform:uppercase; color:var(--copper-light);">Auto 3 Totale Kosten</span>
+              <strong class="tco-total-figure" id="tco-v3-total">—</strong>
+              <div class="tco-km-rate" id="tco-v3-kmrate">—</div>
+              <div class="tco-stacked-bar" id="tco-v3-bar"></div>
+            </div>
+          </div>
+
+          <div class="tco-legend" style="margin-top: 1rem;">
+            <div class="tco-legend-item"><span class="tco-legend-dot seg-deprec"></span> Afschrijving</div>
+            <div class="tco-legend-item"><span class="tco-legend-dot seg-fuel"></span> Brandstof / Stroom</div>
+            <div class="tco-legend-item"><span class="tco-legend-dot seg-mrb"></span> Wegenbelasting (MRB)</div>
+            <div class="tco-legend-item"><span class="tco-legend-dot seg-ins"></span> Verzekering</div>
+            <div class="tco-legend-item"><span class="tco-legend-dot seg-maint"></span> Onderhoud &amp; Banden</div>
+          </div>
+        </div>
+
+        <!-- Cumulatieve Besparing Timeline (1 t/m 5 jaar) -->
+        <div id="savings-timeline-container"></div>
+
+        <!-- Prestaties & Sprint Vergelijker Visualizer -->
+        <div id="perf-visualizer-container"></div>
+
+        <!-- Risico-Analyse & Aankoopmakelaar Checklist -->
+        <div class="risk-checklist-box">
+          <h4>APEX Risico- &amp; Aankoopanalyse</h4>
+          <p class="risk-sub">Belangrijke aandachtspunten en pluspunten geconstateerd op basis van RDW open data:</p>
+          <div class="risk-two-col-grid" id="risk-grid-container">
+            <div class="risk-col-card" id="risk-col-1"></div>
+            <div class="risk-col-card" id="risk-col-2"></div>
+            <div class="risk-col-card" id="risk-col-3" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- Zakelijke Bijtelling 2026 Module -->
+        <div id="bijtelling-container"></div>
+
+        <!-- Caravan Veiligheid & Trekcapaciteit Module -->
+        <div id="caravan-container"></div>
+
+        <!-- Milieuzones & Emissie Toegang Module -->
+        <div id="milieuzone-container"></div>
+
+        <!-- Proefrit & Aankoopinspectie Checklist van Martijn -->
+        <div id="proefrit-tips-container"></div>
+
+        <!-- Full Detailed Specs Matrix (Accordion Group with Progressive Peek) -->
+        <div class="spec-accordion-group">
+          
+          <!-- Category 1: Algemeen & Registratie -->
+          <div class="spec-category-block">
+            <div class="spec-category-header">
+              <h4>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                1. Algemene Gegevens &amp; Voertuighistorie
+              </h4>
+              <span class="spec-toggle-icon">▼</span>
+            </div>
+            <div class="spec-category-body" id="matrix-algemeen"></div>
+          </div>
+
+          <!-- Category 2: Financiën & Maandlasten -->
+          <div class="spec-category-block">
+            <div class="spec-category-header">
+              <h4>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                2. Financiën, Afschrijving &amp; Maandlasten Matrix
+              </h4>
+              <span class="spec-toggle-icon">▼</span>
+            </div>
+            <div class="spec-category-body" id="matrix-financien"></div>
+          </div>
+
+          <!-- Category 3: Motor & Prestaties -->
+          <div class="spec-category-block">
+            <div class="spec-category-header">
+              <h4>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                3. Motor, Aandrijving &amp; Prestaties
+              </h4>
+              <span class="spec-toggle-icon">▼</span>
+            </div>
+            <div class="spec-category-body" id="matrix-motor"></div>
+          </div>
+
+          <!-- Category 4: Verbruik & Milieu -->
+          <div class="spec-category-block">
+            <div class="spec-category-header">
+              <h4>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                4. Verbruik, Milieu &amp; Actieradius
+              </h4>
+              <span class="spec-toggle-icon">▼</span>
+            </div>
+            <div class="spec-category-body" id="matrix-verbruik"></div>
+          </div>
+
+          <!-- Category 5: Maten, Gewichten & Trekcapaciteit -->
+          <div class="spec-category-block">
+            <div class="spec-category-header">
+              <h4>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                5. Maten, Gewichten &amp; Trekcapaciteit (Caravan)
+              </h4>
+              <span class="spec-toggle-icon">▼</span>
+            </div>
+            <div class="spec-category-body" id="matrix-maten"></div>
+          </div>
+
+          <!-- Category 6: APK, Historie & Veiligheid -->
+          <div class="spec-category-block">
+            <div class="spec-category-header">
+              <h4>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                6. APK, Historie &amp; Veiligheidsstatus
+              </h4>
+              <span class="spec-toggle-icon">▼</span>
+            </div>
+            <div class="spec-category-body" id="matrix-apk"></div>
+          </div>
+
+        </div>
+
+        <!-- 🎁 COMMUNITY APPRECIATION & FEEDBACK BOX -->
+        <div class="community-appreciation-box" id="community-appreciation-container">
+          <div class="appreciation-grid">
+            <div class="appreciation-text">
+              <h4>🌿 100% Gratis &amp; Onafhankelijk Gehouden</h4>
+              <p>
+                Wij houden deze vergelijker graag vrij van storende advertenties en commerciële dealerbelangen. 
+                Vindt u deze tool waardevol? Laat een beoordeling of verbetersuggestie achter voor Martijn, of steun onze serverkosten met een kleine vrijwillige gift.
+              </p>
+              <div class="star-rating-row">
+                <span style="font-size:0.8rem; color:var(--muted); margin-right:0.4rem;">Beoordeling:</span>
+                <button class="star-btn active" type="button" onclick="setStarRating(1)" aria-label="1 ster">★</button>
+                <button class="star-btn active" type="button" onclick="setStarRating(2)" aria-label="2 sterren">★</button>
+                <button class="star-btn active" type="button" onclick="setStarRating(3)" aria-label="3 sterren">★</button>
+                <button class="star-btn active" type="button" onclick="setStarRating(4)" aria-label="4 sterren">★</button>
+                <button class="star-btn active" type="button" onclick="setStarRating(5)" aria-label="5 sterren">★</button>
+              </div>
+            </div>
+
+            <div class="feedback-form-row">
+              <textarea class="feedback-input" id="tool-feedback-text" placeholder="Heeft u een suggestie of vraag voor Martijn? Laat het ons weten..."></textarea>
+              <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                <button class="form-submit-btn" type="button" onclick="sendToolFeedback()">Verstuur Feedback ↗</button>
+                <a class="action-btn" href="https://wa.me/31624735939?text=Beste%20Martijn%2C%20ik%20waardeer%20de%20Auto%20Vergelijker%20en%20wil%20graag%20doneren%20of%20advies%20vragen." target="_blank" rel="noopener noreferrer" style="border-color:var(--copper-light); color:var(--copper-light);">
+                  Steun met Gift ☕
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Aankoopmakelaar & Second Opinion Conversion Block -->
+    <section class="aankoop-block">
+      <div class="aankoop-inner">
+        <div class="aankoop-header">
+          <span class="aankoop-eyebrow">APEXCLUSIVE · ONAFHANKELIJK AANKOOPMAKELAAR</span>
+          <h3>Deze check geeft u de <em>feiten</em>.<br>Wij zorgen dat u de <em>juiste beslissing</em> neemt.</h3>
+          <p>
+            RDW-data vertelt wat een auto op papier is — niet of deze specifieke auto het waard is. Martijn van APEXclusive begeleidt kopers van exclusieve en geïmporteerde auto's in Nederland en héél Europa: van zoekprofiel en onafhankelijke inspectie tot onderhandeling, BPM en aflevering. Eén telefoontje voorkomt een miskoop van tienduizenden euro's.
+          </p>
+        </div>
+
+        <div class="aankoop-steps-grid">
+          <div class="aankoop-step-card">
+            <div class="step-num">01</div>
+            <div class="step-title">Intake &amp; Zoekprofiel</div>
+            <div class="step-desc">Uw wensen, smaak, budget en eisen vormen het uitgangspunt. Geen dealerbelang.</div>
+          </div>
+          <div class="aankoop-step-card">
+            <div class="step-num">02</div>
+            <div class="step-title">Selectie in héél Europa</div>
+            <div class="step-desc">Directe toegang tot het beste aanbod in Duitsland, België, Italië en heel Europa.</div>
+          </div>
+          <div class="aankoop-step-card">
+            <div class="step-num">03</div>
+            <div class="step-title">Historie &amp; Schadecheck</div>
+            <div class="step-desc">Onderhoudsverleden, buitenlandse registraties en tellerstanden worden tot op de bodem uitgezocht.</div>
+          </div>
+          <div class="aankoop-step-card">
+            <div class="step-num">04</div>
+            <div class="step-title">Inspectie &amp; Lakdiktemeting</div>
+            <div class="step-desc">Grondige fysieke keuring op locatie: diagnose uitlezen, lakdiktemeting en proefrit.</div>
+          </div>
+          <div class="aankoop-step-card">
+            <div class="step-num">05</div>
+            <div class="step-title">Scherpe Prijsonderhandeling</div>
+            <div class="step-desc">Wij onderhandelen zakelijk en emotieloos de scherpste deal voor u uit.</div>
+          </div>
+          <div class="aankoop-step-card">
+            <div class="step-num">06</div>
+            <div class="step-title">BPM, Transport &amp; Aflevering</div>
+            <div class="step-desc">Volledig ontzorgd: verzekerd transport, voordelige BPM taxatie, RDW keuring en kentekenplaten.</div>
+          </div>
+        </div>
+
+        <div class="aankoop-cta-box">
+          <div class="founder-info">
+            <img class="founder-img" src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_720,q_auto:best,f_auto/v1786112744/8A26E528-46F4-471D-856C-7D4210809521_1_105_c_uguopr.jpg" alt="Martijn Puts, Founder van APEXclusive">
+            <div class="founder-details">
+              <strong>Martijn Puts</strong>
+              <span>Founder &amp; Aankoopmakelaar · Piloot &amp; Autoliefhebber</span>
+            </div>
+          </div>
+
+          <div class="aankoop-cta-buttons">
+            <a class="btn-primary-wa" id="cta-wa-main" href="https://wa.me/31624735939?text=Beste%20Martijn%2C%20ik%20overweeg%20een%20auto%20en%20zou%20graag%20onafhankelijk%20aankoopadvies%20willen." target="_blank" rel="noopener noreferrer">
+              WhatsApp Martijn ↗
+            </a>
+            <a class="btn-secondary-call" href="tel:+31624735939">
+              Bel +31 6 24 73 59 39
+            </a>
+          </div>
+        </div>
+
+        <!-- Real Cases Strip -->
+        <div class="cases-strip-wrap">
+          <h4>Recent begeleide dossiers door APEXclusive</h4>
+          <p class="cases-sub">Onafhankelijk geselecteerd, gecontroleerd en geleverd met zekerheid:</p>
+          <div class="cases-mini-grid">
+            <div class="case-mini-card">
+              <img class="case-mini-img" src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_900,q_auto:best,f_auto/v1786111940/987D691B-FFBF-4137-9766-15DEF62F5CD4_1_201_a_k1eyvp.jpg" alt="Lamborghini Urus">
+              <div class="case-mini-body">
+                <strong>Lamborghini Urus (650 pk)</strong>
+                <span>Luxemburg → Nederland</span>
+                <p>Volledige historie geverifieerd, 1e eigenaar, schadevrij &amp; BPM optimalisatie.</p>
+              </div>
+            </div>
+            <div class="case-mini-card">
+              <img class="case-mini-img" src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_900,q_auto:best,f_auto/v1786123838/WhatsApp_Image_2025-05-20_at_01.01.02_nh95ep.jpg" alt="Lamborghini Huracan">
+              <div class="case-mini-body">
+                <strong>Huracán LP610-4 Spyder (610 pk)</strong>
+                <span>Zweden → Nederland</span>
+                <p>Lakmeting ter plaatse, proefrit, dealeronderhoudscontrole en gesloten transport.</p>
+              </div>
+            </div>
+            <div class="case-mini-card">
+              <img class="case-mini-img" src="https://res.cloudinary.com/sfd8ohjz/image/upload/w_900,q_auto:best,f_auto/v1786112182/8112FE63-03BD-4C6D-9A40-1217FCD5910F_1_201_a_vbazdb.jpg" alt="Audi RS6 Avant">
+              <div class="case-mini-body">
+                <strong>Audi RS6 Avant C8 (600 pk)</strong>
+                <span>Audi Approved Duitsland</span>
+                <p>Garantieoverdracht geregeld, scherpste prijs onderhandeld, RDW import &amp; aflevering.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direct Form for Aankoopadvies -->
+        <div class="aankoop-form-container">
+          <h4>Vraag direct een vrijblijvend adviesgesprek aan</h4>
+          <p>Laat uw gegevens achter. Martijn neemt binnen 24 uur persoonlijk contact met u op.</p>
+          
+          <form id="aankoop-contact-form" onsubmit="submitAankoopForm(event)">
+            <div class="form-row-grid">
+              <input class="form-input-box" id="aankoop-name" type="text" placeholder="Uw naam *" required>
+              <input class="form-input-box" id="aankoop-email" type="email" placeholder="Uw e-mailadres *" required>
+              <input class="form-input-box" id="aankoop-phone" type="tel" placeholder="Telefoonnummer (optioneel)">
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <input class="form-input-box" id="aankoop-form-query" type="text" placeholder="Waar kunnen wij u bij helpen?">
+            </div>
+            <button class="form-submit-btn" type="submit">Aanvraag versturen ↗</button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
-  <footer><div class="fg"><div><a href="https://apexclusive.nl" class="brand"><span class="brand-apex">APEX</span><span class="brand-sep" aria-hidden="true"></span><span class="brand-excl">EXCLUSIVE</span></a><p>Onafhankelijke begeleiding bij aankoop en import van exclusieve auto&rsquo;s.<br>Maastricht &middot; Nederland</p></div><div><p class="fh">Juridisch</p><ul class="fl"><li><a href="https://apexclusive.nl/algemenevoorwaarden.html">Algemene voorwaarden</a></li></ul></div><div><p class="fh">Contact</p><ul class="fl"><li><a href="mailto:info@apexclusive.nl">E-mail: info@apexclusive.nl</a></li><li><a href="https://wa.me/31624735939">WhatsApp: +31 6 24 73 59 39</a></li><li><a href="https://apexclusive.nl">Maastricht, Nederland</a></li></ul></div></div><div class="fb"><span>&copy; <span id="yr">2026</span> APEXclusive &middot; Automotive Advisory &middot; Maastricht</span><span>Driven by Excellence.<span class="tric"></span>Gran turismo, geregeld.</span></div><div class="site-credit">Deze website is ontworpen en gebouwd door <a href="mailto:info@apexclusive.nl?subject=Premium%20website%20aanvraag">APEXclusive.nl</a>. Ook een premium website nodig?</div></footer>
+  <!-- Sticky Bottom Quick Action Bar -->
+  <div class="sticky-bottom-bar" id="sticky-bottom-bar">
+    <div class="sticky-bar-info">
+      <div class="sticky-bar-plates" id="sticky-plates-text">— vs —</div>
+      <div class="sticky-bar-delta" id="sticky-delta-text">—</div>
+    </div>
+    <div style="display: flex; gap: 0.6rem;">
+      <a class="action-btn whatsapp-cta" id="cta-wa-sticky" href="#" target="_blank" rel="noopener noreferrer">
+        WhatsApp Martijn 💬
+      </a>
+      <a class="action-btn" href="#top">
+        Naar boven ↑
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer (Matching Homepage Exactly) -->
+  <footer class="site-footer">
+    <div class="page-width footer-grid">
+      <div>
+        <a class="wordmark footer-wordmark" href="https://apexclusive.nl" target="_blank" rel="noopener noreferrer">
+          <span>APEX</span><i></i><b>EXCLUSIVE</b>
+        </a>
+        <p>
+          Onafhankelijke begeleiding bij aankoop en import van exclusieve auto’s.<br>
+          Maastricht · Nederland
+        </p>
+      </div>
+
+      <div>
+        <h3>Juridisch</h3>
+        <a href="https://apexclusive.nl/algemenevoorwaarden.html" target="_blank" rel="noopener noreferrer">Algemene voorwaarden</a>
+        <a href="https://apexclusive.nl/privacyverklaring.html" target="_blank" rel="noopener noreferrer">Privacyverklaring</a>
+      </div>
+
+      <div>
+        <h3>Contact</h3>
+        <a href="mailto:info@apexclusive.nl">info@apexclusive.nl</a>
+        <a href="tel:+31624735939">+31 6 24 73 59 39</a>
+        <a href="https://wa.me/31624735939" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+        <a href="https://apexclusive.nl" target="_blank" rel="noopener noreferrer">Maastricht, Nederland</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom page-width">
+      <span>&copy; <span id="yr">2026</span> APEXclusive</span>
+      <a href="https://apexclusive.nl/algemenevoorwaarden.html" target="_blank" rel="noopener noreferrer">Algemene voorwaarden</a>
+      <a href="https://apexclusive.nl/privacyverklaring.html" target="_blank" rel="noopener noreferrer">Privacyverklaring</a>
+      <span>Onafhankelijk. Persoonlijk. Zorgvuldig.</span>
+    </div>
+
+    <div class="site-credit">
+      Deze website is ontworpen en gebouwd door <a href="mailto:info@apexclusive.nl?subject=Premium%20website%20aanvraag">APEXclusive.nl</a>.
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
