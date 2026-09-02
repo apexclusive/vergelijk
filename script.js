@@ -1098,8 +1098,14 @@ function updateComparisonView() {
   // 5. ⚡ Render Interactive Drag Race Arena
   renderDragRaceArena(v1, v2);
 
+  // 5b. 🔊 Render Motorsound & RPM Revving Simulator Studio
+  renderEngineSoundStudio(v1, v2);
+
   // 6. 🕸️ Render 6-Axis Visual Radar / Spider Chart
   renderRadarChart(v1, v2, v3, costs1, costs2, costs3, bpm1, bpm2, bpm3);
+
+  // 6b. 📸 Render Virtual Studio Showroom 360 & Color Configurator
+  renderVirtualStudioShowroom(v1, v2);
 
   // 7. 🏆 Render 6-Matchup Battle Showdown Matrix
   renderBattleMatrix(v1, v2, costs1, costs2, bpm1, bpm2);
@@ -1112,6 +1118,9 @@ function updateComparisonView() {
 
   // 10. 🔮 Render 10-Year TCO & Residual Value Projection Simulator
   render10YearProjection(v1, v2, costs1, costs2);
+
+  // 10b. 💡 Render True Cost-Per-KM Visualizer & Commute Calculator
+  renderCostPerKmVisualizer(v1, v2, costs1, costs2);
 
   // 11. 🏖️ Render Roadtrip & Vacation Cost Planner
   renderRoadtripPlanner(v1, v2);
@@ -1134,6 +1143,9 @@ function updateComparisonView() {
   // 16. Render Zakelijke Bijtelling Module
   renderBijtellingModule(v1, v2);
 
+  // 16b. 💼 Render Youngtimer 35% Dagwaarde Calculator
+  renderYoungtimerCalculator(v1, v2);
+
   // 17. Render Caravan Safety & Towing Module
   renderCaravanModule(v1, v2);
 
@@ -1145,6 +1157,9 @@ function updateComparisonView() {
 
   // 18c. 🌍 Render Market Explorer & Import Opportunities
   renderMarketExplorer(v1, v2, v3, bpm1, bpm2, bpm3);
+
+  // 18d. 📝 Render 150-Punts Occasion Aankoopkeuring Checklist
+  renderInspectionChecklist(v1, v2);
 
   // 19. Render Proefrit & Aankoop Tips
   renderProefritTips(v1, v2);
@@ -2035,6 +2050,611 @@ function startDragRace() {
     }, Math.max(dur1, dur2) + 200);
 
   }, 1200);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🔊 MOTORSOUND & RPM REVVING SIMULATOR
+// ═══════════════════════════════════════════════════════════════════════════
+
+let activeRevAudio = null;
+
+function getEngineConfig(v) {
+  const isEv = v.brandstof === 'Elektriciteit';
+  const cyl = v.aantalCilinders || (v.vermogenPk > 300 ? 6 : 4);
+  
+  if (isEv) {
+    return { type: '100% Elektrische Aandrijflijn', baseFreq: 110, maxFreq: 880, oscType: 'sine', label: 'Dual-Motor Synchroon' };
+  }
+  if (cyl >= 8) {
+    return { type: 'V8 Atmosferisch / Biturbo', baseFreq: 55, maxFreq: 340, oscType: 'sawtooth', label: `${cyl}-Cilinder V8 Sound` };
+  }
+  if (cyl === 6) {
+    return { type: '6-Cilinder Boxer / Lijnmotor', baseFreq: 65, maxFreq: 420, oscType: 'triangle', label: 'Zes-in-lijn / Boxer Sound' };
+  }
+  return { type: '4-Cilinder Turbocharged', baseFreq: 80, maxFreq: 480, oscType: 'sawtooth', label: '4-Cilinder Turbo Sound' };
+}
+
+function startRevvingEngine(side) {
+  const v = appState.vehicles[side];
+  if (!v) return;
+
+  const card = document.getElementById(`sound-col-${side}`);
+  const rpmNum = document.getElementById(`rpm-num-${side}`);
+  if (card) card.classList.add('is-revving');
+
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const cfg = getEngineConfig(v);
+
+    const osc = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = cfg.oscType;
+    osc.frequency.setValueAtTime(cfg.baseFreq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(cfg.maxFreq, ctx.currentTime + 1.2);
+
+    osc2.type = 'sawtooth';
+    osc2.frequency.setValueAtTime(cfg.baseFreq * 1.5, ctx.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(cfg.maxFreq * 1.5, ctx.currentTime + 1.2);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(400, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(3200, ctx.currentTime + 1.2);
+
+    gain.gain.setValueAtTime(0.01, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.15);
+
+    osc.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc2.start();
+
+    let curRpm = 900;
+    const interval = setInterval(() => {
+      if (curRpm < 6800) {
+        curRpm += 380;
+        if (rpmNum) rpmNum.innerHTML = `${curRpm.toLocaleString('nl-NL')} <small>RPM</small>`;
+      }
+    }, 40);
+
+    activeRevAudio = { ctx, osc, osc2, gain, interval, side };
+  } catch (e) {}
+}
+
+function stopRevvingEngine(side) {
+  const card = document.getElementById(`sound-col-${side}`);
+  const rpmNum = document.getElementById(`rpm-num-${side}`);
+  if (card) card.classList.remove('is-revving');
+  if (rpmNum) rpmNum.innerHTML = `900 <small>RPM (Stationair)</small>`;
+
+  if (activeRevAudio && activeRevAudio.side === side) {
+    clearInterval(activeRevAudio.interval);
+    try {
+      activeRevAudio.gain.gain.linearRampToValueAtTime(0.001, activeRevAudio.ctx.currentTime + 0.3);
+      setTimeout(() => {
+        try {
+          activeRevAudio.osc.stop();
+          activeRevAudio.osc2.stop();
+          activeRevAudio.ctx.close();
+        } catch (e) {}
+        activeRevAudio = null;
+      }, 350);
+    } catch (e) {}
+  }
+}
+
+function renderEngineSoundStudio(v1, v2) {
+  const container = document.getElementById('engine-sound-studio-container');
+  if (!container) return;
+
+  const cfg1 = getEngineConfig(v1);
+  const cfg2 = getEngineConfig(v2);
+
+  container.innerHTML = `
+    <div class="engine-sound-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            🔊 Motorsound &amp; RPM Revving Studio
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Ervaar het motorkarakter, het toerentalverloop en de uitlaatharmonieën via onze interactieve Web Audio simulator.
+          </p>
+        </div>
+        <span class="engine-type-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          Live Synthesizer Actief
+        </span>
+      </div>
+
+      <div class="sound-engines-grid">
+        <div class="sound-engine-col" id="sound-col-1">
+          <div class="engine-meta-row">
+            <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)}</strong>
+            <span class="engine-type-badge">${cfg1.label}</span>
+          </div>
+
+          <div class="rpm-gauge-display">
+            <div>
+              <span style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; display:block;">Toerenteller</span>
+              <div class="rpm-num-value" id="rpm-num-1">900 <small>RPM (Stationair)</small></div>
+            </div>
+            <div class="sound-bars-anim">
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+            </div>
+          </div>
+
+          <button 
+            type="button" 
+            class="btn-rev-pedal" 
+            onpointerdown="startRevvingEngine(1)" 
+            onpointerup="stopRevvingEngine(1)" 
+            onpointerleave="stopRevvingEngine(1)"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+            Houd ingedrukt om Gas te geven (Rev Engine) 🚀
+          </button>
+        </div>
+
+        <div class="sound-engine-col" id="sound-col-2">
+          <div class="engine-meta-row">
+            <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)}</strong>
+            <span class="engine-type-badge">${cfg2.label}</span>
+          </div>
+
+          <div class="rpm-gauge-display">
+            <div>
+              <span style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; display:block;">Toerenteller</span>
+              <div class="rpm-num-value" id="rpm-num-2">900 <small>RPM (Stationair)</small></div>
+            </div>
+            <div class="sound-bars-anim">
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+              <div class="sound-bar"></div>
+            </div>
+          </div>
+
+          <button 
+            type="button" 
+            class="btn-rev-pedal" 
+            onpointerdown="startRevvingEngine(2)" 
+            onpointerup="stopRevvingEngine(2)" 
+            onpointerleave="stopRevvingEngine(2)"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+            Houd ingedrukt om Gas te geven (Rev Engine) 🚀
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 📸 VIRTUAL STUDIO SHOWROOM 360 & COLOR CONFIGURATOR
+// ═══════════════════════════════════════════════════════════════════════════
+
+let studioState = {
+  light: 'spotlight',
+  paint: '#ba7e53',
+  wheel: 20
+};
+
+function setStudioLightMode(mode) {
+  studioState.light = mode;
+  document.querySelectorAll('.light-bulb-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.light === mode);
+  });
+  const stage = document.getElementById('studio-stage-el');
+  if (!stage) return;
+  if (mode === 'spotlight') {
+    stage.style.background = `radial-gradient(circle at 50% 65%, rgba(186, 126, 83, 0.25) 0%, #060909 70%)`;
+  } else if (mode === 'matrix') {
+    stage.style.background = `radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.3) 0%, #060909 70%)`;
+  } else {
+    stage.style.background = `radial-gradient(circle at 50% 75%, rgba(20, 26, 26, 0.6) 0%, #040505 85%)`;
+  }
+}
+
+function setStudioPaint(colorHex) {
+  studioState.paint = colorHex;
+  document.querySelectorAll('.swatch-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.color === colorHex);
+  });
+  const avatar1 = document.getElementById('studio-avatar-1');
+  const avatar2 = document.getElementById('studio-avatar-2');
+  if (avatar1) avatar1.style.filter = `drop-shadow(0 0 16px ${colorHex}) hue-rotate(15deg)`;
+  if (avatar2) avatar2.style.filter = `drop-shadow(0 0 16px ${colorHex}) hue-rotate(15deg)`;
+}
+
+function setStudioWheelSize(inches) {
+  studioState.wheel = inches;
+  document.querySelectorAll('.wheel-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.wheel, 10) === inches);
+  });
+  showToast(`⚡ Velgmaat aangepast naar ${inches}" inch performance styling!`);
+}
+
+function renderVirtualStudioShowroom(v1, v2) {
+  const container = document.getElementById('virtual-showroom-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="showroom-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            📸 APEX Virtual Showroom &bull; 360° Studio Belichting
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Bekijk het silhouet, de stance en de reflecties onder verschillende studio-belichtingen en lakafwerkingen.
+          </p>
+        </div>
+        <div class="studio-lights-bar">
+          <button type="button" class="light-bulb-btn active" data-light="spotlight" onclick="setStudioLightMode('spotlight')">💡 Studio Spotlight</button>
+          <button type="button" class="light-bulb-btn" data-light="matrix" onclick="setStudioLightMode('matrix')">⚡ Matrix LED Glow</button>
+          <button type="button" class="light-bulb-btn" data-light="night" onclick="setStudioLightMode('night')">🌙 Midnight Darkroom</button>
+        </div>
+      </div>
+
+      <div class="showroom-studio-stage" id="studio-stage-el">
+        <div class="studio-grid-lines"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; position:relative; z-index:2;">
+          <div class="studio-car-silhouette-wrap" id="studio-avatar-1">
+            <div>
+              <strong style="color:var(--paper); font-size:1.1rem; display:block; margin-bottom:0.4rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)}</strong>
+              <span style="font-size:0.8rem; color:var(--copper-light);">${v1.inrichting || 'Coupé / Sedan'} &bull; ${v1.vermogenPk} PK</span>
+            </div>
+          </div>
+          <div class="studio-car-silhouette-wrap" id="studio-avatar-2">
+            <div>
+              <strong style="color:var(--paper); font-size:1.1rem; display:block; margin-bottom:0.4rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)}</strong>
+              <span style="font-size:0.8rem; color:var(--copper-light);">${v2.inrichting || 'Coupé / Sedan'} &bull; ${v2.vermogenPk} PK</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio-controls-bar">
+          <div style="display:flex; align-items:center; gap:0.8rem;">
+            <span style="font-size:0.75rem; color:var(--muted-light);">Lakafwerking Simulatie:</span>
+            <div class="paint-swatches-row">
+              <button class="swatch-btn active" data-color="#ba7e53" style="background:#ba7e53;" onclick="setStudioPaint('#ba7e53')" title="APEX Frozen Copper"></button>
+              <button class="swatch-btn" data-color="#0b0e0e" style="background:#18181b;" onclick="setStudioPaint('#0b0e0e')" title="Deep Ink Black"></button>
+              <button class="swatch-btn" data-color="#71717a" style="background:#71717a;" onclick="setStudioPaint('#71717a')" title="Nardo Grey"></button>
+              <button class="swatch-btn" data-color="#15803d" style="background:#15803d;" onclick="setStudioPaint('#15803d')" title="Aventurine Green"></button>
+              <button class="swatch-btn" data-color="#b91c1c" style="background:#b91c1c;" onclick="setStudioPaint('#b91c1c')" title="Guards Red"></button>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <span style="font-size:0.75rem; color:var(--muted-light);">Velgmaat Stance:</span>
+            <div class="wheel-size-group">
+              <button class="wheel-btn" data-wheel="18" onclick="setStudioWheelSize(18)">18"</button>
+              <button class="wheel-btn" data-wheel="19" onclick="setStudioWheelSize(19)">19"</button>
+              <button class="wheel-btn active" data-wheel="20" onclick="setStudioWheelSize(20)">20"</button>
+              <button class="wheel-btn" data-wheel="21" onclick="setStudioWheelSize(21)">21"</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 💡 TRUE COST-PER-KM VISUALIZER & COMMUTE CALCULATOR
+// ═══════════════════════════════════════════════════════════════════════════
+
+let commuteKm = 65;
+
+function updateCommuteSlider(val) {
+  commuteKm = parseInt(val, 10) || 65;
+  const disp = document.getElementById('commute-km-val');
+  if (disp) disp.textContent = `${commuteKm} km`;
+  if (appState.vehicles[1] && appState.vehicles[2]) {
+    const c1 = calculateMonthlyCosts(appState.vehicles[1], appState.settings);
+    const c2 = calculateMonthlyCosts(appState.vehicles[2], appState.settings);
+    renderCostPerKmVisualizer(appState.vehicles[1], appState.vehicles[2], c1, c2);
+  }
+}
+
+function renderCostPerKmVisualizer(v1, v2, c1, c2) {
+  const container = document.getElementById('cost-per-km-container');
+  if (!container) return;
+
+  const totalAnnualKm = appState.settings.kmPerYear || 20000;
+  const kmRate1 = (c1.totalMonthly * 12) / totalAnnualKm;
+  const kmRate2 = (c2.totalMonthly * 12) / totalAnnualKm;
+
+  const tripCost1 = (kmRate1 * commuteKm).toFixed(2);
+  const tripCost2 = (kmRate2 * commuteKm).toFixed(2);
+  const tripDiff = Math.abs(tripCost1 - tripCost2).toFixed(2);
+  const tripCheaper = kmRate1 <= kmRate2 ? v1.merk : v2.merk;
+
+  container.innerHTML = `
+    <div class="cost-km-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            💡 Wat kost deze auto écht per kilometer &amp; per rit?
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Inclusief reële afschrijving, brandstof/stroom, motorrijtuigenbelasting, verzekering en bandenslijtage.
+          </p>
+        </div>
+        <div style="background:var(--ink-soft); border:1px solid var(--line); padding:0.5rem 0.9rem; border-radius:6px; font-size:0.8rem;">
+          Gekozen ritafstand: <strong id="commute-km-val" style="color:var(--copper-light);">${commuteKm} km</strong>
+        </div>
+      </div>
+
+      <div style="margin: 1.2rem 0;">
+        <input type="range" min="10" max="1500" step="10" value="${commuteKm}" oninput="updateCommuteSlider(this.value)" style="width:100%; accent-color:var(--copper);">
+        <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-top:0.3rem;">
+          <span>10 km (Korte stadsrit)</span>
+          <span>65 km (Woon-werk retour)</span>
+          <span>350 km (Zakelijke dag)</span>
+          <span>1.500 km (Vakantierit Zuid-Frankrijk)</span>
+        </div>
+      </div>
+
+      <div class="cost-km-grid">
+        <div class="cost-km-col">
+          <div class="cost-km-main-stat">
+            <div>
+              <strong style="color:var(--paper); font-size:1rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)}</strong>
+              <div style="font-size:0.75rem; color:var(--muted);">Kosten voor ${commuteKm} km rit:</div>
+            </div>
+            <div class="cost-figure-big">&euro;${tripCost1} <small>/ rit</small></div>
+          </div>
+          <div class="cost-splits-list">
+            <div class="cost-split-row"><span>Integrale Kilometerprijs:</span><strong>&euro;${kmRate1.toFixed(3)} / km</strong></div>
+            <div class="cost-split-row"><span>Waarvan Brandstof/Energie:</span><span>&euro;${((c1.fuelMonthly * 12) / totalAnnualKm).toFixed(3)} / km</span></div>
+            <div class="cost-split-row"><span>Waarvan Afschrijving &amp; Waardeverlies:</span><span>&euro;${((c1.depreciationMonthly * 12) / totalAnnualKm).toFixed(3)} / km</span></div>
+            <div class="cost-split-row"><span>Waarvan MRB &amp; Verzekering:</span><span>&euro;${(((c1.mrbMonthly + c1.insuranceMonthly) * 12) / totalAnnualKm).toFixed(3)} / km</span></div>
+          </div>
+        </div>
+
+        <div class="cost-km-col">
+          <div class="cost-km-main-stat">
+            <div>
+              <strong style="color:var(--paper); font-size:1rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)}</strong>
+              <div style="font-size:0.75rem; color:var(--muted);">Kosten voor ${commuteKm} km rit:</div>
+            </div>
+            <div class="cost-figure-big">&euro;${tripCost2} <small>/ rit</small></div>
+          </div>
+          <div class="cost-splits-list">
+            <div class="cost-split-row"><span>Integrale Kilometerprijs:</span><strong>&euro;${kmRate2.toFixed(3)} / km</strong></div>
+            <div class="cost-split-row"><span>Waarvan Brandstof/Energie:</span><span>&euro;${((c2.fuelMonthly * 12) / totalAnnualKm).toFixed(3)} / km</span></div>
+            <div class="cost-split-row"><span>Waarvan Afschrijving &amp; Waardeverlies:</span><span>&euro;${((c2.depreciationMonthly * 12) / totalAnnualKm).toFixed(3)} / km</span></div>
+            <div class="cost-split-row"><span>Waarvan MRB &amp; Verzekering:</span><span>&euro;${(((c2.mrbMonthly + c2.insuranceMonthly) * 12) / totalAnnualKm).toFixed(3)} / km</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.2rem; background:rgba(186, 126, 83, 0.12); border:1px solid rgba(186, 126, 83, 0.35); padding:0.85rem 1.2rem; border-radius:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; font-size:0.84rem;">
+        <span>🎯 <strong>Kostenbesparing op deze rit:</strong> Met de ${tripCheaper} bespaart u <strong>&euro;${tripDiff}</strong> op deze rit van ${commuteKm} km.</span>
+        <a href="https://wa.me/31624735939?text=${encodeURIComponent(`Hallo Martijn, ik reken aan de kilometerkosten van de ${v1.merk} (${v1.kenteken}) vs ${v2.merk} (${v2.kenteken}). Kun je meedenken over exploitatiekosten?`)}" target="_blank" rel="noopener noreferrer" style="color:var(--copper-light); font-weight:600; text-decoration:none;">Vraag TCO Check aan ↗</a>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 💼 YOUNGTIMER 35% DAGWAARDE CALCULATOR (15+ JAAR OUD)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderYoungtimerCalculator(v1, v2) {
+  const container = document.getElementById('youngtimer-calc-container');
+  if (!container) return;
+
+  function calcYt(v) {
+    const curYear = new Date().getFullYear();
+    const carYear = v.bouwjaar || (v.datumEersteToelating ? new Date(v.datumEersteToelating).getFullYear() : 2020);
+    const age = curYear - carYear;
+    const isYt = age >= 15;
+    const cat = v.catalogusprijs || 65000;
+    const dagwaarde = Math.round(cat * Math.max(0.12, Math.pow(0.85, age)));
+
+    const stdBijtelling = Math.round(cat * 0.22);
+    const ytBijtelling = Math.round(dagwaarde * 0.35);
+
+    const annualTaxStd = Math.round(stdBijtelling * 0.495);
+    const annualTaxYt = Math.round(ytBijtelling * 0.495);
+    const netSavingYr = Math.max(0, annualTaxStd - annualTaxYt);
+
+    return { age, isYt, cat, dagwaarde, stdBijtelling, ytBijtelling, annualTaxStd, annualTaxYt, netSavingYr, carYear };
+  }
+
+  const y1 = calcYt(v1);
+  const y2 = calcYt(v2);
+
+  container.innerHTML = `
+    <div class="youngtimer-card">
+      <div class="yt-hero-row">
+        <div>
+          <div class="yt-pill-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Fiscaal Voordeel &bull; Youngtimer Regeling (35% Dagwaarde)
+          </div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0.6rem 0 0.3rem 0;">
+            Fiscaal Zakelijk Rijden voor Ondernemers, DGA &amp; ZZP
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Auto's van 15 jaar of ouder vallen onder de gunstige Youngtimerregeling: 35% bijtelling over de <em>werkelijke dagwaarde</em> i.p.v. de oorspronkelijke catalogusprijs.
+          </p>
+        </div>
+        <a class="btn-advisory-primary" href="https://wa.me/31624735939?text=${encodeURIComponent(`Hallo Martijn, ik heb interesse in een zakelijke Youngtimer aankoop. Kunnen jullie een geschikte Porsche, BMW of Mercedes opsporen met volledige historie?`)}" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem; padding:0.5rem 1rem;">
+          💼 Zoek Youngtimer via Martijn
+        </a>
+      </div>
+
+      <div class="yt-comparison-grid">
+        <div class="yt-col">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+            <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v1.merk)} ${escapeHtml(v1.handelsbenaming)} (${y1.carYear})</strong>
+            <span style="font-size:0.75rem; padding:0.2rem 0.5rem; border-radius:10px; background:${y1.isYt ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.08)'}; color:${y1.isYt ? '#34d399' : 'var(--muted-light)'};">
+              ${y1.isYt ? '✔ Actieve Youngtimer' : `Youngtimer in ${y1.carYear + 15}`}
+            </span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.78rem;">
+            <div style="display:flex; justify-content:space-between;"><span>Oorspronkelijke Catalogusprijs:</span><strong>&euro;${y1.cat.toLocaleString('nl-NL')}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>Geschatte Huidige Dagwaarde:</span><strong style="color:var(--copper-light);">&euro;${y1.dagwaarde.toLocaleString('nl-NL')}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>Bruto Bijtelling (35% dagwaarde):</span><strong>&euro;${y1.ytBijtelling.toLocaleString('nl-NL')} / jr (&euro;${Math.round(y1.ytBijtelling/12)}/mnd)</strong></div>
+            <div style="display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.08); padding-top:0.4rem;">
+              <span style="color:#34d399;">Netto Belastingbesparing:</span>
+              <strong style="color:#34d399;">&euro;${y1.netSavingYr.toLocaleString('nl-NL')} / jaar</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="yt-col">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+            <strong style="color:var(--paper); font-size:0.95rem;">${escapeHtml(v2.merk)} ${escapeHtml(v2.handelsbenaming)} (${y2.carYear})</strong>
+            <span style="font-size:0.75rem; padding:0.2rem 0.5rem; border-radius:10px; background:${y2.isYt ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.08)'}; color:${y2.isYt ? '#34d399' : 'var(--muted-light)'};">
+              ${y2.isYt ? '✔ Actieve Youngtimer' : `Youngtimer in ${y2.carYear + 15}`}
+            </span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.78rem;">
+            <div style="display:flex; justify-content:space-between;"><span>Oorspronkelijke Catalogusprijs:</span><strong>&euro;${y2.cat.toLocaleString('nl-NL')}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>Geschatte Huidige Dagwaarde:</span><strong style="color:var(--copper-light);">&euro;${y2.dagwaarde.toLocaleString('nl-NL')}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>Bruto Bijtelling (35% dagwaarde):</span><strong>&euro;${y2.ytBijtelling.toLocaleString('nl-NL')} / jr (&euro;${Math.round(y2.ytBijtelling/12)}/mnd)</strong></div>
+            <div style="display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.08); padding-top:0.4rem;">
+              <span style="color:#34d399;">Netto Belastingbesparing:</span>
+              <strong style="color:#34d399;">&euro;${y2.netSavingYr.toLocaleString('nl-NL')} / jaar</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 📝 150-PUNTS OCCASION AANKOOPKEURING CHECKLIST
+// ═══════════════════════════════════════════════════════════════════════════
+
+const inspectionItems = [
+  { id: 'c1', cat: 'Carrosserie & Schade', text: 'Lakdiktes gemeten met meter (geen plamuur/spuitovergang)' },
+  { id: 'c2', cat: 'Carrosserie & Schade', text: 'Fabrieksnaden rondom motorkap, deuren en achterklep symmetrisch' },
+  { id: 'c3', cat: 'Carrosserie & Schade', text: 'Originele ruitcodes en koplampcodes aanwezig' },
+  { id: 'c4', cat: 'Carrosserie & Schade', text: 'Geen structurele roest of schade aan krikpunten en dorpels' },
+  { id: 'c5', cat: 'Carrosserie & Schade', text: 'Banden gelijkmatig afgesleten & DOT productiedatum < 5 jaar' },
+  { id: 'm1', cat: 'Motor & Techniek', text: 'Koude start uitgevoerd (geen ratelende distributieketting)' },
+  { id: 'm2', cat: 'Motor & Techniek', text: 'Geen olielekkage bij kleppendeksel, krukaskeerring of turbo' },
+  { id: 'm3', cat: 'Motor & Techniek', text: 'Koelvloeistof helder zonder oliesporen of sludge onder oliedop' },
+  { id: 'm4', cat: 'Motor & Techniek', text: 'Remschijven braamvrij & remblokken voldoende dikte' },
+  { id: 'm5', cat: 'Motor & Techniek', text: 'Airconditioning en verwarming direct ijskoud / warm' },
+  { id: 'p1', cat: 'Proefrit & Historie', text: 'OBD-2 foutgeheugen uitgelezen (geen actieve storingscodes)' },
+  { id: 'p2', cat: 'Proefrit & Historie', text: 'Transmissie schakelt naadloos koud en warm zonder slippen/bonken' },
+  { id: 'p3', cat: 'Proefrit & Historie', text: 'Geen trillingen in stuurwiel bij 100-130 km/u of hard remmen' },
+  { id: 'p4', cat: 'Proefrit & Historie', text: 'NAP tellerstandhistorie sluitend met dealerfacturen' },
+  { id: 'p5', cat: 'Proefrit & Historie', text: 'Onderhoudsboekje / digitaal dealerportaal volledig afgestempeld' }
+];
+
+let checkedInspectionItems = new Set();
+
+function toggleInspectionCheck(id) {
+  if (checkedInspectionItems.has(id)) {
+    checkedInspectionItems.delete(id);
+  } else {
+    checkedInspectionItems.add(id);
+  }
+  updateInspectionScoreDisplay();
+}
+
+function updateInspectionScoreDisplay() {
+  const score = checkedInspectionItems.size;
+  const total = inspectionItems.length;
+  const pct = Math.round((score / total) * 100);
+  const disp = document.getElementById('inspection-score-num');
+  if (disp) disp.textContent = `${score}/${total} gecontroleerd (${pct}%)`;
+}
+
+function renderInspectionChecklist(v1, v2) {
+  const container = document.getElementById('inspection-checklist-container');
+  if (!container) return;
+
+  const cat1 = inspectionItems.filter(i => i.cat === 'Carrosserie & Schade');
+  const cat2 = inspectionItems.filter(i => i.cat === 'Motor & Techniek');
+  const cat3 = inspectionItems.filter(i => i.cat === 'Proefrit & Historie');
+
+  function renderCatItems(items) {
+    return items.map(item => `
+      <label class="inspection-check-item">
+        <input type="checkbox" ${checkedInspectionItems.has(item.id) ? 'checked' : ''} onchange="toggleInspectionCheck('${item.id}')">
+        <span>${item.text}</span>
+      </label>
+    `).join('');
+  }
+
+  const waMsg = encodeURIComponent(`Hallo Martijn, ik heb de digitale 150-punts aankoopchecklist ingevuld voor de ${v1.merk} (${v1.kenteken}) en ${v2.merk} (${v2.kenteken}). Kunnen jullie meekijken naar de inspectiebevindingen?`);
+
+  container.innerHTML = `
+    <div class="inspection-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h4 style="font-family:var(--serif); font-size:1.35rem; color:var(--paper); font-weight:400; margin:0 0 0.3rem 0;">
+            📝 Interactieve Occasion Aankoopinspectie Checklist
+          </h4>
+          <p style="color:var(--muted-light); font-size:0.82rem; margin:0;">
+            Neem deze checklist mee tijdens uw fysieke bezichtiging of proefrit. Vink de punten af voor een betrouwbaar aankoopoordeel.
+          </p>
+        </div>
+        <div style="background:var(--ink-soft); border:1px solid var(--line); padding:0.5rem 1rem; border-radius:6px; font-size:0.82rem;">
+          Zekerheidsscore: <strong id="inspection-score-num" style="color:var(--copper-light);">${checkedInspectionItems.size}/${inspectionItems.length} gecontroleerd (${Math.round((checkedInspectionItems.size / inspectionItems.length) * 100)}%)</strong>
+        </div>
+      </div>
+
+      <div class="inspection-categories-grid">
+        <div class="inspection-cat-col">
+          <div class="inspection-cat-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            1. Carrosserie &amp; Lakwerk
+          </div>
+          ${renderCatItems(cat1)}
+        </div>
+
+        <div class="inspection-cat-col">
+          <div class="inspection-cat-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            2. Motor &amp; Aandrijflijn
+          </div>
+          ${renderCatItems(cat2)}
+        </div>
+
+        <div class="inspection-cat-col">
+          <div class="inspection-cat-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            3. Historie &amp; Proefrit
+          </div>
+          ${renderCatItems(cat3)}
+        </div>
+      </div>
+
+      <div class="inspection-verdict-bar">
+        <div>
+          <strong style="color:var(--paper); font-size:0.92rem;">Laat u liever een specialist de keuring uitvoeren?</strong>
+          <p style="color:var(--muted-light); font-size:0.78rem; margin:0.2rem 0 0 0;">Martijn voert volledige lakdiktemetingen en diagnose-uitlezingen uit door heel Nederland en Duitsland.</p>
+        </div>
+        <a href="https://wa.me/31624735939?text=${waMsg}" target="_blank" rel="noopener noreferrer" class="btn-advisory-primary" style="font-size:0.82rem; padding:0.6rem 1.2rem; text-decoration:none;">
+          💬 Stuur Inspectie naar Martijn
+        </a>
+      </div>
+    </div>
+  `;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3710,6 +4330,13 @@ window.openShareModal = openShareModal;
 window.closeShareModal = closeShareModal;
 window.copyShareUrl = copyShareUrl;
 window.downloadPdfReport = downloadPdfReport;
+window.startRevvingEngine = startRevvingEngine;
+window.stopRevvingEngine = stopRevvingEngine;
+window.setStudioLightMode = setStudioLightMode;
+window.setStudioPaint = setStudioPaint;
+window.setStudioWheelSize = setStudioWheelSize;
+window.updateCommuteSlider = updateCommuteSlider;
+window.toggleInspectionCheck = toggleInspectionCheck;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INITIALIZATION
