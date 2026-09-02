@@ -4801,6 +4801,8 @@ function initScrollSpy() {
   const progressBar = document.getElementById('reading-progress-bar');
   const jumpRail = document.getElementById('quick-jump-rail');
   const resultsArea = document.getElementById('comparison-results');
+  const subnavItems = document.querySelectorAll('.subnav-tab-item');
+  const jumpNodes = document.querySelectorAll('.jump-node');
 
   window.addEventListener('scroll', () => {
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -4821,39 +4823,33 @@ function initScrollSpy() {
     }
 
     const sections = [
-      'vehicle-hero-grid',
-      'win-crowns-container',
-      'martijn-advisory-container',
-      'lifestyle-match-container',
-      'drag-race-container',
-      'radar-chart-container',
-      'battle-matrix-container',
-      'projection-10yr-container',
-      'roadtrip-planner-container',
-      'wok-risk-barometer-container',
-      'inruil-calculator-container',
-      'market-explorer-container',
-      'spec-accordion-group',
-      'pdf-export-container'
+      { id: 'v1-hero-card', subnavHref: '#v1-hero-card', railSection: 'vehicle-hero-grid' },
+      { id: 'martijn-advisory-container', subnavHref: '#martijn-advisory-container', railSection: 'martijn-advisory-container' },
+      { id: 'drag-race-container', subnavHref: '#drag-race-container', railSection: 'drag-race-container' },
+      { id: 'projection-10yr-container', subnavHref: '#projection-10yr-container', railSection: 'projection-10yr-container' },
+      { id: 'wok-risk-barometer-container', subnavHref: '#wok-risk-barometer-container', railSection: 'wok-risk-barometer-container' },
+      { id: 'market-explorer-container', subnavHref: '#market-explorer-container', railSection: 'market-explorer-container' },
+      { id: 'spec-accordion-group', subnavHref: '#spec-accordion-group', railSection: 'spec-accordion-group' },
+      { id: 'pdf-export-container', subnavHref: '#pdf-export-container', railSection: 'pdf-export-container' }
     ];
 
     for (let i = sections.length - 1; i >= 0; i--) {
-      const secEl = document.getElementById(sections[i]);
+      const secEl = document.getElementById(sections[i].id);
       if (secEl) {
         const top = secEl.getBoundingClientRect().top;
-        if (top <= 220) {
-          document.querySelectorAll('.jump-node').forEach(node => {
-            if (node.getAttribute('data-section') === sections[i]) {
+        if (top <= 200) {
+          jumpNodes.forEach(node => {
+            if (node.getAttribute('data-section') === sections[i].railSection || node.getAttribute('href') === `#${sections[i].id}`) {
               node.classList.add('is-active');
             } else {
               node.classList.remove('is-active');
             }
           });
-          document.querySelectorAll('.mobile-jump-pill').forEach(pill => {
-            if (pill.getAttribute('href') === `#${sections[i]}` || pill.getAttribute('href') === `#v1-hero-card`) {
-              pill.classList.add('is-active');
+          subnavItems.forEach(tab => {
+            if (tab.getAttribute('href') === sections[i].subnavHref) {
+              tab.classList.add('is-active');
             } else {
-              pill.classList.remove('is-active');
+              tab.classList.remove('is-active');
             }
           });
           break;

@@ -62,82 +62,40 @@
   <div id="toast-msg" class="toast-msg" aria-live="polite"></div>
 
   <!-- 🧭 FLOATING QUICK JUMP RAIL (SCROLLSPY DESKTOP) -->
-  <nav class="quick-jump-rail" id="quick-jump-rail" aria-label="Snel naar sectie springen">
-    <a href="#v1-hero-card" class="jump-node is-active" data-section="vehicle-hero-grid" aria-label="Helden Modellen">
-      <span>⚡</span>
-      <span class="jump-tooltip">Top Modellen</span>
+  <nav class="quick-jump-rail is-hidden" id="quick-jump-rail" aria-label="Snel naar sectie springen">
+    <a href="#v1-hero-card" class="jump-node is-active" data-section="vehicle-hero-grid" aria-label="Modellen">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M5 11l2-6h10l2 6"/><circle cx="7" cy="16" r="1.5"/><circle cx="17" cy="16" r="1.5"/></svg>
+      <span class="jump-tooltip">01 Modellen &amp; Overzicht</span>
     </a>
-    <a href="#win-crowns-container" class="jump-node" data-section="win-crowns-container" aria-label="Winnaars">
-      <span>👑</span>
-      <span class="jump-tooltip">Win Crowns</span>
-    </a>
-    <a href="#martijn-advisory-container" class="jump-node" data-section="martijn-advisory-container" aria-label="Martijn Advies">
-      <span>🏆</span>
-      <span class="jump-tooltip">Advies Martijn Puts</span>
-    </a>
-    <a href="#lifestyle-match-container" class="jump-node" data-section="lifestyle-match-container" aria-label="Keuzehulp">
-      <span>⚖️</span>
-      <span class="jump-tooltip">Rijprofiel Keuzehulp</span>
+    <a href="#martijn-advisory-container" class="jump-node" data-section="martijn-advisory-container" aria-label="Advies">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span class="jump-tooltip">02 APEX Eindoordeel</span>
     </a>
     <a href="#drag-race-container" class="jump-node" data-section="drag-race-container" aria-label="Drag Race">
-      <span>🏎️</span>
-      <span class="jump-tooltip">Drag Race Arena</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span class="jump-tooltip">03 Prestaties &amp; Drag</span>
     </a>
-    <a href="#engine-sound-studio-container" class="jump-node" data-section="engine-sound-studio-container" aria-label="Motor Sound">
-      <span>🔊</span>
-      <span class="jump-tooltip">Motorsound &amp; Revving</span>
+    <a href="#projection-10yr-container" class="jump-node" data-section="projection-10yr-container" aria-label="TCO & Kosten">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span class="jump-tooltip">04 TCO &amp; Lease Prognose</span>
     </a>
-    <a href="#virtual-showroom-container" class="jump-node" data-section="virtual-showroom-container" aria-label="Virtual Studio">
-      <span>📸</span>
-      <span class="jump-tooltip">Virtual Studio Showroom</span>
+    <a href="#wok-risk-barometer-container" class="jump-node" data-section="wok-risk-barometer-container" aria-label="Risico & Historie">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      <span class="jump-tooltip">05 Schade &amp; Historie Check</span>
     </a>
-    <a href="#radar-chart-container" class="jump-node" data-section="radar-chart-container" aria-label="Spider Radar">
-      <span>🕸️</span>
-      <span class="jump-tooltip">6-Assige Spider Radar</span>
-    </a>
-    <a href="#battle-matrix-container" class="jump-node" data-section="battle-matrix-container" aria-label="Battle Showdown">
-      <span>⚔️</span>
-      <span class="jump-tooltip">Battle Showdown</span>
-    </a>
-    <a href="#projection-10yr-container" class="jump-node" data-section="projection-10yr-container" aria-label="10-Jaar TCO">
-      <span>🔮</span>
-      <span class="jump-tooltip">10-Jaars Prognose</span>
-    </a>
-    <a href="#cost-per-km-container" class="jump-node" data-section="cost-per-km-container" aria-label="Kosten per KM">
-      <span>💡</span>
-      <span class="jump-tooltip">Kosten per Kilometer</span>
-    </a>
-    <a href="#roadtrip-planner-container" class="jump-node" data-section="roadtrip-planner-container" aria-label="Roadtrip Planner">
-      <span>🏖️</span>
-      <span class="jump-tooltip">Roadtrip Planner</span>
-    </a>
-    <a href="#youngtimer-calc-container" class="jump-node" data-section="youngtimer-calc-container" aria-label="Youngtimer Voordeel">
-      <span>💼</span>
-      <span class="jump-tooltip">Youngtimer 35% Regeling</span>
-    </a>
-    <a href="#wok-risk-barometer-container" class="jump-node" data-section="wok-risk-barometer-container" aria-label="Schade & WOK">
-      <span>🛡️</span>
-      <span class="jump-tooltip">Schade &amp; WOK Risico</span>
-    </a>
-    <a href="#inspection-checklist-container" class="jump-node" data-section="inspection-checklist-container" aria-label="150-Punts Inspectie">
-      <span>📝</span>
-      <span class="jump-tooltip">150-Punts Inspectie Checklist</span>
-    </a>
-    <a href="#inruil-calculator-container" class="jump-node" data-section="inruil-calculator-container" aria-label="Inruilwaarde">
-      <span>🔄</span>
-      <span class="jump-tooltip">Inruil- &amp; Dagwaarde</span>
-    </a>
-    <a href="#market-explorer-container" class="jump-node" data-section="market-explorer-container" aria-label="Marktverkenner">
-      <span>🌍</span>
-      <span class="jump-tooltip">Marktverkenner Europa</span>
+    <a href="#market-explorer-container" class="jump-node" data-section="market-explorer-container" aria-label="Markt & BPM">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span class="jump-tooltip">06 Markt &amp; BPM Calculatie</span>
     </a>
     <a href="#spec-accordion-group" class="jump-node" data-section="spec-accordion-group" aria-label="Specificaties">
-      <span>📋</span>
-      <span class="jump-tooltip">Specificatiematrix</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span class="jump-tooltip">07 Alle Specificaties</span>
     </a>
-    <a href="#pdf-export-container" class="jump-node" data-section="pdf-export-container" aria-label="PDF Rapport">
-      <span>📄</span>
-      <span class="jump-tooltip">Download PDF Dossier</span>
+    <a href="#pdf-export-container" class="jump-node" data-section="pdf-export-container" aria-label="PDF Export">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span class="jump-tooltip">08 Executive Dossier (PDF)</span>
+    </a>
+  </nav>
     </a>
   </nav>
 
@@ -175,24 +133,6 @@
       <span></span><span></span>
     </button>
   </header>
-
-  <!-- Mobile Quick Jump Dock -->
-  <div class="mobile-jump-dock" id="mobile-jump-dock">
-    <a href="#v1-hero-card" class="mobile-jump-pill is-active">⚡ Modellen</a>
-    <a href="#win-crowns-container" class="mobile-jump-pill">👑 Crowns</a>
-    <a href="#martijn-advisory-container" class="mobile-jump-pill">🏆 Advies</a>
-    <a href="#lifestyle-match-container" class="mobile-jump-pill">⚖️ Keuzehulp</a>
-    <a href="#drag-race-container" class="mobile-jump-pill">🏎️ Drag Race</a>
-    <a href="#engine-sound-studio-container" class="mobile-jump-pill">🔊 Sound</a>
-    <a href="#virtual-showroom-container" class="mobile-jump-pill">📸 Studio</a>
-    <a href="#cost-per-km-container" class="mobile-jump-pill">💡 Kosten/KM</a>
-    <a href="#youngtimer-calc-container" class="mobile-jump-pill">💼 Youngtimer</a>
-    <a href="#wok-risk-barometer-container" class="mobile-jump-pill">🛡️ Schadecheck</a>
-    <a href="#inspection-checklist-container" class="mobile-jump-pill">📝 Inspectie</a>
-    <a href="#inruil-calculator-container" class="mobile-jump-pill">🔄 Inruilwaarde</a>
-    <a href="#market-explorer-container" class="mobile-jump-pill">🌍 Marktverkenner</a>
-    <a href="#pdf-export-container" class="mobile-jump-pill">📄 PDF Export</a>
-  </div>
 
   <!-- Mobile Menu (Identiek aan apexclusive.nl) -->
   <div class="mobile-menu" id="mobile-menu" hidden>
@@ -472,6 +412,22 @@
       <!-- Comparison Results Area -->
       <div class="comparison-results-area" id="comparison-results" hidden>
         
+        <!-- 🧭 EXECUTIVE RESULTS SUBNAV (STICKY ONDER DE HEADER) -->
+        <nav class="results-subnav-dock" id="results-subnav-dock" aria-label="Sectie navigatie">
+          <div class="subnav-links-wrap">
+            <a href="#v1-hero-card" class="subnav-tab-item is-active"><span class="subnav-num-badge">01</span> Overzicht</a>
+            <a href="#martijn-advisory-container" class="subnav-tab-item"><span class="subnav-num-badge">02</span> Advies</a>
+            <a href="#drag-race-container" class="subnav-tab-item"><span class="subnav-num-badge">03</span> Prestaties</a>
+            <a href="#projection-10yr-container" class="subnav-tab-item"><span class="subnav-num-badge">04</span> TCO &amp; Lease</a>
+            <a href="#wok-risk-barometer-container" class="subnav-tab-item"><span class="subnav-num-badge">05</span> Risico &amp; Historie</a>
+            <a href="#market-explorer-container" class="subnav-tab-item"><span class="subnav-num-badge">06</span> Markt &amp; BPM</a>
+            <a href="#spec-accordion-group" class="subnav-tab-item"><span class="subnav-num-badge">07</span> Specificaties</a>
+          </div>
+          <a href="#pdf-export-container" class="subnav-cta-btn">
+            <span>Dossier PDF</span> <span>↓</span>
+          </a>
+        </nav>
+
         <!-- ✨ QUICK HIGHLIGHTS & EXECUTIVE BRIEFING CARD -->
         <div id="executive-highlights-container"></div>
 
