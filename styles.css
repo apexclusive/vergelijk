@@ -816,7 +816,11 @@ body:before {
   border-top: 1px solid var(--line);
 }
 
-/* 👑 Crowns & Color-Coded Win Highlights */
+/* 👑 Crowns & Color-Coded Win Highlights (Quick Win kroontjes)
+   renderWinCrowns() rendert: .win-crowns-wrapper > .crown-card.crown-{gold|green|blue|copper}
+   met daarin .crown-badge, .crown-winner-name, .crown-stat-main en .crown-stat-sub.
+   De legacy-selectors (.win-crowns-grid / .win-crown-*) blijven als alias behouden. */
+.win-crowns-wrapper,
 .win-crowns-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -824,19 +828,48 @@ body:before {
   margin-bottom: 2rem;
 }
 
+.crown-card,
 .win-crown-card {
   background: var(--ink-soft);
   border: 1px solid var(--line);
-  padding: 1.1rem;
+  padding: 1.1rem 1.2rem 1.2rem;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.win-crown-card.crown-gold { border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), var(--ink-soft)); }
-.win-crown-card.crown-green { border-color: rgba(34, 197, 94, 0.4); background: linear-gradient(145deg, rgba(34, 197, 94, 0.08), var(--ink-soft)); }
-.win-crown-card.crown-blue { border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(145deg, rgba(56, 189, 248, 0.08), var(--ink-soft)); }
-.win-crown-card.crown-copper { border-color: rgba(223, 177, 141, 0.4); background: linear-gradient(145deg, rgba(223, 177, 141, 0.08), var(--ink-soft)); }
+/* Gekleurde accentlijn bovenaan iedere kroon-kaart */
+.crown-card::before,
+.win-crown-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.85;
+}
 
+.crown-card:hover,
+.win-crown-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+
+.crown-card.crown-gold,
+.win-crown-card.crown-gold { color: #f59e0b; border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), var(--ink-soft)); }
+.crown-card.crown-green,
+.win-crown-card.crown-green { color: #4ade80; border-color: rgba(34, 197, 94, 0.4); background: linear-gradient(145deg, rgba(34, 197, 94, 0.08), var(--ink-soft)); }
+.crown-card.crown-blue,
+.win-crown-card.crown-blue { color: #38bdf8; border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(145deg, rgba(56, 189, 248, 0.08), var(--ink-soft)); }
+.crown-card.crown-copper,
+.win-crown-card.crown-copper { color: #e2b28e; border-color: rgba(223, 177, 141, 0.4); background: linear-gradient(145deg, rgba(223, 177, 141, 0.08), var(--ink-soft)); }
+
+.crown-badge,
 .win-crown-badge {
   font: 700 0.58rem/1 var(--display);
   letter-spacing: 0.14em;
@@ -844,21 +877,41 @@ body:before {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.65rem;
+  color: currentColor;
 }
 
+.crown-badge svg {
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.crown-gold .crown-badge,
 .crown-gold .win-crown-badge { color: #f59e0b; }
+.crown-green .crown-badge,
 .crown-green .win-crown-badge { color: #4ade80; }
+.crown-blue .crown-badge,
 .crown-blue .win-crown-badge { color: #38bdf8; }
+.crown-copper .crown-badge,
 .crown-copper .win-crown-badge { color: #e2b28e; }
 
+.crown-winner-name,
 .win-crown-car {
   font-family: var(--serif);
   font-size: 1.1rem;
+  line-height: 1.25;
   color: var(--paper);
   display: block;
+  overflow-wrap: anywhere;
 }
 
+.crown-stat-main {
+  font: 600 0.82rem/1.35 var(--display);
+  color: var(--paper-soft);
+  margin-top: 0.45rem;
+}
+
+.crown-stat-sub,
 .win-crown-desc {
   font-size: 0.78rem;
   color: var(--muted);
@@ -866,7 +919,14 @@ body:before {
   line-height: 1.45;
 }
 
-/* 🏆 Deep APEX Executive Advisory Box by Martijn Puts */
+/* 🏆 Deep APEX Executive Advisory Box by Martijn Puts
+   renderMartijnAdvisory() rendert:
+   .martijn-advisory-box
+     > .advisory-top-banner  (.advisory-badge-pill + .advisory-author)
+     > .advisory-content-grid
+         > .advisory-quote-column   (.advisory-avatar-wrap > .advisory-initials-badge,
+                                     .advisory-quote-text, .advisory-action-btns > .btn-advisory-*)
+         > .advisory-pillars-column (.advisory-pillar-item > .pillar-num + .pillar-info) */
 .martijn-advisory-box {
   background: linear-gradient(145deg, #182424 0%, #0d1212 100%);
   border: 1px solid var(--line-strong);
@@ -874,77 +934,279 @@ body:before {
   margin-bottom: 2.5rem;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   position: relative;
+  overflow: hidden;
+  scroll-margin-top: 130px;
 }
 
-.martijn-advisory-header {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  border-bottom: 1px solid rgba(223, 177, 141, 0.25);
-  padding-bottom: 1.2rem;
-  margin-bottom: 1.4rem;
-}
-
-.martijn-avatar-small {
-  width: 52px;
-  height: 52px;
+/* Subtiele koperen gloed rechtsboven, in lijn met de homepage-hero */
+.martijn-advisory-box::before {
+  content: '';
+  position: absolute;
+  top: -140px;
+  right: -140px;
+  width: 360px;
+  height: 360px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--copper);
+  background: radial-gradient(circle, rgba(186, 126, 83, 0.18) 0%, rgba(186, 126, 83, 0) 70%);
+  pointer-events: none;
 }
 
-.martijn-advisory-title-group span {
-  font: 600 0.58rem/1 var(--display);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--copper-light);
-  display: block;
+.martijn-advisory-box > * {
+  position: relative;
+  z-index: 1;
 }
 
-.martijn-advisory-title-group h3 {
-  font-family: var(--serif);
-  font-size: 1.35rem;
-  color: var(--paper);
-  margin-top: 0.2rem;
-}
-
-.martijn-advisory-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.8rem;
-  font-size: 0.9rem;
-  line-height: 1.75;
-}
-
-.advisory-car-block strong {
-  font-family: var(--serif);
-  font-size: 1.15rem;
-  color: var(--paper);
-  display: block;
-  margin-bottom: 0.4rem;
-}
-
-.advisory-car-block p {
-  color: var(--muted-light);
-}
-
-.martijn-verdict-summary {
-  grid-column: 1 / -1;
-  background: rgba(11, 14, 14, 0.6);
-  border: 1px solid var(--line);
-  padding: 1.2rem 1.4rem;
-  margin-top: 0.8rem;
+/* ── Top banner ─────────────────────────────────────────────────────── */
+.advisory-top-banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.8rem 1.2rem;
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.8rem;
+  border-bottom: 1px solid rgba(223, 177, 141, 0.25);
 }
 
-.martijn-verdict-summary p {
+.advisory-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 700 0.6rem/1 var(--display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--copper-light);
+  background: rgba(186, 126, 83, 0.16);
+  border: 1px solid rgba(223, 177, 141, 0.5);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.advisory-badge-pill svg {
+  flex-shrink: 0;
+  color: var(--copper-light);
+  filter: drop-shadow(0 0 5px rgba(226, 178, 142, 0.6));
+}
+
+.advisory-author {
+  font: 500 0.6rem/1.4 var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Content grid ───────────────────────────────────────────────────── */
+.advisory-content-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 2.2rem;
+  align-items: start;
+}
+
+.advisory-quote-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.advisory-avatar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.advisory-initials-badge {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font: 600 1.05rem/1 var(--serif);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--copper-light) 0%, var(--copper) 100%);
+  border: 2px solid rgba(241, 238, 232, 0.9);
+  box-shadow: 0 0 0 4px rgba(186, 126, 83, 0.22), 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+.advisory-name {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.2;
   color: var(--paper);
-  font-size: 0.88rem;
-  max-width: 70ch;
+}
+
+.advisory-role {
+  font: 500 0.58rem/1.4 var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--copper-light);
+  margin-top: 0.25rem;
+}
+
+.advisory-quote-text {
+  position: relative;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  line-height: 1.7;
+  color: var(--paper-soft);
+  padding-left: 1.4rem;
+  border-left: 2px solid var(--copper);
+  margin: 0 0 1.6rem 0;
+  text-wrap: pretty;
+}
+
+.advisory-action-btns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.4rem;
+  margin-top: auto;
+}
+
+/* ── Advisory buttons (ook hergebruikt bij lease, BPM, inruil & share-modal) ── */
+.btn-advisory-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0.9rem 1.4rem;
+  background: #25d366;
+  border: 1px solid #25d366;
+  color: #ffffff;
+  font: 600 0.65rem/1.4 var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(37, 211, 102, 0.22);
+  transition: background 0.25s, border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.btn-advisory-primary svg {
+  flex-shrink: 0;
+}
+
+.btn-advisory-primary:hover,
+.btn-advisory-primary:focus-visible {
+  background: #1fbf5b;
+  border-color: #1fbf5b;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px rgba(37, 211, 102, 0.3);
+  text-decoration: none;
+}
+
+.btn-advisory-primary:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
+}
+
+.btn-advisory-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.9rem 0.2rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--copper);
+  color: var(--paper);
+  font: 600 0.65rem/1.4 var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.25s, border-color 0.25s;
+}
+
+.btn-advisory-secondary:hover,
+.btn-advisory-secondary:focus-visible {
+  color: var(--copper-light);
+  border-bottom-color: var(--copper-light);
+  text-decoration: none;
+}
+
+.btn-advisory-secondary:focus-visible {
+  outline: 2px solid var(--copper-light);
+  outline-offset: 4px;
+}
+
+/* ── Pillars: genummerde badges 01 / 02 / 03 ─────────────────────────── */
+.advisory-pillars-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.advisory-pillar-item {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.1rem 1.2rem;
+  background: rgba(11, 14, 14, 0.6);
+  border: 1px solid var(--line);
+  transition: border-color 0.25s, background 0.25s;
+}
+
+.advisory-pillar-item:hover {
+  border-color: var(--line-strong);
+  background: rgba(11, 14, 14, 0.8);
+}
+
+/* Genummerde badge — specifieker dan de score-matrix .pillar-num zodat die niet lekt */
+.advisory-pillar-item .pillar-num {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font: 700 0.72rem/1 var(--display);
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--copper-light);
+  background: rgba(186, 126, 83, 0.12);
+  border: 1px solid rgba(223, 177, 141, 0.45);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.advisory-pillar-item:hover .pillar-num {
+  color: var(--ink);
+  background: var(--copper-light);
+  border-color: var(--copper-light);
+}
+
+.advisory-pillar-item .pillar-info {
+  min-width: 0;
+}
+
+.advisory-pillar-item .pillar-info h5 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.02rem;
+  line-height: 1.25;
+  color: var(--paper);
+  margin: 0.15rem 0 0.4rem 0;
+}
+
+.advisory-pillar-item .pillar-info p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted-light);
+  margin: 0;
+}
+
+.advisory-pillar-item .pillar-info strong {
+  color: var(--paper);
+  font-weight: 600;
 }
 
 /* 🔍 Market Explorer / Similar Vehicles for Sale */
@@ -2880,9 +3142,32 @@ body:before {
     grid-template-columns: 1fr;
   }
   .delta-kpi-grid,
+  .win-crowns-wrapper,
   .win-crowns-grid,
-  .martijn-advisory-body {
+  .advisory-content-grid {
     grid-template-columns: 1fr;
+  }
+  .martijn-advisory-box {
+    padding: 1.6rem 1.3rem;
+  }
+  .advisory-top-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .advisory-badge-pill {
+    white-space: normal;
+    text-align: left;
+    line-height: 1.5;
+    border-radius: 18px;
+  }
+  .advisory-action-btns {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .advisory-action-btns .btn-advisory-primary,
+  .advisory-action-btns .btn-advisory-secondary {
+    justify-content: center;
+    width: 100%;
   }
   .similar-cars-grid,
   .lifestyle-controls-grid,
@@ -3094,6 +3379,14 @@ body:before {
     top: 60px;
     margin: 0 -1rem 1.5rem -1rem;
     padding: 0 0.8rem;
+  }
+}
+
+/* 👑 Kroontjes: 4 → 2 kolommen op tablet, 1 kolom op mobiel (zie 960px-blok) */
+@media (min-width: 961px) and (max-width: 1180px) {
+  .win-crowns-wrapper,
+  .win-crowns-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -4646,5 +4939,55 @@ body:before {
   .tco-total-figure,
   .score-num-display {
     color: #ba7e53 !important;
+  }
+  /* Kroontjes & advies leesbaar op papier */
+  .crown-card,
+  .crown-card.crown-gold,
+  .crown-card.crown-green,
+  .crown-card.crown-blue,
+  .crown-card.crown-copper,
+  .advisory-pillar-item,
+  .advisory-pillar-item:hover {
+    background: #ffffff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    color: #000 !important;
+    page-break-inside: avoid;
+  }
+  .crown-card::before,
+  .martijn-advisory-box::before {
+    display: none !important;
+  }
+  .crown-badge {
+    color: #9d643d !important;
+  }
+  .crown-winner-name,
+  .crown-stat-main,
+  .advisory-name,
+  .advisory-quote-text,
+  .advisory-pillar-item .pillar-info h5,
+  .advisory-pillar-item .pillar-info strong {
+    color: #000 !important;
+  }
+  .crown-stat-sub,
+  .advisory-author,
+  .advisory-pillar-item .pillar-info p {
+    color: #444 !important;
+  }
+  .advisory-badge-pill,
+  .advisory-role,
+  .advisory-pillar-item .pillar-num {
+    color: #9d643d !important;
+    background: transparent !important;
+    border-color: #9d643d !important;
+  }
+  .advisory-initials-badge {
+    color: #000 !important;
+    background: #f1eee8 !important;
+    border-color: #9d643d !important;
+    box-shadow: none !important;
+  }
+  .advisory-action-btns {
+    display: none !important;
   }
 }
